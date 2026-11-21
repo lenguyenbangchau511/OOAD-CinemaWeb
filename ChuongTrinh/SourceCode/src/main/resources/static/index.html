@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Trang chủ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <script type="module" src="js/home.js"></script>
+</head>
+<body id="top">
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
+        <nav aria-label="Menu chính">
+            <a href="./" aria-current="page">Trang chủ</a>
+            <a href="#phim">Phim</a>
+            <button type="button" disabled aria-describedby="demo-note" title="Chưa triển khai">Bắp nước</button>
+            <button type="button" disabled aria-describedby="demo-note" title="Chưa triển khai">Khuyến mãi</button>
+        </nav>
+        <button type="button" class="button secondary login" disabled aria-describedby="demo-note" title="Chưa triển khai">Đăng nhập</button>
+    </div>
+</header>
+
+<main class="container main" id="phim">
+    <div class="section-head">
+        <div>
+            <h1>Phim tại rạp</h1>
+            <p id="demo-note">Lịch phim mẫu. Bắp nước, khuyến mãi và đăng nhập đang được phát triển.</p>
+        </div>
+        <form class="search" role="search">
+            <label class="sr-only" for="query">Tìm phim theo tên</label>
+            <input id="query" name="q" type="search" placeholder="Nhập tên phim…">
+            <button class="button primary" type="submit">Tìm kiếm</button>
+        </form>
+    </div>
+
+    <div class="list-head">
+        <div class="tabs" role="tablist" aria-label="Lịch chiếu">
+            <button type="button" role="tab" id="now" aria-controls="films" aria-selected="true">Đang chiếu</button>
+            <button type="button" role="tab" id="soon" aria-controls="films" aria-selected="false" tabindex="-1">Sắp chiếu</button>
+        </div>
+        <p id="count" class="result-count" role="status"></p>
+    </div>
+    <section id="films" role="tabpanel" aria-labelledby="now" tabindex="0">
+        <div class="film-grid"></div>
+        <div class="empty" hidden>
+            <h2>Không tìm thấy phim</h2>
+            <p>Thử tên phim khác hoặc chuyển sang tab còn lại.</p>
+            <button type="button" class="button secondary" id="clear">Xóa tìm kiếm</button>
+        </div>
+    </section>
+    <noscript><p>Bật JavaScript để xem và tìm phim.</p></noscript>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <div><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
+            <p>Website quản lý rạp chiếu phim.</p></div>
+        <div><strong>Liên hệ demo</strong><p>hello@cinema11.example<br>TP. Hồ Chí Minh, Việt Nam</p></div>
+        <div><strong>Nhóm 11</strong><p>Đồ án Phân tích và Thiết kế hướng đối tượng</p></div>
+    </div>
+</footer>
+
+<dialog id="detail" aria-labelledby="detail-title">
+    <form method="dialog"><button class="button secondary close" aria-label="Đóng chi tiết">×</button></form>
+    <h2 id="detail-title"></h2>
+    <p id="detail-meta"></p>
+    <p id="detail-description"></p>
+    <button type="button" class="button primary" disabled>Đặt vé · Chưa mở</button>
+</dialog>
+
+<template id="film-card">
+    <article class="film">
+        <div class="poster">
+            <span class="poster-fallback" aria-hidden="true"></span>
+            <span class="age"></span>
+        </div>
+        <div class="film-body">
+            <h2></h2>
+            <p class="meta"></p>
+            <button class="button secondary" type="button">Xem chi tiết</button>
+        </div>
+    </article>
+</template>
+</body>
+</html>
