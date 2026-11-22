@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Chi tiết phòng chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/phong-chieu-chi-tiet.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html" aria-current="page">Phòng chiếu</a>
+            <a href="suat-chieu.html">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+<main class="container main">
+    <div class="page-title"><div><h1 id="ten-phong">Chi tiết phòng chiếu</h1><p id="mo-ta"></p></div>
+        <div class="hanh-dong"><a class="button secondary" href="phong-chieu.html">← Danh sách</a><button class="button primary" id="nut-sua" type="button" hidden>Sửa sơ đồ ghế</button></div></div>
+    <div class="alert" id="thong-bao" hidden></div>
+    <section class="card" id="noi-dung" hidden>
+        <div class="thanh-cong-cu"><div class="thong-ke-ghe" id="thong-ke"></div>
+            <div class="hanh-dong" id="nhom-luu" hidden><button class="button secondary" id="nut-huy" type="button">Hủy sửa</button><button class="button primary" id="nut-luu" type="button">Lưu sơ đồ</button></div></div>
+        <p class="muted" id="huong-dan" hidden>Bấm vào ghế để đổi loại (Thường → VIP → Sweetbox → Hỏng). Ghế đang có suất bán không thể sửa. Chức năng lưu là minh họa.</p>
+        <div class="so-do" id="so-do"></div>
+        <div class="chu-thich">
+            <span><span class="seat" aria-hidden="true"></span>Thường</span>
+            <span><span class="seat vip" aria-hidden="true"></span>VIP</span>
+            <span><span class="seat sweetbox" aria-hidden="true"></span>Sweetbox</span>
+            <span><span class="seat BAO_TRI" aria-hidden="true">–</span>Hỏng</span>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Thanh toán</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <script type="module" src="js/thanh-toan.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
+        <nav aria-label="Menu chính">
+            <a href="./">Trang chủ</a>
+            <a href="./#phim">Phim</a>
+            <a href="lich-su-ve.html" >Lịch sử vé</a>
+        </nav>
+        <div class="header-right" id="nguoi-dung"></div>
+    </div>
+</header>
+
+<main class="container main">
+    <p class="breadcrumb"><a href="./">Trang chủ</a> / Thanh toán</p>
+    <div class="page-title">
+        <div>
+            <h1>Thanh toán đơn hàng</h1>
+            <p id="ma-don">Đang kiểm tra đơn hàng…</p>
+        </div>
+    </div>
+
+    <div id="thong-bao" role="status" hidden></div>
+
+    <div class="layout-2" id="noi-dung" hidden>
+        <section class="card" aria-labelledby="tieu-de-don">
+            <h2 id="tieu-de-don">Thông tin đơn hàng</h2>
+            <h3 id="ten-phim"></h3>
+            <p class="muted" id="thong-tin-suat"></p>
+            <div class="ghe-chon" id="ds-ghe" aria-label="Ghế đã chọn"></div>
+            <div id="khoi-dich-vu" hidden>
+                <h3>Đồ ăn &amp; thức uống</h3>
+                <div id="ds-dich-vu"></div>
+            </div>
+            <div style="margin-top:12px">
+                <div class="dong-tien"><span>Tiền vé</span><span id="tien-ve"></span></div>
+                <div class="dong-tien" id="dong-dich-vu"><span>Đồ ăn, thức uống</span><span id="tien-dich-vu"></span></div>
+                <div class="dong-tien" id="dong-km" hidden><span>Khuyến mãi <span id="ma-km"></span></span><span class="giam" id="giam-km"></span></div>
+                <div class="dong-tien" id="dong-diem" hidden><span>Dùng <span id="so-diem"></span> điểm</span><span class="giam" id="giam-diem"></span></div>
+                <div class="dong-tien tong"><span>Tổng thanh toán</span><span id="tong-tien"></span></div>
+            </div>
+        </section>
+
+        <aside class="card sticky" aria-labelledby="tieu-de-tt">
+            <h2 id="tieu-de-tt">Thanh toán</h2>
+            <div id="khoi-dem">
+                <p class="muted">Thời gian giữ ghế còn lại</p>
+                <p class="dem-nguoc" id="dem-nguoc" aria-live="off">00:00</p>
+            </div>
+            <p style="margin:12px 0 8px"><span class="muted">Trạng thái: </span><span id="trang-thai-tt"></span></p>
+
+            <form id="form-tt">
+                <fieldset class="phuong-thuc" style="border:0;padding:0;margin:0" id="nhom-phuong-thuc">
+                    <legend class="sr-only">Phương thức thanh toán</legend>
+                    <label><input type="radio" name="pt" value="MOMO"> Ví MoMo</label>
+                    <label><input type="radio" name="pt" value="VNPAY"> VNPay</label>
+                    <label><input type="radio" name="pt" value="THE_NGAN_HANG"> Thẻ ngân hàng</label>
+                </fieldset>
+                <div class="hanh-dong">
+                    <a class="button secondary" id="nut-quay-lai" href="./">Quay lại</a>
+                    <button type="submit" class="button primary" id="nut-thanh-toan">Thanh toán</button>
+                </div>
+            </form>
+
+            <div class="sandbox" id="sandbox" hidden>
+                <h3>Cổng thanh toán mô phỏng (sandbox)</h3>
+                <p class="muted">Không thu tiền thật. Mã giao dịch: <strong id="ma-gd"></strong>. Hãy chọn kết quả mà cổng sẽ báo về cho hệ thống:</p>
+                <div class="nut">
+                    <button type="button" class="button primary" data-kq="THANH_CONG">Giả lập: thanh toán thành công</button>
+                    <button type="button" class="button secondary" data-kq="THAT_BAI">Giả lập: thanh toán thất bại</button>
+                    <button type="button" class="button secondary" data-kq="CHO_XAC_MINH">Giả lập: chưa xác định được kết quả</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container footer-inner">
+        <div><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
+            <p>Website quản lý rạp chiếu phim.</p></div>
+        <div><strong>Liên hệ demo</strong><p>hello@cinema11.example<br>TP. Hồ Chí Minh, Việt Nam</p></div>
+        <div><strong>Hỗ trợ</strong><p>Giao dịch lỗi hoặc cần hoàn tiền: liên hệ quầy vé với mã đơn hàng.</p></div>
+    </div>
+</footer>
+</body>
+</html>

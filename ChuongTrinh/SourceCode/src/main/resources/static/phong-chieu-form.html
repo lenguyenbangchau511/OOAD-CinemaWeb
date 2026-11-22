@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Thêm / sửa phòng chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/phong-chieu-form.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html" aria-current="page">Phòng chiếu</a>
+            <a href="suat-chieu.html">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+<main class="container main">
+    <div class="page-title"><div><h1 id="tieu-de">Thêm phòng chiếu</h1><p>Giao diện minh họa: kiểm tra dữ liệu nhập nhưng chưa lưu vào cơ sở dữ liệu.</p></div></div>
+    <div class="alert" id="thong-bao" hidden></div>
+    <div class="layout-2">
+        <form class="card" id="form" novalidate>
+            <div class="form-grid">
+                <div class="field"><label for="ma-phong">Mã phòng *</label><input id="ma-phong" maxlength="10" required><span class="error" id="loi-ma-phong"></span></div>
+                <div class="field"><label for="ten-phong">Tên phòng *</label><input id="ten-phong" maxlength="50" required><span class="error" id="loi-ten-phong"></span></div>
+                <div class="field"><label for="loai-phong">Loại phòng *</label>
+                    <select id="loai-phong"><option value="STANDARD">Tiêu chuẩn</option><option value="VIP">VIP</option><option value="IMAX">IMAX</option><option value="3D">3D</option></select></div>
+                <div class="field"><label for="trang-thai">Trạng thái</label>
+                    <select id="trang-thai"><option value="HOAT_DONG">Hoạt động</option><option value="BAO_TRI">Bảo trì</option><option value="DONG_CUA">Đóng cửa</option></select></div>
+                <div class="field"><label for="so-hang">Số hàng ghế *</label><input id="so-hang" type="number" min="1" max="26" value="8"><span class="hint">1 – 26 hàng (A–Z)</span><span class="error" id="loi-so-hang"></span></div>
+                <div class="field"><label for="so-cot">Số ghế mỗi hàng *</label><input id="so-cot" type="number" min="1" max="30" value="10"><span class="hint">1 – 30 ghế</span><span class="error" id="loi-so-cot"></span></div>
+            </div>
+            <div class="hanh-dong"><a class="button secondary" href="phong-chieu.html">Hủy</a><button class="button primary" type="submit">Lưu phòng</button></div>
+        </form>
+        <aside class="card"><h2>Xem trước sơ đồ</h2><p class="muted" id="tong-ghe"></p><div class="xem-truoc-so-do" id="xem-truoc" aria-live="polite"></div></aside>
+    </div>
+</main>
+</body>
+</html>
