@@ -1,0 +1,71 @@
+/* Giao diện của Phan Thành Công Danh – dùng chung biến màu trong home.css/dat-ve.css */
+.kho-nav { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.kho-nav a { min-height:40px; padding:7px 10px; border-radius:8px; font-size:14px; font-weight:600; }
+.kho-nav a:hover, .kho-nav a[aria-current="page"] { background:var(--accent); }
+.banner-demo { padding:10px 14px; border:1px dashed #d9a45a; border-radius:10px; background:#fff8e8; color:#76511d; font-size:13px; margin-bottom:18px; }
+.kho-toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.kho-toolbar .left, .kho-toolbar .right { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.kho-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:18px; }
+.kho-stat { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; }
+.kho-stat small { display:block; color:var(--muted); font-size:13px; }
+.kho-stat strong { display:block; font-size:25px; margin-top:4px; }
+.kho-search { min-height:44px; border:1px solid var(--line); border-radius:8px; padding:8px 12px; background:#fff; min-width:230px; }
+.kho-select { min-height:44px; border:1px solid var(--line); border-radius:8px; padding:8px 12px; background:#fff; color:var(--text); }
+.kho-thumb { width:50px; height:50px; border-radius:10px; display:grid; place-items:center; background:#fff2e6; font-size:25px; overflow:hidden; }
+.kho-thumb img { width:100%; height:100%; object-fit:cover; }
+.name-cell { display:flex; align-items:center; gap:10px; min-width:180px; }
+.name-cell small { display:block; color:var(--muted); font-size:13px; }
+.low-stock { color:#a15c00; font-weight:700; }
+.good-stock { color:#277345; font-weight:600; }
+.tabs-kho { display:flex; gap:6px; border-bottom:1px solid var(--line); margin:18px 0 14px; }
+.tabs-kho button { border:0; border-bottom:3px solid transparent; background:transparent; padding:10px 14px; font-weight:600; color:var(--muted); }
+.tabs-kho button.active { color:var(--primary); border-bottom-color:var(--primary); }
+.form-card { padding:22px; background:#fff; border:1px solid var(--line); border-radius:12px; margin-bottom:16px; }
+.form-card h2 { font-size:18px; margin-bottom:16px; }
+.form-grid-3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.form-grid-2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.field textarea { min-height:100px; resize:vertical; width:100%; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font:inherit; }
+.field input[type="file"] { padding:8px; }
+.preview-img { max-width:160px; max-height:120px; object-fit:cover; border:1px solid var(--line); border-radius:10px; }
+.inline-field { display:flex; gap:8px; align-items:end; flex-wrap:wrap; }
+.inline-field .field { flex:1 1 170px; }
+.line-item { display:grid; grid-template-columns:minmax(180px,2fr) minmax(100px,1fr) minmax(100px,1fr) 110px 42px; gap:10px; align-items:end; padding:12px; background:#fffaf5; border:1px solid var(--line); border-radius:10px; margin-bottom:10px; }
+.line-item.combo-line { grid-template-columns:minmax(180px,2fr) minmax(100px,1fr) 42px; }
+.icon-btn { width:40px; height:44px; border:1px solid var(--line); border-radius:8px; background:#fff; color:#a22; font-size:20px; }
+.summary-box { background:#fff8f1; border:1px solid var(--line); border-radius:10px; padding:16px; }
+.summary-row { display:flex; justify-content:space-between; gap:12px; padding:5px 0; }
+.summary-row.total { border-top:1px solid var(--line); margin-top:8px; padding-top:12px; font-size:18px; font-weight:700; }
+.product-hero { display:flex; gap:22px; align-items:center; background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px; margin-bottom:18px; }
+.product-art { width:150px; height:150px; flex:none; display:grid; place-items:center; border-radius:14px; background:#fff1e4; font-size:70px; overflow:hidden; }
+.product-art img { width:100%; height:100%; object-fit:cover; }
+.detail-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.detail-item { padding:12px; border:1px solid var(--line); border-radius:10px; background:#fff; }
+.detail-item small { display:block; color:var(--muted); font-size:13px; }
+.detail-item strong { display:block; margin-top:4px; }
+.status-pill { display:inline-flex; border-radius:999px; padding:4px 10px; font-size:13px; font-weight:700; }
+.status-pill.active { background:#e6f4ea; color:#277345; }
+.status-pill.off { background:#f0e9e3; color:#75665c; }
+.status-pill.warn { background:#fff3d6; color:#8a5a00; }
+.scan-box { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; max-width:760px; }
+.scan-box input { min-height:54px; border:2px solid var(--line); border-radius:10px; padding:10px 14px; font-size:18px; letter-spacing:.04em; }
+.ticket-panel { max-width:850px; margin-top:20px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff; }
+.ticket-panel-head { padding:16px 20px; background:#fff5ec; display:flex; justify-content:space-between; gap:12px; align-items:center; }
+.ticket-panel-body { padding:20px; }
+.ticket-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.ticket-data { padding:12px; background:#fffaf5; border-radius:8px; }
+.ticket-data small { display:block; color:var(--muted); font-size:13px; }
+.ticket-data strong { display:block; margin-top:4px; }
+@media(max-width:900px) {
+ .kho-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .form-grid-3 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:680px) {
+ .form-grid-2,.form-grid-3,.detail-grid,.ticket-grid { grid-template-columns:1fr; }
+ .product-hero { flex-direction:column; align-items:flex-start; }
+ .line-item,.line-item.combo-line { grid-template-columns:1fr 1fr; }
+ .line-item .field:first-child { grid-column:1/-1; }
+ .scan-box { grid-template-columns:1fr; }
+ .kho-stats { gap:8px; }
+ .kho-stat { padding:12px; }
+ .kho-stat strong { font-size:21px; }
+}

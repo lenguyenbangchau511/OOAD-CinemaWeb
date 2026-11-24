@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinema 11 | Phiếu kiểm kê</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
+
+<script type="module" src="js/phieu-kiem-ke.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+  <div class="container header-inner">
+    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+    <nav class="kho-nav" aria-label="Menu quản lý kho">
+      <a href="ton-kho.html" >Tồn kho</a>
+      <a href="san-pham-form.html">Sản phẩm</a>
+      <a href="combo-form.html">Combo</a>
+      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
+      <a href="phieu-kiem-ke.html" aria-current="page">Kiểm kê</a>
+      <a href="soat-ve.html" >Soát vé</a>
+    </nav>
+    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+  </div>
+</header>
+<main class="container main">
+<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Phiếu kiểm kê</div>
+<div class="page-title"><div><h1>Phiếu kiểm kê</h1><p>Đối chiếu số lượng thực tế với tồn kho đang ghi nhận trên hệ thống.</p></div></div>
+<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
+
+<form id="form-kiem-ke">
+  <section class="form-card">
+    <h2>Thông tin phiếu kiểm kê</h2>
+    <div class="form-grid-3">
+      <div class="field"><label for="ma-phieu">Mã phiếu</label><input id="ma-phieu" readonly></div>
+      <div class="field"><label for="thoi-diem">Thời điểm lập</label><input id="thoi-diem" readonly></div>
+      <div class="field"><label for="ghi-chu">Ghi chú</label><input id="ghi-chu" maxlength="500" placeholder="Ghi chú kiểm kê"></div>
+    </div>
+  </section>
+  <section class="form-card">
+    <div class="kho-toolbar"><h2>Đối chiếu tồn kho</h2><button class="button secondary" id="them-dong" type="button">+ Thêm sản phẩm</button></div>
+    <div id="ds-dong"></div>
+    <p class="muted">Chênh lệch = Số lượng thực tế − Số lượng hệ thống. Chỉ kiểm kê sản phẩm, không kiểm kê tồn riêng cho combo.</p>
+  </section>
+  <section class="form-card">
+    <div class="summary-box"><div class="summary-row"><span>Số dòng kiểm kê</span><strong id="tong-dong">0</strong></div><div class="summary-row"><span>Số dòng chênh lệch</span><strong id="so-chenh-lech">0</strong></div></div>
+    <div id="thong-bao" class="alert" hidden role="status" style="margin-top:14px"></div>
+    <div class="hanh-dong"><button class="button primary" type="submit">Xác nhận kiểm kê</button><a class="button secondary" href="ton-kho.html">Hủy</a></div>
+  </section>
+</form>
+
+</main>
+</body></html>
