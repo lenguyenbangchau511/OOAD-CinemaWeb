@@ -106,6 +106,7 @@ async function chonGhe(maGheSuat, laCuaToi) {
             ? await goiApi(`/api/giu-ghe/${encodeURIComponent(maPhienGiu)}/ghe/${encodeURIComponent(maGheSuat)}`, { method: 'DELETE' })
             : await goiApi('/api/giu-ghe', { method: 'POST', body: { maSuat, maPhienGiu, dsMaGheSuat: [maGheSuat] } });
         maPhienGiu = phienHienTai.maPhienGiu;
+        if (layPhienDatVe().maPhienGiu !== maPhienGiu) xoaPhienDatVe();
         luuPhienDatVe({ maSuat, maPhienGiu });
         veTomTat();
     } catch (loi) {

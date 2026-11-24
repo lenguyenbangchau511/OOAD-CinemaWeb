@@ -3,51 +3,68 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cinema 11 | Trang chủ</title>
+    <title>MegaCine | Trang chủ</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/megacine-index.css">
     <script type="module" src="js/home.js"></script>
 </head>
-<body id="top">
+<body id="top" class="megacine-home">
 <header class="header">
     <div class="container header-inner">
-        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="brand-accent">Cine</span></span></a>
         <nav aria-label="Menu chính">
             <a href="./" aria-current="page">Trang chủ</a>
-            <a href="#phim">Phim</a>
-            <button type="button" disabled aria-describedby="demo-note" title="Chưa triển khai">Bắp nước</button>
-            <button type="button" disabled aria-describedby="demo-note" title="Chưa triển khai">Khuyến mãi</button>
+            <a href="#combo">Bắp nước</a>
+            <a href="#uu-dai">Khuyến mãi</a>
         </nav>
-        <button type="button" class="button secondary login" disabled aria-describedby="demo-note" title="Chưa triển khai">Đăng nhập</button>
+        <a class="button secondary login" id="tai-khoan" href="login.html">Đăng nhập</a>
     </div>
 </header>
 
-<main class="container main" id="phim">
-    <div class="section-head">
-        <div>
-            <h1>Phim tại rạp</h1>
-            <p id="demo-note">Lịch phim mẫu. Bắp nước, khuyến mãi và đăng nhập đang được phát triển.</p>
+<main class="container main">
+    <a class="home-hero" href="#phim" aria-label="Đến danh sách phim">
+        <div class="hero-copy">
+            <p class="hero-label">Phim nổi bật</p>
+            <h1>Godzilla Trừ Không</h1>
+            <p>Khoa học viễn tưởng</p>
         </div>
-        <form class="search" role="search">
-            <label class="sr-only" for="query">Tìm phim theo tên</label>
-            <input id="query" name="q" type="search" placeholder="Nhập tên phim…">
-            <button class="button primary" type="submit">Tìm kiếm</button>
-        </form>
-    </div>
-
-    <div class="list-head">
+    </a>
+    <div class="section-head" id="phim">
+        <div><p class="eyebrow">Lịch chiếu MegaCine</p><h2>Danh sách phim</h2></div>
         <div class="tabs" role="tablist" aria-label="Lịch chiếu">
             <button type="button" role="tab" id="now" aria-controls="films" aria-selected="true">Đang chiếu</button>
             <button type="button" role="tab" id="soon" aria-controls="films" aria-selected="false" tabindex="-1">Sắp chiếu</button>
         </div>
-        <p id="count" class="result-count" role="status"></p>
     </div>
+    <form class="search home-filters" role="search">
+        <label class="sr-only" for="query">Tìm theo tên phim, đạo diễn, diễn viên</label>
+        <input id="query" name="q" type="search" placeholder="Tìm theo tên phim, đạo diễn, diễn viên…">
+        <label class="sr-only" for="genre">Thể loại</label>
+        <select id="genre"><option value="">Tất cả thể loại</option></select>
+        <label class="sr-only" for="rating">Độ tuổi</label>
+        <select id="rating"><option value="">Mọi độ tuổi</option></select>
+        <button class="button secondary" type="reset">↶ Xóa bộ lọc</button>
+    </form>
+    <p id="count" class="result-count" role="status">Đang tải danh sách phim…</p>
     <section id="films" role="tabpanel" aria-labelledby="now" tabindex="0">
+        <div id="load-error" class="empty" hidden>
+            <h2>Không tải được danh sách phim</h2>
+            <p id="load-error-message"></p>
+            <button type="button" class="button secondary" id="retry">Thử lại</button>
+        </div>
         <div class="film-grid"></div>
         <div class="empty" hidden>
-            <h2>Không tìm thấy phim</h2>
-            <p>Thử tên phim khác hoặc chuyển sang tab còn lại.</p>
+            <h2 id="empty-title"></h2>
+            <p id="empty-message"></p>
             <button type="button" class="button secondary" id="clear">Xóa tìm kiếm</button>
+        </div>
+    </section>
+    <section id="uu-dai" class="home-offers" aria-labelledby="offer-title">
+        <h2 id="offer-title">Ưu đãi tại MegaCine</h2>
+        <div class="offer-grid">
+            <article><span aria-hidden="true">▣</span><div><h3>Mã khuyến mãi</h3><p>Nhập mã khi xác nhận đơn để xem mức giảm áp dụng.</p></div></article>
+            <article id="combo"><span aria-hidden="true">✦</span><div><h3>Combo bắp nước</h3><p>Xem các combo đang bán sau khi chọn ghế.</p></div></article>
+            <article><span aria-hidden="true">★</span><div><h3>Tích điểm thành viên</h3><p>Tích điểm khi thanh toán và dùng điểm cho lần đặt vé tiếp theo.</p></div></article>
         </div>
     </section>
     <noscript><p>Bật JavaScript để xem và tìm phim.</p></noscript>
@@ -55,20 +72,10 @@
 
 <footer class="footer">
     <div class="container footer-inner">
-        <div><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
-            <p>Website quản lý rạp chiếu phim.</p></div>
-        <div><strong>Liên hệ demo</strong><p>hello@cinema11.example<br>TP. Hồ Chí Minh, Việt Nam</p></div>
-        <div><strong>Nhóm 11</strong><p>Đồ án Phân tích và Thiết kế hướng đối tượng</p></div>
+        <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="brand-accent">Cine</span></span></a>
+        <p>© MegaCine · Đồ án OOAD Nhóm 11</p>
     </div>
 </footer>
-
-<dialog id="detail" aria-labelledby="detail-title">
-    <form method="dialog"><button class="button secondary close" aria-label="Đóng chi tiết">×</button></form>
-    <h2 id="detail-title"></h2>
-    <p id="detail-meta"></p>
-    <p id="detail-description"></p>
-    <button type="button" class="button primary" disabled>Đặt vé · Chưa mở</button>
-</dialog>
 
 <template id="film-card">
     <article class="film">
@@ -79,7 +86,8 @@
         <div class="film-body">
             <h2></h2>
             <p class="meta"></p>
-            <button class="button secondary" type="button">Xem chi tiết</button>
+            <a class="button primary booking-link">Đặt vé</a>
+            <a class="button secondary detail-link">Xem chi tiết</a>
         </div>
     </article>
 </template>

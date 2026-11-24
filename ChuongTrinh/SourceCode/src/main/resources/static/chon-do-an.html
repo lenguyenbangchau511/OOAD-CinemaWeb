@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chọn đồ ăn và thức uống | MegaCine</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <script type="module" src="js/chon-do-an.js"></script>
+    <link rel="stylesheet" href="css/megacine-pages.css">
+</head>
+<body class="mc-page chon-do-an">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Menu"><a href="./">Trang chủ</a><a href="./#phim">Phim</a><a href="./#combo">Bắp nước</a><a href="./#uu-dai">Khuyến mãi</a></nav>
+</div></header>
+<main class="container main chau-page">
+    <ol class="mc-steps" aria-label="Tiến trình đặt vé"><li class="done"><span>1</span>Chọn suất</li><li class="done"><span>2</span>Chọn ghế</li><li class="current" aria-current="step"><span>3</span>Bắp nước</li><li class=""><span>4</span>Xác nhận</li><li class=""><span>5</span>Thanh toán</li></ol><h1>Chọn đồ ăn, thức uống và combo</h1><p class="mc-muted">Thêm bắp nước cho suất chiếu của bạn hoặc bỏ qua để tiếp tục.</p>
+    <p id="thong-bao" role="status" hidden></p>
+    <div class="mc-hold"><strong>Ghế đang được giữ cho bạn</strong><span id="phien-info"></span><span id="han" aria-label="Thời gian còn lại"></span></div>
+  <div class="mc-columns"><div><div class="mc-category" aria-label="Nhóm món">
+  <button type="button" data-loai="" aria-pressed="true">Tất cả</button>
+  <button type="button" data-loai="DO_AN" aria-pressed="false">Đồ ăn</button>
+  <button type="button" data-loai="THUC_UONG" aria-pressed="false">Thức uống</button>
+  <button type="button" data-loai="COMBO" aria-pressed="false">Combo</button></div>
+  <div id="mon" class="chau-grid"></div></div><aside class="chau-card mc-summary"><h2>Tóm tắt đơn</h2><div id="tom-tat"></div><div class="chau-actions"><a class="button secondary" id="quay-lai">Về chọn ghế</a><button id="bo-qua" class="button secondary" disabled>Bỏ qua</button><button id="tiep" class="button primary" disabled>Tiếp tục</button></div>
+</aside></div></main>
+</body>
+</html>

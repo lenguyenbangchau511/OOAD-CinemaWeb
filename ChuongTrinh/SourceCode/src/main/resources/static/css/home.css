@@ -94,3 +94,60 @@ dialog p { margin: 8px 0 16px; }
     .film-grid { grid-template-columns: minmax(0, 1fr); }
     .tabs button { padding-inline: 10px; }
 }
+
+/* Trang chủ MegaCine */
+.megacine-home { background: #fbf8f5; }
+.megacine-home .container { max-width: 1120px; }
+.megacine-home .header-inner { min-height: 70px; justify-content: flex-start; gap: 28px; }
+.megacine-home .login { margin-left: auto; border-radius: 24px; white-space: nowrap; }
+.megacine-home .brand-mark { background: var(--primary); color: white; }
+.brand-accent, .eyebrow { color: var(--primary-hover); }
+.megacine-home nav a { border-radius: 24px; }
+.megacine-home .main { padding-top: 24px; }
+.home-hero {
+    display: flex; align-items: center; min-height: clamp(245px, 30vw, 410px);
+    padding: clamp(24px, 5vw, 54px); border-radius: 24px; color: white;
+    background: linear-gradient(90deg, #281c15fa, #281c15a0 46%, #281c150d),
+        url("../images/megacine-banner.jpg") center / cover;
+}
+.hero-copy { max-width: 530px; }
+.hero-copy h1 { font-size: clamp(34px, 5vw, 54px); margin-block: 12px; }
+.hero-copy p:last-child { color: #fff0e6; }
+.hero-label { display: inline-block; background: var(--accent); color: var(--primary-hover); border-radius: 18px; padding: 4px 12px; font-size: 13px; font-weight: 700; }
+.megacine-home .section-head { margin: 44px 0 22px; scroll-margin-top: 20px; }
+.megacine-home .eyebrow { margin-bottom: 4px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
+.megacine-home .tabs { padding: 5px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+.home-filters { padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: white; flex-wrap: wrap; align-items: center; }
+.home-filters input { flex: 1 1 250px; background: #fbf8f5; }
+.home-filters select { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: inherit; font: inherit; }
+.megacine-home .result-count { min-height: 22px; margin: 8px 0 16px; }
+.megacine-home .film-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 155px), 1fr)); gap: 18px; }
+.megacine-home .film { background: transparent; border: 0; border-radius: 0; }
+.megacine-home .poster { border-radius: 14px; }
+.megacine-home .age { top: 8px; left: 8px; color: white; background: #a94714; font-size: 12px; }
+.megacine-home .age[data-rating="P"] { background: #18734e; }
+.megacine-home .age[data-rating="K"] { background: #117493; }
+.megacine-home .age[data-rating="T18"] { background: #ad2227; }
+.megacine-home .film-body { padding: 9px 0 0; gap: 6px; }
+.megacine-home .film h2 { font-size: 15px; }
+.megacine-home .film .meta { white-space: pre-line; }
+.megacine-home .film .button { margin: 0; font-size: 13px; min-height: 40px; }
+.megacine-home .film .booking-link { margin-top: auto; }
+.home-offers { margin-top: 60px; }
+.offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; margin-top: 18px; }
+.offer-grid article { display: flex; gap: 14px; background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.offer-grid article > span { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--accent); color: var(--primary-hover); }
+.offer-grid h3 { margin: 0 0 4px; font-size: 15px; }
+.offer-grid p { color: var(--muted); font-size: 13px; }
+.megacine-home .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.megacine-home .footer p { margin: 0; }
+@media (max-width: 620px) {
+    .megacine-home .header-inner { flex-wrap: wrap; gap: 8px 14px; padding-block: 10px; }
+    .megacine-home nav { order: 3; justify-content: flex-start; width: 100%; }
+    .megacine-home .section-head { align-items: flex-start; flex-direction: column; gap: 12px; }
+    .megacine-home .film-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .home-filters input { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    html:has(.megacine-home) { scroll-behavior: smooth; }
+}

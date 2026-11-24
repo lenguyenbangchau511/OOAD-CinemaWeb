@@ -48,7 +48,8 @@ public class SuatChieuService {
         List<SuatChieu> ds = maPhim != null && !maPhim.isBlank()
                 ? suatRepo.findByMaPhimAndNgayChieu(maPhim, ngayXem)
                 : suatRepo.findByNgayChieu(ngayXem);
-        return chuyenDanhSach(ds.stream().filter(s -> s.conBanVe(bayGio)).toList());
+        return chuyenDanhSach(ds.stream().filter(s -> s.conBanVe(bayGio)).toList())
+                .stream().filter(SuatChieuDto::conBanVe).toList();
     }
 
     /** Danh sách suất chiếu cho quản lý / nhân viên, lọc theo phim, phòng, ngày, trạng thái (mọi tham số đều tùy chọn). */

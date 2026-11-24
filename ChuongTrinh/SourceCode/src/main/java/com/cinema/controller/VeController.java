@@ -48,6 +48,11 @@ public class VeController {
         return veService.xemKetQuaDatVe(phienDangNhap.yeuCau(session), maDonHang);
     }
 
+    @GetMapping("/api/ve/{maVe}")
+    public KetQuaDatVeDto chiTietVe(@PathVariable String maVe, HttpSession session) {
+        return veService.xemChiTietVe(phienDangNhap.yeuCau(session), maVe);
+    }
+
     /** Cho giao diện biết đã đăng nhập chưa và với vai trò nào (để hiện đúng thanh trên cùng). */
     @GetMapping("/api/dat-ve/toi")
     public Map<String, Object> toi(HttpSession session) {
