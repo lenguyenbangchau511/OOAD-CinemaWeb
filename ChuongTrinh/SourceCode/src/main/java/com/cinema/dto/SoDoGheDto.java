@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /** Sơ đồ ghế của một suất chiếu (UC5.1 bước 5-6, giao diện 7). */
-public record SoDoGheDto(
+    public record SoDoGheDto(
         SuatChieuDto suat, int tongSoHang, int tongSoCot,
         int soGheToiDa, int soPhutGiu,
         String thongBao,                // khác null khi suất không còn được bán (vd "Suất chiếu không khả dụng")
