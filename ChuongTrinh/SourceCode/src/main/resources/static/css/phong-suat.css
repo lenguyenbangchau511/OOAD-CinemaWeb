@@ -1,0 +1,15 @@
+/* Riêng cho các màn hình quản lý phòng chiếu / suất chiếu (18, 19, 20, 21). */
+.header-noi-bo nav a { font-weight: 600; }
+.thanh-cong-cu { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.thong-ke-ghe { display: flex; flex-wrap: wrap; gap: 8px; }
+.thong-ke-ghe .chip { font-size: 14px; }
+.che-do-sua .seat { cursor: pointer; }
+.che-do-sua .seat:disabled { cursor: not-allowed; opacity: .6; }
+.xem-truoc-so-do { max-height: 360px; overflow: auto; padding: 12px; border: 1px dashed var(--line); border-radius: 12px; background: #fffaf5; }
+.ngay-dieu-huong { display: flex; gap: 6px; }
+.ngay-dieu-huong .button { min-width: 44px; }
+.nhom-ngay { font-size: 15px; font-weight: 700; margin: 20px 0 8px; }
+.thanh-tien-do { height: 8px; border-radius: 999px; background: #f0e9e3; overflow: hidden; min-width: 80px; }
+.thanh-tien-do span { display: block; height: 100%; background: var(--primary); }
+dialog form { display: grid; gap: 12px; }
+dialog .hanh-dong { margin-top: 4px; }

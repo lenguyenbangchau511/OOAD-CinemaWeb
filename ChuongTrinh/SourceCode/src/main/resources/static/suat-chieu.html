@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Lịch suất chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/suat-chieu.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html">Phòng chiếu</a>
+            <a href="suat-chieu.html" aria-current="page">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+<main class="container main">
+    <div class="page-title"><div><h1>Danh sách suất chiếu</h1><p>Lịch chiếu theo ngày; mặc định là hôm nay.</p></div>
+        <a class="button primary" id="nut-them" href="#">+ Thêm suất chiếu</a></div>
+    <form class="filters" id="bo-loc" role="search">
+        <div class="field"><label for="ngay">Ngày chiếu</label>
+            <div class="ngay-dieu-huong"><button class="button secondary" type="button" id="ngay-truoc" aria-label="Ngày trước">‹</button><input id="ngay" type="date"><button class="button secondary" type="button" id="ngay-sau" aria-label="Ngày sau">›</button></div></div>
+        <div class="field"><label for="phim">Phim</label><select id="phim"><option value="">Tất cả phim</option></select></div>
+        <div class="field"><label for="phong">Phòng</label><select id="phong"><option value="">Tất cả phòng</option></select></div>
+        <div class="field"><label for="trang-thai">Trạng thái</label>
+            <select id="trang-thai"><option value="">Tất cả</option><option value="SAP_CHIEU">Sắp chiếu</option><option value="DANG_CHIEU">Đang chiếu</option><option value="KET_THUC">Đã kết thúc</option><option value="DA_HUY">Đã hủy</option></select></div>
+        <div class="actions"><button class="button primary" type="submit">Lọc</button></div>
+    </form>
+    <div class="alert" id="thong-bao" hidden></div>
+    <p class="muted" id="so-ket-qua" aria-live="polite"></p>
+    <div id="ket-qua"></div>
+</main>
+</body>
+</html>

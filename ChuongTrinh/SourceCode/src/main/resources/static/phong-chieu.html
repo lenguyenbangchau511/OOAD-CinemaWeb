@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Danh sách phòng chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/phong-chieu.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html" aria-current="page">Phòng chiếu</a>
+            <a href="suat-chieu.html">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+<main class="container main">
+    <div class="page-title">
+        <div><h1>Danh sách phòng chiếu</h1><p>Tra cứu phòng chiếu của rạp. Thêm, sửa, đóng phòng hiện là giao diện minh họa.</p></div>
+        <a class="button primary" href="phong-chieu-form.html">+ Thêm phòng</a>
+    </div>
+    <form class="filters" id="bo-loc" role="search">
+        <div class="field"><label for="tu-khoa">Mã hoặc tên phòng</label><input id="tu-khoa" type="search" placeholder="Ví dụ P01, VIP"></div>
+        <div class="field"><label for="loai-phong">Loại phòng</label>
+            <select id="loai-phong"><option value="">Tất cả</option><option value="STANDARD">Tiêu chuẩn</option><option value="VIP">VIP</option><option value="IMAX">IMAX</option><option value="3D">3D</option></select></div>
+        <div class="field"><label for="trang-thai">Trạng thái</label>
+            <select id="trang-thai"><option value="">Tất cả</option><option value="HOAT_DONG">Hoạt động</option><option value="BAO_TRI">Bảo trì</option><option value="DONG_CUA">Đóng cửa</option></select></div>
+        <div class="actions"><button class="button primary" type="submit">Tìm</button><button class="button secondary" type="button" id="xoa-loc">Xóa lọc</button></div>
+    </form>
+    <div class="alert" id="thong-bao" hidden></div>
+    <p class="muted" id="so-ket-qua" aria-live="polite"></p>
+    <div id="ket-qua"></div>
+</main>
+</body>
+</html>
