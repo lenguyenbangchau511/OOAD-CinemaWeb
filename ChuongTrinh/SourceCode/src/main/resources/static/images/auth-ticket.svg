@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 300">
+<circle cx="176" cy="143" r="124" fill="#FFF0E3"/><ellipse cx="171" cy="248" rx="115" ry="11" fill="#EEDDD0"/>
+<g transform="rotate(-13 205 132)"><rect x="123" y="89" width="165" height="84" rx="11" fill="#C45116"/><circle cx="123" cy="131" r="10" fill="#FFF0E3"/><circle cx="288" cy="131" r="10" fill="#FFF0E3"/><path d="M245 95V167" stroke="#FFDFC4" stroke-width="2" stroke-dasharray="4 5"/><text x="185" y="137" font-family="Arial,sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">TICKET</text></g>
+<g transform="rotate(-7 91 180)"><g fill="#F5C66F" stroke="#FFF0C4" stroke-width="3"><circle cx="64" cy="150" r="14"/><circle cx="86" cy="135" r="14"/><circle cx="108" cy="144" r="14"/><circle cx="76" cy="125" r="14"/><circle cx="101" cy="120" r="14"/><circle cx="118" cy="139" r="14"/><circle cx="53" cy="140" r="14"/></g><path d="M51 155H128L116 250H63Z" fill="white" stroke="#EEDDD0"/><path d="M58 155H70L77 250H65ZM84 155H97V250H84ZM115 155H128L116 250H106Z" fill="#D9793F"/><rect x="47" y="151" width="85" height="10" rx="5" fill="#C45116"/></g>
+<path d="M54 57l4 10 10 4-10 4-4 10-4-10-10-4 10-4ZM290 212l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z" fill="#D9793F"/>
+</svg>

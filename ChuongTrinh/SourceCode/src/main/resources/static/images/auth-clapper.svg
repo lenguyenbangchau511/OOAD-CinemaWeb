@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 300">
+<circle cx="176" cy="143" r="124" fill="#FFF0E3"/><ellipse cx="170" cy="250" rx="115" ry="11" fill="#EEDDD0"/>
+<rect x="55" y="109" width="174" height="125" rx="5" fill="#3D3029"/>
+<g transform="rotate(-12 55 101)"><rect x="55" y="73" width="174" height="28" rx="4" fill="#3D3029"/><path d="M63 73h18l15 28H78ZM107 73h18l15 28h-18ZM151 73h18l15 28h-18ZM195 73h18l15 28h-18Z" fill="#FFDFC4"/></g>
+<path d="M63 109h18l15 27H78ZM107 109h18l15 27h-18ZM151 109h18l15 27h-18ZM195 109h18l15 27h-18Z" fill="#FFDFC4"/><path d="M65 151H219M65 218H219M115 158V211M173 158V211" stroke="#EEDDD0" stroke-width="2" fill="none"/>
+<g transform="rotate(-9 105 222)"><rect x="44" y="199" width="123" height="53" rx="6" fill="#F5C66F"/><circle cx="44" cy="225" r="6" fill="#FFF0E3"/><circle cx="167" cy="225" r="6" fill="#FFF0E3"/><path d="M142 203V248" stroke="#C45116" stroke-dasharray="3 4"/><text x="95" y="229" font-family="Arial,sans-serif" font-weight="bold" font-size="14" fill="#3D3029" text-anchor="middle">CINEMA</text></g>
+<path d="M225 145H302L289 248H238Z" fill="#D9793F"/><path d="M232 145H244L253 248H241ZM258 145H270L273 248H261ZM284 145H296L286 248H276Z" fill="white"/><rect x="222" y="141" width="83" height="11" rx="5" fill="white" stroke="#EEDDD0"/><path d="M264 141V105L282 88" stroke="#C45116" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M264 130V121M264 111V105L270 99" stroke="white" stroke-width="6" fill="none"/>
+<path d="M43 89l3 9 9 3-9 3-3 9-3-9-9-3 9-3ZM292 68l3 9 9 3-9 3-3 9-3-9-9-3 9-3Z" fill="#D9793F"/>
+</svg>
