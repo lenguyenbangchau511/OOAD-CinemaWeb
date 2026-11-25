@@ -17,6 +17,7 @@ export async function goiApi(url) {
     if (res.ok) return data;
     const loi = new Error(data?.thongBao || 'Có lỗi xảy ra, vui lòng thử lại');
     loi.status = res.status;
+    loi.tuMayChu = Boolean(data?.thongBao);   // lỗi nghiệp vụ do backend trả về
     throw loi;
 }
 
@@ -25,7 +26,7 @@ export async function docDuLieu(url, duLieuMau) {
     try {
         return await goiApi(url);
     } catch (loi) {
-        if (loi.status === 401 || loi.status === 403) throw loi;
+        if (loi.tuMayChu || loi.status === 401 || loi.status === 403) throw loi;
         hienThongBao($('thong-bao'), 'Chưa kết nối được máy chủ, đang hiển thị dữ liệu mẫu.', 'thong-tin');
         return structuredClone(duLieuMau);
     }
