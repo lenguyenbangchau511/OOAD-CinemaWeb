@@ -35,6 +35,24 @@ public class QuanTriNguoiDungController {
         auth.hienTai(request.getSession(false), VaiTro.ADMIN);
         return ResponseEntity.ok().header("Cache-Control", "no-store").body(repo.taiKhoanNhanVien());
     }
+    public record TaoTaiKhoanRequest(String maNhanVien, String tenDangNhap, String email, String matKhau, String xacNhan) {}
+    public record ThayDoiRequest(String cu, String moi) {}
+    @PostMapping(value = "/tai-khoan", consumes = "application/json")
+    public ResponseEntity<Void> taoTaiKhoan(@RequestBody TaoTaiKhoanRequest body, HttpServletRequest request) {
+        auth.taoTaiKhoanNhanVien(body.maNhanVien(), body.tenDangNhap(), body.email(), body.matKhau(), body.xacNhan(), request.getSession(false));
+        return ResponseEntity.status(201).header("Cache-Control", "no-store").build();
+    }
+    @PostMapping(value = "/tai-khoan/{ma}/vai-tro", consumes = "application/json")
+    public ResponseEntity<Void> vaiTro(@PathVariable String ma, @RequestBody ThayDoiRequest body, HttpServletRequest request) {
+        auth.doiVaiTro(ma, body.cu(), body.moi(), request.getSession(false));
+        return ResponseEntity.noContent().header("Cache-Control", "no-store").build();
+    }
+    @PostMapping(value = "/tai-khoan/{ma}/trang-thai", consumes = "application/json")
+    public ResponseEntity<Void> trangThai(@PathVariable String ma, @RequestBody ThayDoiRequest body, HttpServletRequest request) {
+        auth.doiTrangThai(ma, body.cu(), body.moi(), request.getSession(false));
+        return ResponseEntity.noContent().header("Cache-Control", "no-store").build();
+    }
+
     // Kiểm tra trùng khi Admin tạo tài khoản mẫu, kể cả tài khoản khách hàng.
     @PostMapping("/kiem-tra-trung")
     public Map<String, Boolean> kiemTra(@RequestBody Map<String, String> body, HttpServletRequest request) {
