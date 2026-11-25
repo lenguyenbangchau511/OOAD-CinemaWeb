@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chi tiết phim nội bộ | MegaCine</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/phim-chi-tiet-noi-bo.js"></script>
+</head>
+<body class="mc-page phim-chi-tiet">
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+        <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+    </div>
+</header>
+
+<div class="container mc-admin">
+    <aside class="mc-sidebar">
+        <nav aria-label="Khu nội bộ">
+            <a href="noi-bo.html">Tổng quan</a>
+            <p>Vận hành rạp</p>
+            <a href="quan-ly-phim.html" aria-current="page">Quản lý phim</a>
+            <a href="suat-chieu.html">Suất chiếu</a>
+            <a href="phong-chieu.html">Phòng chiếu</a>
+            <a href="lich-su-ve.html">Tra cứu vé</a>
+            <p>Bán hàng</p>
+            <a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a>
+        </nav>
+    </aside>
+
+    <main class="main chau-page">
+        <div class="chau-actions" style="justify-content: space-between; align-items: center;">
+            <h1 id="tieu-de">Chi tiết phim</h1>
+            <div class="chau-actions">
+                <a href="quan-ly-phim.html" class="button secondary">← Quay lại danh sách</a>
+                <a id="nut-sua" href="phim-form.html" class="button primary" hidden>Chỉnh sửa phim</a>
+            </div>
+        </div>
+
+        <p id="thong-bao" role="status" hidden></p>
+
+        <section id="khung-chi-tiet" class="mc-card" style="padding: 24px;" hidden>
+            <div style="display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start;">
+                <div>
+                    <img id="poster" src="" alt="Poster phim" style="width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 12px; border: 1px solid #EEDDD0; background: #FFDFC4;">
+                </div>
+                <div>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap;">
+                        <span id="ma-phim" class="mc-pill"></span>
+                        <span id="do-tuoi" class="mc-pill"></span>
+                        <span id="trang-thai" class="mc-pill"></span>
+                    </div>
+                    <h2 id="ten-phim" style="margin: 0 0 16px; font-size: 24px;"></h2>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+                        <div><small style="color: #75665C; display: block;">Đạo diễn</small><strong id="dao-dien">—</strong></div>
+                        <div><small style="color: #75665C; display: block;">Diễn viên</small><strong id="dien-vien">—</strong></div>
+                        <div><small style="color: #75665C; display: block;">Thể loại</small><strong id="the-loai">—</strong></div>
+                        <div><small style="color: #75665C; display: block;">Thời lượng</small><strong id="thoi-luong">—</strong></div>
+                        <div><small style="color: #75665C; display: block;">Ngôn ngữ</small><strong id="ngon-ngu">—</strong></div>
+                        <div><small style="color: #75665C; display: block;">Ngày khởi chiếu</small><strong id="ngay-khoi-chieu">—</strong></div>
+                    </div>
+
+                    <div style="border-top: 1px solid #EEDDD0; padding-top: 16px;">
+                        <small style="color: #75665C; display: block; margin-bottom: 6px;">Nội dung tóm tắt</small>
+                        <p id="mo-ta" style="margin: 0; line-height: 1.6;"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

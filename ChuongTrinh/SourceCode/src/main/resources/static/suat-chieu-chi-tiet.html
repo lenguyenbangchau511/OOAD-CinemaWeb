@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Chi tiết suất chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/suat-chieu-chi-tiet.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html">Phòng chiếu</a>
+            <a href="suat-chieu.html" aria-current="page">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+
+<main class="container main">
+    <div class="page-title">
+        <div>
+            <h1 id="tieu-de">Chi tiết suất chiếu</h1>
+            <p>Thông tin suất chiếu và tình trạng ghế thực tế từ CSDL.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a class="button secondary" href="suat-chieu.html">← Danh sách suất</a>
+            <a id="nut-sua" class="button secondary" href="#">Sửa suất</a>
+            <button id="nut-huy" class="button primary" type="button" hidden>Hủy suất chiếu</button>
+        </div>
+    </div>
+
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <section id="thong-tin-suat" class="filters" style="padding: 20px; margin-bottom: 24px;" hidden>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;">
+            <div><small class="muted">Mã suất</small><div id="ma-suat" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Phim</small><div id="ten-phim" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Phòng chiếu</small><div id="ten-phong" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Thời gian</small><div id="thoi-gian" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Tình hình ghế</small><div id="thong-ke-ghe" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Trạng thái</small><div id="trang-thai"></div></div>
+        </div>
+    </section>
+
+    <section id="khung-so-do" hidden>
+        <h2>Sơ đồ ghế theo suất</h2>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0 20px; font-size: 14px;">
+            <span>⬜ Trống</span>
+            <span>🟧 Đang giữ</span>
+            <span>🟥 Đã bán</span>
+            <span>⬛ Bảo trì</span>
+        </div>
+        <div id="so-do-ghe" style="background: #fff; border: 1px solid #EEDDD0; border-radius: 12px; padding: 24px; overflow-x: auto;"></div>
+    </section>
+</main>
+</body>
+</html>

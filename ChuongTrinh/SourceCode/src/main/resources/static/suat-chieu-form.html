@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Thêm / Sửa suất chiếu</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/suat-chieu-form.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+        <nav aria-label="Menu quản lý">
+            <a href="phong-chieu.html">Phòng chiếu</a>
+            <a href="suat-chieu.html" aria-current="page">Suất chiếu</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+    </div>
+</header>
+
+<main class="container main">
+    <div class="page-title">
+        <div>
+            <h1 id="tieu-de">Thêm suất chiếu mới</h1>
+            <p>Chọn phim, phòng chiếu, ngày giờ; hệ thống tự tính giờ kết thúc và kiểm tra trùng lịch.</p>
+        </div>
+        <a class="button secondary" href="suat-chieu.html">← Quay lại lịch chiếu</a>
+    </div>
+
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <form id="form-suat" class="filters" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding: 24px;">
+        <div class="field">
+            <label for="phim">Phim chiếu *</label>
+            <select id="phim" required>
+                <option value="">-- Chọn phim --</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="phong">Phòng chiếu *</label>
+            <select id="phong" required>
+                <option value="">-- Chọn phòng chiếu --</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="ngay">Ngày chiếu *</label>
+            <input id="ngay" type="date" required>
+        </div>
+
+        <div class="field">
+            <label for="gio-bat-dau">Giờ bắt đầu *</label>
+            <input id="gio-bat-dau" type="time" value="19:00" required>
+        </div>
+
+        <div class="field">
+            <label for="gio-ket-thuc">Giờ kết thúc (tự động + 15p dọn phòng)</label>
+            <input id="gio-ket-thuc" type="time" readonly style="background: #F5EFEA; font-weight: 600;">
+        </div>
+
+        <div class="field">
+            <label for="trang-thai">Trạng thái suất</label>
+            <select id="trang-thai">
+                <option value="SAP_CHIEU">Sắp chiếu</option>
+                <option value="DANG_CHIEU">Đang chiếu</option>
+                <option value="DA_HUY">Đã hủy</option>
+            </select>
+        </div>
+
+        <div style="grid-column: 1 / -1; display: flex; gap: 12px; justify-content: flex-end; border-top: 1px solid #EEDDD0; padding-top: 16px;">
+            <a class="button secondary" href="suat-chieu.html">Hủy</a>
+            <button class="button primary" type="submit">Lưu suất chiếu</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>
