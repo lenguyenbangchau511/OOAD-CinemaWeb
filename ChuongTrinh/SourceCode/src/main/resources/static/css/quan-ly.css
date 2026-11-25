@@ -1,0 +1,150 @@
+/* CSS dùng chung cho các màn hình (24, 25, 28, 36, 37, 39, 45).
+   Dùng kèm css/home.css. Tên class đồng bộ. */
+:root {
+    --ok: #2e7d4f; --ok-bg: #e6f4ea;
+    --warn: #8a5a00; --warn-bg: #fff3d6;
+    --bad: #b3261e; --bad-bg: #fde8e6;
+    --mau-ve: #c45116;
+    --mau-fnb: #1f8fa8;
+}
+
+h3 { margin: 0; font-size: 17px; }
+select, textarea { font: inherit; }
+.header-noi-bo nav a { font-weight: 600; }
+.page-title { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.page-title p, .muted { font-size: 14px; color: var(--muted); }
+.breadcrumb { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.breadcrumb a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== Thông báo và chip trạng thái ===== */
+.alert { padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 16px; }
+.alert.loi { background: var(--bad-bg); color: var(--bad); }
+.alert.thanh-cong { background: var(--ok-bg); color: var(--ok); }
+.alert.thong-tin { background: var(--accent); }
+.alert a { font-weight: 700; text-decoration: underline; }
+.chip { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.chip.tot { background: var(--ok-bg); color: var(--ok); }
+.chip.cho { background: var(--warn-bg); color: var(--warn); }
+.chip.xau { background: var(--bad-bg); color: var(--bad); }
+.chip.trung-tinh { background: #f0e9e3; color: var(--muted); }
+
+/* ===== Thẻ ===== */
+.card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.card + .card { margin-top: 16px; }
+.card h2 { font-size: 18px; margin-bottom: 14px; }
+.dl { display: grid; grid-template-columns: 180px 1fr; gap: 8px 16px; margin: 0; }
+.dl dt { color: var(--muted); }
+.dl dd { margin: 0; }
+.hanh-dong { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+
+/* ===== Biểu mẫu và bộ lọc ===== */
+.form-hep { max-width: 880px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 14px; font-weight: 600; }
+.field input, .field select, .field textarea { min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); color: var(--text); width: 100%; }
+.field input:disabled, .field select:disabled, .field textarea:disabled, .field input[readonly] { background: #f6eee7; color: var(--text); }
+.field .hint { font-size: 13px; color: var(--muted); }
+.field .error { font-size: 13px; color: var(--bad); }
+.field.invalid input, .field.invalid select, .field.invalid textarea { border-color: var(--bad); }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; align-items: end; padding: 16px; background: var(--white); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 20px; }
+.filters .actions { display: flex; gap: 8px; }
+.filters .actions .button { white-space: nowrap; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.form-grid h3 { grid-column: 1 / -1; padding-top: 16px; border-top: 1px solid var(--line); }
+.form-grid h3:first-child { padding-top: 0; border-top: 0; }
+
+/* ===== Bảng ===== */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--white); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background: #fbf3ec; font-size: 13px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tbody tr:hover { background: #fffaf5; }
+tfoot td { font-weight: 700; background: #fbf3ec; }
+td.so, th.so { text-align: right; white-space: nowrap; }
+td .phu { display: block; margin-top: 2px; font-size: 13px; color: var(--muted); }
+.row-actions { display: flex; gap: 6px; }
+.button.nho { min-height: 36px; padding: 4px 12px; font-size: 14px; }
+.button.nguy-hiem { color: var(--bad); }
+.tom-tat { font-size: 14px; color: var(--muted); margin-bottom: 10px; }
+.tom-tat strong { color: var(--text); }
+.trong { padding: 38px 14px; text-align: center; border: 1px dashed var(--line); border-radius: 12px; background: var(--white); }
+.trong h2 { font-size: 18px; margin-bottom: 6px; }
+.trong p { margin-bottom: 16px; }
+
+/* Tiêu đề cột có sắp xếp: trông như chữ tiêu đề, có mũi tên nhỏ */
+th button { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border-radius: 6px; padding: 2px 6px; margin: -2px -6px; }
+th button:hover { background: var(--accent); color: var(--text); }
+th button:focus-visible { outline: 2px solid var(--primary); }
+th button .mui-ten { font-size: 12px; color: var(--primary); }
+
+/* Số tiền: số đậm, ký hiệu ₫ nhỏ và nhạt */
+.tien { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 16px; }
+.tien small { margin-left: 3px; font-size: 13px; font-weight: 500; color: var(--muted); }
+
+/* ===== Tab ===== */
+.tabs { flex-wrap: wrap; margin-bottom: 20px; }
+.tab-panel { display: grid; gap: 16px; }
+
+/* ===== Báo cáo: ô số liệu và biểu đồ cột ===== */
+.o-so-lieu { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.o-so-lieu .card + .card { margin-top: 0; }
+.o-so-lieu .gia-tri { font-size: 24px; font-weight: 700; margin-top: 4px; }
+.o-so-lieu .noi-bat { background: var(--accent); }
+.chu-giai { display: flex; gap: 16px; font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+.cham { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+.bieu-do { display: flex; align-items: flex-end; gap: 12px; height: 200px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.cot { flex: 1 0 36px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+.cot span { width: 60%; max-width: 44px; }
+.nhan-cot { display: flex; gap: 12px; font-size: 13px; color: var(--muted); padding-top: 6px; }
+.nhan-cot span { flex: 1 0 36px; text-align: center; }
+
+/* ===== Máy tính bảng và điện thoại ===== */
+@media (max-width: 950px) {
+    .o-so-lieu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 720px) {
+    .form-grid { grid-template-columns: minmax(0, 1fr); }
+    .dl { grid-template-columns: 1fr; }
+}
+
+/* Cột căn giữa và cột không xuống dòng */
+th.giua, td.giua { text-align: center; }
+td.khong-xuong-dong { white-space: nowrap; }
+.so-uu-tien { display: inline-grid; place-items: center; min-width: 28px; height: 28px; border-radius: 999px; background: var(--accent); font-weight: 700; font-size: 14px; }
+
+/* Ô nhập nhiều dòng và gợi ý cảnh báo */
+.field textarea { min-height: 88px; resize: vertical; }
+.field .hint.canh-bao { color: var(--warn); font-weight: 600; }
+
+/* Hồ sơ khách hàng: điểm tăng/giảm, khung chỉnh sửa */
+.tang { color: var(--ok); font-weight: 700; }
+.giam { color: var(--bad); font-weight: 700; }
+.diem-lon { font-size: 28px; font-weight: 700; color: var(--primary); line-height: 1.2; }
+.thanh-tab { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+.thanh-tab .tabs { margin-bottom: 0; }
+
+/* Báo cáo: khung biểu đồ, cột rê chuột */
+.bieu-do { padding: 0 4px; background: repeating-linear-gradient(to top, transparent 0 49px, #f3e8de 49px 50px); }
+.cot span:first-child { border-radius: 4px 4px 0 0; }
+.cot:hover span { filter: brightness(.9); }
+.ghi-chu-mau { font-size: 14px; color: var(--warn); background: var(--warn-bg); padding: 8px 12px; border-radius: var(--radius); }
+
+/* ===== Khung MegaCine ===== */
+/* Tô sáng mục menu trái của trang đang mở */
+.mc-sidebar [aria-current="page"] { color: #8d390e; background: var(--accent); font-weight: 700; }
+
+/* Sửa: số trong ô báo cáo dùng cỡ chữ lớn của ô; điểm đầu hồ sơ to và màu cam */
+.o-so-lieu .gia-tri .tien { font-size: inherit; }
+.o-so-lieu .gia-tri .tien small { font-size: 15px; }
+.page-title .diem-lon { font-size: 28px; font-weight: 700; color: var(--primary); }
+
+/* Bảng gọn (mc-table) nằm trong khung MegaCine */
+.mc-page table { font-size: 14px; }
+.mc-page th, .mc-page td { padding: 10px; }
+.mc-page th { background: #fff6ed; font-size: 12px; }
+.mc-page .tien { font-size: 15px; }
+.mc-page .row-actions { flex-wrap: wrap; gap: 4px 12px; min-width: 110px; }
+.mc-page .row-actions .button.nho { min-height: auto; padding: 0; border: 0; background: transparent; color: var(--primary-hover); font-weight: 600; }
+.mc-page .row-actions .button.nho:hover { background: transparent; text-decoration: underline; }
+.mc-page .row-actions .button.nguy-hiem { color: var(--bad); }

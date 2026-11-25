@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hồ sơ khách hàng | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/khach-hang-ho-so.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html" aria-current="page">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page">
+    <p class="breadcrumb"><a href="khach-hang.html" id="ve-danh-sach">Khách hàng</a> / Hồ sơ</p>
+    <div class="page-title">
+        <div><h1 id="ten-kh">Hồ sơ khách hàng</h1><p id="phu-kh"></p></div>
+        <div><p class="muted">Điểm tích lũy</p><p class="diem-lon" id="diem-dau">—</p></div>
+    </div>
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <div id="noi-dung" hidden>
+        <div class="thanh-tab">
+            <div class="tabs" role="tablist" aria-label="Hồ sơ khách hàng">
+                <button type="button" role="tab" id="tab-thong-tin" aria-controls="pn-thong-tin" aria-selected="true">Thông tin cá nhân</button>
+                <button type="button" role="tab" id="tab-diem" aria-controls="pn-diem" aria-selected="false">Điểm thành viên</button>
+                <button type="button" role="tab" id="tab-lich-su" aria-controls="pn-lich-su" aria-selected="false">Lịch sử biến động điểm</button>
+            </div>
+            <a class="button secondary" id="nut-lich-su-ve" href="lich-su-ve.html">Lịch sử mua vé</a>
+        </div>
+
+        <!-- Tab 1: Thông tin cá nhân -->
+        <section class="tab-panel" id="pn-thong-tin" role="tabpanel">
+            <div class="card" id="khung-xem">
+                <dl class="dl" id="thong-tin"></dl>
+                <div class="hanh-dong"><button class="button primary" type="button" id="nut-sua">Chỉnh sửa hồ sơ</button></div>
+            </div>
+            <form class="card" id="form-sua" novalidate hidden>
+                <h2>Chỉnh sửa hồ sơ</h2>
+                <div class="form-grid">
+                    <div class="field"><label for="sua-ho-ten">Họ và tên *</label><input id="sua-ho-ten" maxlength="100"></div>
+                    <div class="field"><label for="sua-sdt">Số điện thoại *</label><input id="sua-sdt" type="tel" maxlength="10" inputmode="numeric"></div>
+                    <div class="field full"><label for="sua-email">Email *</label><input id="sua-email" type="email" maxlength="255"></div>
+                </div>
+                <p class="muted">Không chỉnh sửa điểm tích lũy, lịch sử giao dịch, vai trò hoặc trạng thái tài khoản tại đây.</p>
+                <div class="hanh-dong">
+                    <button class="button secondary" type="button" id="huy-sua">Hủy</button>
+                    <button class="button primary" type="submit">Lưu thay đổi</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Tab 2: Điểm thành viên -->
+        <section class="tab-panel" id="pn-diem" role="tabpanel" hidden>
+            <div class="o-so-lieu" id="o-diem"></div>
+            <p class="muted">Mỗi 10.000 ₫ thanh toán thành công được tích 1 điểm; 1 điểm quy đổi 1.000 ₫. Điểm chỉ thay đổi qua giao dịch, không chỉnh sửa trực tiếp.</p>
+        </section>
+
+        <!-- Tab 3: Lịch sử biến động điểm -->
+        <section class="tab-panel" id="pn-lich-su" role="tabpanel" hidden>
+            <form class="filters" id="loc-gd">
+                <div class="field"><label for="loai-gd">Loại biến động</label>
+                    <select id="loai-gd"><option value="">Tất cả</option><option value="TANG">Cộng điểm</option><option value="GIAM">Trừ điểm</option></select></div>
+            </form>
+            <div id="lich-su-diem"></div>
+        </section>
+    </div>
+</main></div>
+</body>
+</html>

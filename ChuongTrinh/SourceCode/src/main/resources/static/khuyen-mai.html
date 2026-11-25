@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Danh sách khuyến mãi | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/khuyen-mai.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html" aria-current="page">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page">
+    <div class="page-title">
+        <div>
+            <h1>Danh sách khuyến mãi</h1>
+            <p>Chương trình, mức giảm, điều kiện, thời gian hiệu lực và lượt sử dụng.</p>
+        </div>
+        <a class="button primary" href="khuyen-mai-form.html">+ Thêm khuyến mãi</a>
+    </div>
+
+    <form class="filters" id="bo-loc" role="search">
+        <div class="field"><label for="tu-khoa">Mã hoặc tên chương trình</label><input id="tu-khoa" type="search" placeholder="Ví dụ KM01, thành viên"></div>
+        <div class="field"><label for="loc-hinh-thuc">Hình thức giảm</label><select id="loc-hinh-thuc"></select></div>
+        <div class="field"><label for="loc-pham-vi">Phạm vi</label><select id="loc-pham-vi"></select></div>
+        <div class="field"><label for="loc-trang-thai">Trạng thái</label><select id="loc-trang-thai"></select></div>
+        <div class="field"><label for="tu-ngay">Hiệu lực từ ngày</label><input id="tu-ngay" type="date"></div>
+        <div class="field"><label for="den-ngay">Đến ngày</label><input id="den-ngay" type="date"></div>
+        <div class="actions">
+            <button class="button primary" type="submit">Tìm kiếm</button>
+            <button class="button secondary" type="button" id="xoa-loc">Xóa lọc</button>
+        </div>
+    </form>
+
+    <div class="alert" id="thong-bao" hidden></div>
+    <div id="ket-qua"></div>
+</main></div>
+</body>
+</html>
