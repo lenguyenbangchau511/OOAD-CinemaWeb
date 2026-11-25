@@ -3,6 +3,7 @@ package com.cinema.service;
 import com.cinema.dto.DichVuDto;
 import com.cinema.dto.KetQuaDatVeDto;
 import com.cinema.dto.LichSuVeDto;
+import com.cinema.dto.SoatVeDto;
 import com.cinema.entity.ChiTietDichVu;
 import com.cinema.entity.DonHang;
 import com.cinema.entity.Ghe;
@@ -33,6 +34,7 @@ import com.cinema.util.ThoiGian;
 import com.cinema.util.TimKiem;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -45,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Lớp Ve: phát hành vé + mã QR (UC5.8), tra cứu lịch sử vé (UC5.9), xem chi tiết vé / đơn hàng (UC5.10). */
@@ -63,11 +66,12 @@ public class VeService {
     private final PhongChieuRepository phongRepo;
     private final LienKetModuleKhac lienKet;
     private final CauHinhRap cauHinh;
+    private final JdbcTemplate jdbc;
 
     public VeService(VeRepository veRepo, DonHangRepository donHangRepo, ChiTietDichVuRepository dichVuRepo,
                      ThanhToanRepository thanhToanRepo, GheSuatChieuRepository gheSuatRepo, GheRepository gheRepo,
                      SuatChieuRepository suatRepo, PhongChieuRepository phongRepo,
-                     LienKetModuleKhac lienKet, CauHinhRap cauHinh) {
+                     LienKetModuleKhac lienKet, CauHinhRap cauHinh, JdbcTemplate jdbc) {
         this.veRepo = veRepo;
         this.donHangRepo = donHangRepo;
         this.dichVuRepo = dichVuRepo;
@@ -78,6 +82,7 @@ public class VeService {
         this.phongRepo = phongRepo;
         this.lienKet = lienKet;
         this.cauHinh = cauHinh;
+        this.jdbc = jdbc;
     }
 
     // ------------------------------------------------------------------ UC5.8
@@ -319,4 +324,90 @@ public class VeService {
             throw new NghiepVuException(HttpStatus.FORBIDDEN, "KHONG_CO_QUYEN", "Bạn không có quyền xem đơn hàng này");
         }
     }
+
+    // ------------------------------------------------------------ UC5.11: SOAT VE
+    /** Tra cứu vé bằng mã vé hoặc chuỗi QR. Chỉ nhân viên/quản lý được sử dụng màn hình soát vé. */
+    @Transactional(readOnly = true)
+    public SoatVeDto traCuuSoatVe(NguoiDung nd, String maVeHoacQr) {
+        kiemTraQuyenSoatVe(nd);
+        String ma = maVeHoacQr == null ? "" : maVeHoacQr.trim();
+        if (ma.isEmpty()) {
+            throw new NghiepVuException(HttpStatus.BAD_REQUEST, "THIEU_MA_VE", "Vui lòng nhập mã vé hoặc mã QR");
+        }
+        Ve ve = veRepo.findFirstByMaVeIgnoreCaseOrMaQRIgnoreCase(ma, ma)
+                .orElseThrow(() -> new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_VE",
+                        "Không tìm thấy vé. Vui lòng kiểm tra lại mã vé hoặc mã QR."));
+        return taoThongTinSoatVe(ve);
+    }
+
+    /** Check-in trong một transaction; khóa dòng vé và chỉ đổi trạng thái một lần. */
+    @Transactional
+    public SoatVeDto xacNhanCheckIn(NguoiDung nd, String maVe) {
+        kiemTraQuyenSoatVe(nd);
+        Ve ve = veRepo.khoaTheoMaVeHoacQr(maVe == null ? "" : maVe.trim())
+                .orElseThrow(() -> new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_VE",
+                        "Không tìm thấy vé. Vui lòng tra cứu lại."));
+
+        if (ve.getTrangThai() == TrangThaiVe.DA_SU_DUNG) {
+            String luc = ve.getThoiDiemCheckIn() == null ? "" : " lúc " + ve.getThoiDiemCheckIn().toString().replace('T', ' ');
+            throw new NghiepVuException(HttpStatus.CONFLICT, "VE_DA_SOAT", "Vé đã được check-in" + luc + ", không thể xác nhận lại.");
+        }
+        if (ve.getTrangThai() != TrangThaiVe.CHUA_SU_DUNG) {
+            throw new NghiepVuException(HttpStatus.CONFLICT, "VE_KHONG_HOP_LE",
+                    "Vé đã hủy, đã đổi hoặc hết hạn; không thể cho khách vào rạp.");
+        }
+
+        DonHang don = donHangRepo.findById(ve.getMaDonHang()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_DON", "Không tìm thấy đơn hàng của vé."));
+        if (don.getTrangThai() != TrangThaiDonHang.DA_THANH_TOAN) {
+            throw new NghiepVuException(HttpStatus.CONFLICT, "DON_CHUA_THANH_TOAN",
+                    "Đơn hàng chưa thanh toán thành công; vé chưa đủ điều kiện sử dụng.");
+        }
+
+        ve.setTrangThai(TrangThaiVe.DA_SU_DUNG);
+        ve.setThoiDiemCheckIn(ThoiGian.bayGio());
+        veRepo.saveAndFlush(ve);
+        return taoThongTinSoatVe(ve);
+    }
+
+    private void kiemTraQuyenSoatVe(NguoiDung nd) {
+        if (nd == null || !nd.laNhanVienHoacQuanLy()) {
+            throw new NghiepVuException(HttpStatus.FORBIDDEN, "KHONG_CO_QUYEN",
+                    "Chỉ nhân viên hoặc quản lý được phép soát vé.");
+        }
+    }
+
+    private SoatVeDto taoThongTinSoatVe(Ve ve) {
+        DonHang don = donHangRepo.findById(ve.getMaDonHang()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_DON", "Không tìm thấy đơn hàng của vé."));
+        GheSuatChieu gs = gheSuatRepo.findById(ve.getMaGheSuat()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_GHE", "Không tìm thấy thông tin ghế của vé."));
+        SuatChieu suat = suatRepo.findById(gs.getMaSuat()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_SUAT", "Không tìm thấy suất chiếu của vé."));
+        Ghe ghe = gheRepo.findById(gs.getMaGhe()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_GHE", "Không tìm thấy thông tin ghế của vé."));
+        PhongChieu phong = phongRepo.findById(suat.getMaPhong()).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "KHONG_TIM_THAY_PHONG", "Không tìm thấy phòng chiếu của vé."));
+        PhimTomTat phim = lienKet.layPhim(List.of(suat.getMaPhim())).get(suat.getMaPhim());
+
+        String tenKhach = "Khách mua tại quầy";
+        if (don.getMaKhachHang() != null) {
+            List<String> ten = jdbc.query("SELECT hoTen FROM KHACHHANG WHERE maKhachHang = ?",
+                    (rs, row) -> rs.getString(1), don.getMaKhachHang());
+            if (!ten.isEmpty() && ten.get(0) != null) tenKhach = ten.get(0);
+        }
+
+        boolean donDaThanhToan = don.getTrangThai() == TrangThaiDonHang.DA_THANH_TOAN;
+        boolean coTheSoat = donDaThanhToan && ve.getTrangThai() == TrangThaiVe.CHUA_SU_DUNG;
+        String lyDo = coTheSoat ? null : (!donDaThanhToan
+                ? "Đơn hàng chưa thanh toán thành công."
+                : ve.getTrangThai() == TrangThaiVe.DA_SU_DUNG
+                    ? "Vé đã được sử dụng trước đó."
+                    : "Vé đã hủy, đã đổi hoặc hết hạn.");
+
+        return new SoatVeDto(ve.getMaVe(), ve.getMaQR(), phim == null ? "(Không rõ tên phim)" : phim.tenPhim(),
+                suat.getNgayChieu(), suat.getGioBatDau(), phong.getTenPhong(), ghe.getTenGhe(), tenKhach,
+                ve.getTrangThai().name(), ve.getThoiDiemCheckIn(), coTheSoat, lyDo);
+    }
+
 }

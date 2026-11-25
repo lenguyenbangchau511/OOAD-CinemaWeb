@@ -3,6 +3,7 @@ package com.cinema.entity;
 import com.cinema.enums.TrangThaiVe;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /** Lớp Ve (báo cáo 3.7.3.11) - bảng VE. Mỗi vé gắn một ghế của một suất chiếu. */
 @Entity
@@ -31,6 +32,9 @@ public class Ve {
     @Column(name = "trangThai")
     private TrangThaiVe trangThai;
 
+    @Column(name = "thoiDiemCheckIn")
+    private LocalDateTime thoiDiemCheckIn;
+
     public String getMaVe() { return maVe; }
     public void setMaVe(String maVe) { this.maVe = maVe; }
     public String getMaDonHang() { return maDonHang; }
@@ -45,4 +49,6 @@ public class Ve {
     public void setMaQR(String maQR) { this.maQR = maQR; }
     public TrangThaiVe getTrangThai() { return trangThai; }
     public void setTrangThai(TrangThaiVe trangThai) { this.trangThai = trangThai; }
+    public LocalDateTime getThoiDiemCheckIn() { return thoiDiemCheckIn; }
+    public void setThoiDiemCheckIn(LocalDateTime thoiDiemCheckIn) { this.thoiDiemCheckIn = thoiDiemCheckIn; }
 }
