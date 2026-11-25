@@ -15,7 +15,14 @@
 <header data-customer-header></header>
 
 <main class="container main">
-    <p class="breadcrumb"><a href="./">Trang chủ</a> / Chọn ghế</p>
+    <ol class="mc-steps" aria-label="Tiến trình đặt vé">
+        <li class="done"><a id="buoc-chon-suat" href="./"><span>1</span>Chọn suất</a></li>
+        <li class="current" aria-current="step"><span>2</span>Chọn ghế</li>
+        <li><span>3</span>Bắp nước</li>
+        <li><span>4</span>Xác nhận</li>
+        <li><span>5</span>Thanh toán</li>
+    </ol>
+    <p class="breadcrumb"><a href="./">Trang chủ</a> / <a id="link-chon-suat" href="./">Chọn suất</a> / Chọn ghế</p>
     <div class="page-title">
         <div>
             <h1 id="tieu-de-phim">Chọn ghế</h1>
@@ -53,6 +60,7 @@
             <div class="dong-tien tong"><span>Tạm tính</span><span id="tam-tinh">0 ₫</span></div>
             <p class="muted">Giá cuối cùng được tính ở bước xác nhận đơn (đồ ăn, khuyến mãi, điểm thưởng).</p>
             <div class="hanh-dong">
+                <a class="button secondary" id="nut-quay-lai" href="./">Về chọn suất</a>
                 <button type="button" class="button secondary" id="nut-huy" disabled>Hủy giữ ghế</button>
                 <button type="button" class="button primary" id="nut-tiep-tuc" disabled>Tiếp tục</button>
             </div>

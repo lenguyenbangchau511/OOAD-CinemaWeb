@@ -137,7 +137,7 @@ function dialog(title,body,submitText,callback){
 const details=entries=>`<div class="details">${entries.map(([k,v])=>`<div><small>${k}</small><p>${val(v)}</p></div>`).join('')}</div>`;
 async function action(a,i,button){
     const r=rows[i];if(!r)return;
-    if(a==='history'&&me.vaiTro!=='ADMIN'){location.href='lich-su-ve.html?maKhachHang='+encodeURIComponent(r.maKhachHang);return;}
+    if(a==='history'&&me.vaiTro!=='ADMIN'){location.href='tra-cuu-ve.html?maKhachHang='+encodeURIComponent(r.maKhachHang);return;}
     if(a==='manage'&&me.vaiTro==='ADMIN'){location.href='tai-khoan.html?maNhanVien='+encodeURIComponent(r.maNhanVien)+(r.tenDangNhap?'':'&tao=1');return;}
     if(a==='profile'){
         const target=screen==='customers'?linkedPages.customerProfile:linkedPages.employeeProfile;

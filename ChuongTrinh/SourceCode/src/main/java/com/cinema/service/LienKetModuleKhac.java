@@ -35,13 +35,17 @@ public class LienKetModuleKhac {
 
     // ---------------------------------------------------------------- Phim
     public record PhimTomTat(String maPhim, String tenPhim, String gioiHanDoTuoi, String poster,
-                             int thoiLuong, String theLoai) {}
+                             int thoiLuong, String theLoai, String trangThai) {
+        public boolean conBanVe() {
+            return !"NGUNG_CHIEU".equals(trangThai);
+        }
+    }
 
-    private static final String SQL_PHIM = "SELECT maPhim, tenPhim, gioiHanDoTuoi, poster, thoiLuong, theLoai FROM PHIM";
+    private static final String SQL_PHIM = "SELECT maPhim, tenPhim, gioiHanDoTuoi, poster, thoiLuong, theLoai, trangThai FROM PHIM";
 
     private PhimTomTat docPhim(java.sql.ResultSet rs, int i) throws java.sql.SQLException {
         return new PhimTomTat(rs.getString("maPhim"), rs.getString("tenPhim"), rs.getString("gioiHanDoTuoi"),
-                rs.getString("poster"), rs.getInt("thoiLuong"), rs.getString("theLoai"));
+                rs.getString("poster"), rs.getInt("thoiLuong"), rs.getString("theLoai"), rs.getString("trangThai"));
     }
 
     public Map<String, PhimTomTat> layPhim(Collection<String> dsMaPhim) {

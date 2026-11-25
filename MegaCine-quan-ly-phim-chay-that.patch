@@ -1,0 +1,392 @@
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/controller/QuanLyPhimController.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/controller/QuanLyPhimController.java
+index 1299524..5c13462 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/controller/QuanLyPhimController.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/controller/QuanLyPhimController.java
+@@ -5,8 +5,12 @@ import com.cinema.exception.NghiepVuException;
+ import com.cinema.util.PhienDangNhap;
+ import com.cinema.util.TimKiem;
+ import jakarta.servlet.http.HttpSession;
++import java.time.LocalDate;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Set;
++import org.springframework.dao.DataIntegrityViolationException;
++import org.springframework.dao.DuplicateKeyException;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.jdbc.core.JdbcTemplate;
+ import org.springframework.web.bind.annotation.*;
+@@ -40,4 +44,92 @@ public class QuanLyPhimController {
+         return jdbc.queryForList("SELECT * FROM PHIM WHERE maPhim = ?", maPhim).stream().findFirst()
+                 .orElseThrow(() -> new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy phim"));
+     }
++
++    @PostMapping
++    @ResponseStatus(HttpStatus.CREATED)
++    public void them(@RequestBody PhimForm p, HttpSession session) {
++        dangNhap.yeuCau(session, VaiTro.QUAN_LY);
++        String maPhim = chuoi(p.maPhim(), "Mã phim", 10, true);
++        if (!maPhim.matches("[A-Za-z0-9_-]+")) throw khongHopLe("Mã phim chỉ gồm chữ, số, dấu gạch ngang hoặc gạch dưới");
++        try {
++            jdbc.update("""
++                    INSERT INTO PHIM (tenPhim, theLoai, thoiLuong, daoDien, dienVien, ngayKhoiChieu,
++                                      quocGia, noiDung, poster, gioiHanDoTuoi, trangThai, maPhim)
++                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
++                    """, duLieu(p, maPhim));
++        } catch (DuplicateKeyException e) {
++            throw new NghiepVuException(HttpStatus.CONFLICT, "Mã phim đã tồn tại");
++        }
++    }
++
++    @PutMapping("/{maPhim}")
++    @ResponseStatus(HttpStatus.NO_CONTENT)
++    public void sua(@PathVariable String maPhim, @RequestBody PhimForm p, HttpSession session) {
++        dangNhap.yeuCau(session, VaiTro.QUAN_LY);
++        int soDong = jdbc.update("""
++                UPDATE PHIM SET tenPhim = ?, theLoai = ?, thoiLuong = ?, daoDien = ?, dienVien = ?,
++                                ngayKhoiChieu = ?, quocGia = ?, noiDung = ?, poster = ?,
++                                gioiHanDoTuoi = ?, trangThai = ?
++                WHERE maPhim = ?
++                """, duLieu(p, maPhim));
++        if (soDong == 0) chiTiet(maPhim, session);
++    }
++
++    @PatchMapping("/{maPhim}/ngung-chieu")
++    @ResponseStatus(HttpStatus.NO_CONTENT)
++    public void ngungChieu(@PathVariable String maPhim, HttpSession session) {
++        dangNhap.yeuCau(session, VaiTro.QUAN_LY);
++        int soDong = jdbc.update("UPDATE PHIM SET trangThai = 'NGUNG_CHIEU' WHERE maPhim = ?", maPhim);
++        if (soDong == 0) chiTiet(maPhim, session);
++    }
++
++    @DeleteMapping("/{maPhim}")
++    @ResponseStatus(HttpStatus.NO_CONTENT)
++    public void xoa(@PathVariable String maPhim, HttpSession session) {
++        dangNhap.yeuCau(session, VaiTro.QUAN_LY);
++        try {
++            if (jdbc.update("DELETE FROM PHIM WHERE maPhim = ?", maPhim) == 0) {
++                throw new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy phim");
++            }
++        } catch (DataIntegrityViolationException e) {
++            throw new NghiepVuException(HttpStatus.CONFLICT, "Phim đã có suất chiếu. Hãy dùng Ngừng chiếu để giữ lịch sử.");
++        }
++    }
++
++    private Object[] duLieu(PhimForm p, String maPhim) {
++        if (p.thoiLuong() == null || p.thoiLuong() < 1) throw khongHopLe("Thời lượng phải lớn hơn 0");
++        if (p.ngayKhoiChieu() == null) throw khongHopLe("Vui lòng nhập ngày khởi chiếu");
++        String tuoi = chuoi(p.gioiHanDoTuoi(), "Giới hạn độ tuổi", 10, true);
++        String trangThai = chuoi(p.trangThai(), "Trạng thái", 30, true);
++        if (!Set.of("P", "K", "T13", "T16", "T18", "C").contains(tuoi)) throw khongHopLe("Giới hạn độ tuổi không hợp lệ");
++        if (!Set.of("SAP_CHIEU", "DANG_CHIEU", "NGUNG_CHIEU").contains(trangThai)) throw khongHopLe("Trạng thái không hợp lệ");
++        String poster = chuoi(p.poster(), "Tên file poster", 255, false);
++        if (poster.contains("/") || poster.contains("\\") || poster.equals(".") || poster.equals("..")) {
++            throw khongHopLe("Poster phải là tên file trong thư mục images");
++        }
++        String noiDung = p.noiDung() == null ? "" : p.noiDung().strip();
++        if (noiDung.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > 65_535) {
++            throw khongHopLe("Nội dung phim quá dài");
++        }
++        return new Object[]{chuoi(p.tenPhim(), "Tên phim", 100, true),
++                chuoi(p.theLoai(), "Thể loại", 50, true), p.thoiLuong(),
++                chuoi(p.daoDien(), "Đạo diễn", 50, false), chuoi(p.dienVien(), "Diễn viên", 200, false),
++                p.ngayKhoiChieu(), chuoi(p.quocGia(), "Quốc gia", 50, false),
++                noiDung, poster, tuoi, trangThai, maPhim};
++    }
++
++    private String chuoi(String giaTri, String nhan, int gioiHan, boolean batBuoc) {
++        String ketQua = giaTri == null ? "" : giaTri.strip();
++        if (batBuoc && ketQua.isEmpty()) throw khongHopLe("Vui lòng nhập " + nhan.toLowerCase());
++        if (ketQua.length() > gioiHan) throw khongHopLe(nhan + " dài tối đa " + gioiHan + " ký tự");
++        return ketQua;
++    }
++
++    private NghiepVuException khongHopLe(String thongBao) {
++        return new NghiepVuException(HttpStatus.BAD_REQUEST, thongBao);
++    }
++
++    public record PhimForm(String maPhim, String tenPhim, String theLoai, Integer thoiLuong,
++                           String daoDien, String dienVien, LocalDate ngayKhoiChieu, String quocGia,
++                           String noiDung, String poster, String gioiHanDoTuoi, String trangThai) {}
+ }
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/exception/XuLyLoiQuanLy.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/exception/XuLyLoiQuanLy.java
+index a33a340..16ae1e8 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/exception/XuLyLoiQuanLy.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/exception/XuLyLoiQuanLy.java
+@@ -2,6 +2,7 @@ package com.cinema.exception;
+ 
+ import com.cinema.controller.GiaVeController;
+ import com.cinema.controller.KhuyenMaiController;
++import com.cinema.controller.QuanLyPhimController;
+ import java.util.Map;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.ExceptionHandler;
+@@ -10,7 +11,7 @@ import com.cinema.controller.KhachHangController;
+ import com.cinema.controller.BaoCaoController;
+ 
+ /** Đổi NghiepVuException thành JSON {ma, thongBao} cho các API (24, 28, 36, 45). */
+-@RestControllerAdvice(assignableTypes = {GiaVeController.class, KhuyenMaiController.class, KhachHangController.class, BaoCaoController.class})
++@RestControllerAdvice(assignableTypes = {GiaVeController.class, KhuyenMaiController.class, KhachHangController.class, BaoCaoController.class, QuanLyPhimController.class})
+ public class XuLyLoiQuanLy {
+ 
+     @ExceptionHandler(NghiepVuException.class)
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/GiuGheService.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/GiuGheService.java
+index 9a84bbe..93d3657 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/GiuGheService.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/GiuGheService.java
+@@ -94,7 +94,8 @@ public class GiuGheService {
+         giaiPhongGheQuaHan();
+         SuatChieu suat = laySuat(req.maSuat());
+         PhongChieu phong = layPhong(suat);
+-        if (!suat.conBanVe(ThoiGian.bayGio()) || !phong.dangHoatDong()) {
++        if (!suat.conBanVe(ThoiGian.bayGio()) || !phong.dangHoatDong()
++                || !suatChieuService.phimConBanVe(suat.getMaPhim())) {
+             throw new NghiepVuException(HttpStatus.CONFLICT, "SUAT_KHONG_KHA_DUNG", "Suất chiếu không khả dụng");
+         }
+ 
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/LienKetModuleKhac.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/LienKetModuleKhac.java
+index d50f7df..bceeb74 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/LienKetModuleKhac.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/LienKetModuleKhac.java
+@@ -35,13 +35,17 @@ public class LienKetModuleKhac {
+ 
+     // ---------------------------------------------------------------- Phim
+     public record PhimTomTat(String maPhim, String tenPhim, String gioiHanDoTuoi, String poster,
+-                             int thoiLuong, String theLoai) {}
++                             int thoiLuong, String theLoai, String trangThai) {
++        public boolean conBanVe() {
++            return !"NGUNG_CHIEU".equals(trangThai);
++        }
++    }
+ 
+-    private static final String SQL_PHIM = "SELECT maPhim, tenPhim, gioiHanDoTuoi, poster, thoiLuong, theLoai FROM PHIM";
++    private static final String SQL_PHIM = "SELECT maPhim, tenPhim, gioiHanDoTuoi, poster, thoiLuong, theLoai, trangThai FROM PHIM";
+ 
+     private PhimTomTat docPhim(java.sql.ResultSet rs, int i) throws java.sql.SQLException {
+         return new PhimTomTat(rs.getString("maPhim"), rs.getString("tenPhim"), rs.getString("gioiHanDoTuoi"),
+-                rs.getString("poster"), rs.getInt("thoiLuong"), rs.getString("theLoai"));
++                rs.getString("poster"), rs.getInt("thoiLuong"), rs.getString("theLoai"), rs.getString("trangThai"));
+     }
+ 
+     public Map<String, PhimTomTat> layPhim(Collection<String> dsMaPhim) {
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/SuatChieuService.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/SuatChieuService.java
+index 04c2f98..49a13f8 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/SuatChieuService.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/SuatChieuService.java
+@@ -77,6 +77,11 @@ public class SuatChieuService {
+         return chuyenDanhSach(List.of(suat)).get(0);
+     }
+ 
++    public boolean phimConBanVe(String maPhim) {
++        PhimTomTat phim = lienKet.layPhim(List.of(maPhim)).get(maPhim);
++        return phim != null && phim.conBanVe();
++    }
++
+     private List<SuatChieuDto> chuyenDanhSach(List<SuatChieu> dsSuat) {
+         LocalDateTime bayGio = ThoiGian.bayGio();
+         Map<String, PhimTomTat> phim = lienKet.layPhim(dsSuat.stream().map(SuatChieu::getMaPhim).collect(Collectors.toSet()));
+@@ -97,7 +102,7 @@ public class SuatChieuService {
+                             s.getMaPhong(), pc != null ? pc.getTenPhong() : s.getMaPhong(),
+                             pc != null ? pc.getLoaiPhong().getMa() : null,
+                             s.getNgayChieu(), s.getGioBatDau(), s.getGioKetThuc(),
+-                            s.getTrangThai().name(), s.conBanVe(bayGio) && pc != null && pc.dangHoatDong(),
++                            s.getTrangThai().name(), s.conBanVe(bayGio) && p != null && p.conBanVe() && pc != null && pc.dangHoatDong(),
+                             ghe.size(), dem(ghe, TrangThaiGheSuat.TRONG), dem(ghe, TrangThaiGheSuat.DANG_GIU),
+                             dem(ghe, TrangThaiGheSuat.DA_DAT));
+                 }).toList();
+diff --git a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/ThanhToanService.java b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/ThanhToanService.java
+index 674c410..3e7046e 100644
+--- a/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/ThanhToanService.java
++++ b/ChuongTrinh/SourceCode/src/main/java/com/cinema/service/ThanhToanService.java
+@@ -411,7 +411,8 @@ public class ThanhToanService {
+                     "Danh sách ghế đang giữ không khớp với đơn hàng đã xác nhận, vui lòng kiểm tra lại đơn hàng");
+         }
+         SuatChieu suat = suatRepo.findById(dsGhe.get(0).getMaSuat()).orElseThrow();
+-        if (!suat.conBanVe(ThoiGian.bayGio())) {
++        var phim = lienKet.layPhim(List.of(suat.getMaPhim())).get(suat.getMaPhim());
++        if (!suat.conBanVe(ThoiGian.bayGio()) || phim == null || !phim.conBanVe()) {
+             throw new NghiepVuException(HttpStatus.CONFLICT, "SUAT_KHONG_KHA_DUNG", "Suất chiếu không khả dụng");
+         }
+         List<ChiTietDichVu> dsDichVu = dichVuRepo.findByMaDonHang(don.getMaDonHang());
+diff --git a/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js b/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js
+index 9651d3e..6f4f6db 100644
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js
+@@ -1,27 +1,5 @@
+ import { dinhDangNgay, goiApi } from './datve-common.js';
+ 
+-// Danh mục minh họa của trang chủ, dựa trên lịch rạp ngày 24/11/2026.
+-const demoFilms = [
+-    { tenPhim: "Ngày Con Còn Mẹ", theLoai: "Tâm lý, Gia đình", thoiLuong: 113,
+-        gioiHanDoTuoi: "T16", poster: "ngay-con-con-me.webp" },
+-    { tenPhim: "Kiến Lé Phiêu Lưu Ké", theLoai: "Hoạt hình, Phiêu lưu, Hài", thoiLuong: 77,
+-        gioiHanDoTuoi: "P", poster: "kien-le-phieu-luu-ke.webp" },
+-    { tenPhim: "Đấu Trường Sinh Tử: Bình Minh Ngày Chiêu Quân",
+-        theLoai: "Hành động, Phiêu lưu, Viễn tưởng", thoiLuong: 158,
+-        gioiHanDoTuoi: "T16", poster: "dau-truong-sinh-tu-binh-minh-ngay-chieu-quan.webp" },
+-    { tenPhim: "Ramayana: Khởi Nguồn Một Huyền Thoại",
+-        theLoai: "Hành động, Phiêu lưu, Giả tưởng", thoiLuong: 168,
+-        gioiHanDoTuoi: "T13", poster: "ramayana-khoi-nguon-mot-huyen-thoai.webp" },
+-    { tenPhim: "Bò Sữa Bay", theLoai: "Hài, Hành động, Chính kịch", thoiLuong: 108,
+-        gioiHanDoTuoi: "T18", poster: "bo-sua-bay.webp" },
+-    { tenPhim: "Chàng Mèo Mang Mũ", theLoai: "Hoạt hình, Gia đình", thoiLuong: 107,
+-        gioiHanDoTuoi: "P", poster: "chang-meo-mang-mu.webp" },
+-    { tenPhim: "Kẻ hồi sinh",
+-        theLoai: "Hành động, giả tưởng", thoiLuong: 101, gioiHanDoTuoi: "T16", poster: "ke-hoi-sinh.webp" },
+-    { tenPhim: "Ebenezer Phép Màu Đêm Giáng Sinh", theLoai: "Hài, Giả tưởng", thoiLuong: 116,
+-        gioiHanDoTuoi: "T13", poster: "ebenezer-phep-mau-dem-giang-sinh.webp" }
+-];
+-
+ let films = null;
+ const tabs = [...document.querySelectorAll('[role="tab"]')];
+ const panel = document.querySelector("#films");
+@@ -69,8 +47,7 @@ function createCard(film) {
+     const title = document.createElement("a");
+     title.className = "film-title";
+     const booking = card.querySelector(".booking-link");
+-    const maPhimDich = film.demo ? "P01" : film.id;
+-    const filmUrl = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
++    const filmUrl = `chi-tiet-phim.html?maPhim=${encodeURIComponent(film.id)}`;
+     title.textContent = film.name;
+     title.href = filmUrl;
+     card.querySelector("h2").replaceChildren(title);
+@@ -158,16 +135,14 @@ async function loadFilms() {
+     try {
+         const phim = await goiApi("/api/phim", { chuyenKhiChuaDangNhap: false });
+         if (!Array.isArray(phim)) throw new Error("Phản hồi danh sách phim không hợp lệ");
+-        const catalogTitles = new Set(phim.map(p => normalize(p.tenPhim)));
+-        const demo = demoFilms.filter(p => !catalogTitles.has(normalize(p.tenPhim)))
+-            .map(p => ({ ...p, trangThai: "DANG_CHIEU", demo: true }));
+-        films = [...phim, ...demo].filter(p => ["DANG_CHIEU", "SAP_CHIEU"].includes(p.trangThai)).map(p => ({
+-            id: p.maPhim, demo: p.demo === true, name: p.tenPhim, rating: p.gioiHanDoTuoi, genre: p.theLoai, minutes: p.thoiLuong,
++        films = phim.filter(p => ["DANG_CHIEU", "SAP_CHIEU"].includes(p.trangThai)).map(p => ({
++            id: p.maPhim, name: p.tenPhim, rating: p.gioiHanDoTuoi, genre: p.theLoai, minutes: p.thoiLuong,
+             genres: (p.theLoai || "").split(",").map(value => value.trim()).filter(Boolean),
+             searchText: normalize([p.tenPhim, p.daoDien, p.dienVien].filter(Boolean).join(" ")),
+             release: p.ngayKhoiChieu, tab: p.trangThai === "DANG_CHIEU" ? "now" : "soon",
+             tones: ["#fff0e5", "#efc7b9"], poster: p.poster ? "images/" + encodeURIComponent(p.poster) : null
+         }));
++        document.querySelector(".home-hero").hidden = !films.some(film => film.id === "P02" && film.name === "Godzilla Trừ Không");
+         addOptions(genre, films.flatMap(film => film.genres));
+         addOptions(rating, films.map(film => film.rating));
+         render();
+diff --git a/ChuongTrinh/SourceCode/src/main/resources/static/js/phim-form.js b/ChuongTrinh/SourceCode/src/main/resources/static/js/phim-form.js
+index 1e02f34..7208b39 100644
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/js/phim-form.js
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/js/phim-form.js
+@@ -4,6 +4,7 @@ const form = document.querySelector('#form');
+ const thongBao = document.querySelector('#thong-bao');
+ const ma = thamSo('maPhim');
+ const chiXem = thamSo('xem') === '1';
++const apiPhim = '/api/quan-ly/phim' + (ma ? '/' + encodeURIComponent(ma) : '');
+ const truong = [
+     ['maPhim', 'Mã phim', 'text', 'required maxlength="10"'],
+     ['tenPhim', 'Tên phim', 'text', 'required maxlength="100"'],
+@@ -23,11 +24,9 @@ form.innerHTML = truong.map(([ten, nhan, type, thuocTinh]) =>
+         .map(t => `<option>${t}</option>`).join('')}</select></label>
+     <label>Trạng thái<select name="trangThai"><option value="SAP_CHIEU">Sắp chiếu</option>
+     <option value="DANG_CHIEU">Đang chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label>
+-    <label>Chọn poster<input id="tep-poster" type="file" accept="image/*"></label>
+-    <button class="button primary">Lưu mẫu</button><a href="quan-ly-phim.html">Hủy</a>`;
++    ${chiXem ? '' : '<button class="button primary" type="submit">Lưu phim</button>'}<a href="quan-ly-phim.html">Hủy</a>`;
+ const posterPreview = document.querySelector('#poster-preview');
+ const posterEmpty = document.querySelector('#poster-empty');
+-let posterUrl;
+ function xemPoster(url) {
+     posterPreview.hidden = !url;
+     posterEmpty.hidden = Boolean(url);
+@@ -37,7 +36,7 @@ posterPreview.addEventListener('error', () => xemPoster(''));
+ if (ma) {
+     [...form.elements].forEach(e => { e.disabled = true; });
+     try {
+-        const p = await goiApi('/api/quan-ly/phim/' + encodeURIComponent(ma));
++        const p = await goiApi(apiPhim);
+         for (const [ten, giaTri] of Object.entries(p)) {
+             const el = form.elements.namedItem(ten);
+             if (el) el.value = giaTri ?? '';
+@@ -49,15 +48,24 @@ if (ma) {
+         hienThongBao(thongBao, loi.message, 'loi');
+     }
+ }
+-document.querySelector('#tep-poster').addEventListener('change', e => {
+-    const tep = e.target.files[0];
+-    if (!tep) return;
+-    if (posterUrl) URL.revokeObjectURL(posterUrl);
+-    posterUrl = URL.createObjectURL(tep);
+-    form.elements.poster.value = tep.name;
+-    xemPoster(posterUrl);
++form.elements.poster.addEventListener('input', () => {
++    const ten = form.elements.poster.value.trim();
++    xemPoster(ten ? 'images/' + encodeURIComponent(ten) : '');
+ });
+-form.addEventListener('submit', e => {
++
++form.addEventListener('submit', async e => {
+     e.preventDefault();
+-    hienThongBao(thongBao, 'Dữ liệu hợp lệ. Đã hoàn tất thao tác lưu mẫu.', 'thanh-cong');
++    const nutLuu = form.querySelector('button[type="submit"]');
++    if (chiXem || !nutLuu || nutLuu.disabled) return;
++    const phim = Object.fromEntries(new FormData(form));
++    phim.thoiLuong = Number(phim.thoiLuong);
++    nutLuu.disabled = true;
++    hienThongBao(thongBao, '');
++    try {
++        await goiApi(apiPhim, { method: ma ? 'PUT' : 'POST', body: phim });
++        location.replace('quan-ly-phim.html?daLuu=1');
++    } catch (loi) {
++        hienThongBao(thongBao, loi.message, 'loi');
++        nutLuu.disabled = false;
++    }
+ });
+diff --git a/ChuongTrinh/SourceCode/src/main/resources/static/js/quan-ly-phim.js b/ChuongTrinh/SourceCode/src/main/resources/static/js/quan-ly-phim.js
+index e3f0e54..b6e9965 100644
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/js/quan-ly-phim.js
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/js/quan-ly-phim.js
+@@ -2,7 +2,7 @@ import { goiApi, hienThongBao, thoat } from './datve-common.js';
+ 
+ const $ = id => document.getElementById(id);
+ const tenTrangThai = { DANG_CHIEU: 'Đang chiếu', SAP_CHIEU: 'Sắp chiếu', NGUNG_CHIEU: 'Ngừng chiếu' };
+-async function tai() {
++async function tai(thongBao = "") {
+     hienThongBao($('thong-bao'), '');
+     const query = new URLSearchParams({ tuKhoa: $('q').value, trangThai: $('tt').value });
+     try {
+@@ -19,18 +19,32 @@ async function tai() {
+                 <td>${thoat(p.ngayKhoiChieu)}</td><td><span class="mc-pill">${thoat(tenTrangThai[p.trangThai])}</span></td>
+                 <td><div class="mc-row-actions"><a href="phim-form.html?maPhim=${ma}&xem=1">Chi tiết</a>
+                 <a href="phim-form.html?maPhim=${ma}">Sửa</a>
+-                <button type="button" data-ma="${thoat(p.maPhim)}">Ngừng chiếu</button></div></td></tr>`;
++                ${p.trangThai === 'NGUNG_CHIEU' ? '' : `<button type="button" data-ma="${thoat(p.maPhim)}" data-thao-tac="ngung">Ngừng chiếu</button>`}
++                <button type="button" data-ma="${thoat(p.maPhim)}" data-thao-tac="xoa">Xóa</button></div></td></tr>`;
+         }).join('') || '<tr><td colspan="9">Không tìm thấy phim phù hợp.</td></tr>';
++        if (thongBao) hienThongBao($('thong-bao'), thongBao, 'thanh-cong');
+     } catch (loi) {
+         hienThongBao($('thong-bao'), loi.message, 'loi');
+     }
+ }
+-$('ds').addEventListener('click', e => {
+-    const ma = e.target.closest('[data-ma]')?.dataset.ma;
+-    if (ma && confirm(`Xác nhận ngừng chiếu phim ${ma}?`)) {
+-        hienThongBao($('thong-bao'), 'Đã xác nhận thao tác mẫu. Dữ liệu phim chưa thay đổi.');
++$('ds').addEventListener('click', async e => {
++    const nut = e.target.closest('[data-thao-tac]');
++    if (!nut || nut.disabled) return;
++    const { ma, thaoTac } = nut.dataset;
++    const xoa = thaoTac === 'xoa';
++    if (!confirm(xoa ? `Xóa vĩnh viễn phim ${ma}?` : `Xác nhận ngừng chiếu phim ${ma}?`)) return;
++    const cacNut = nut.closest('tr').querySelectorAll('button[data-thao-tac]');
++    cacNut.forEach(n => { n.disabled = true; });
++    try {
++        await goiApi('/api/quan-ly/phim/' + encodeURIComponent(ma) + (xoa ? '' : '/ngung-chieu'),
++            { method: xoa ? 'DELETE' : 'PATCH' });
++        await tai(xoa ? 'Đã xóa phim.' : 'Đã ngừng chiếu phim.');
++    } catch (loi) {
++        hienThongBao($('thong-bao'), loi.message, 'loi');
++    } finally {
++        cacNut.forEach(n => { n.disabled = false; });
+     }
+ });
+ $('loc').addEventListener('submit', e => { e.preventDefault(); tai(); });
+-$('tt').addEventListener('change', tai);
+-tai();
++$('tt').addEventListener('change', () => tai());
++tai(new URLSearchParams(location.search).has('daLuu') ? 'Đã lưu phim.' : '');

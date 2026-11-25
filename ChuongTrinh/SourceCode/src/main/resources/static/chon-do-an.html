@@ -4,26 +4,53 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chọn đồ ăn và thức uống | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
-    <script type="module" src="js/chon-do-an.js"></script>
     <link rel="stylesheet" href="css/megacine-pages.css">
     <link rel="stylesheet" href="css/home-account.css">
     <script type="module" src="js/customer-layout.js"></script>
+    <script type="module" src="js/chon-do-an.js"></script>
 </head>
 <body class="mc-page chon-do-an">
 <header data-customer-header></header>
 <main class="container main chau-page">
-    <ol class="mc-steps" aria-label="Tiến trình đặt vé"><li class="done"><span>1</span>Chọn suất</li><li class="done"><span>2</span>Chọn ghế</li><li class="current" aria-current="step"><span>3</span>Bắp nước</li><li class=""><span>4</span>Xác nhận</li><li class=""><span>5</span>Thanh toán</li></ol><h1>Chọn đồ ăn, thức uống và combo</h1><p class="mc-muted">Thêm bắp nước cho suất chiếu của bạn hoặc bỏ qua để tiếp tục.</p>
+    <ol class="mc-steps" aria-label="Tiến trình đặt vé">
+        <li class="done"><a id="buoc-chon-suat" href="./"><span>1</span>Chọn suất</a></li>
+        <li class="done"><a id="buoc-chon-ghe" href="chon-ghe.html"><span>2</span>Chọn ghế</a></li>
+        <li class="current" aria-current="step"><span>3</span>Bắp nước</li>
+        <li><span>4</span>Xác nhận</li>
+        <li><span>5</span>Thanh toán</li>
+    </ol>
+    <h1>Chọn đồ ăn, thức uống và combo</h1>
+    <p class="mc-muted">Thêm bắp nước cho suất chiếu của bạn hoặc bỏ qua để sang bước xác nhận đơn.</p>
     <p id="thong-bao" role="status" hidden></p>
-    <div class="mc-hold"><strong>Ghế đang được giữ cho bạn</strong><span id="phien-info"></span><span id="han" aria-label="Thời gian còn lại"></span></div>
-  <div class="mc-columns"><div><div class="mc-category" aria-label="Nhóm món">
-  <button type="button" data-loai="" aria-pressed="true">Tất cả</button>
-  <button type="button" data-loai="DO_AN" aria-pressed="false">Đồ ăn</button>
-  <button type="button" data-loai="THUC_UONG" aria-pressed="false">Thức uống</button>
-  <button type="button" data-loai="COMBO" aria-pressed="false">Combo</button></div>
-  <div id="mon" class="chau-grid"></div></div><aside class="chau-card mc-summary"><h2>Tóm tắt đơn</h2><div id="tom-tat"></div><div class="chau-actions"><a class="button secondary" id="quay-lai">Về chọn ghế</a><button id="bo-qua" class="button secondary" disabled>Bỏ qua</button><button id="tiep" class="button primary" disabled>Tiếp tục</button></div>
-</aside></div></main>
+    <div class="mc-hold">
+        <strong>Ghế đang được giữ cho bạn</strong>
+        <span id="phien-info"></span>
+        <span id="han" aria-label="Thời gian còn lại">00:00</span>
+    </div>
+    <div class="mc-columns">
+        <div>
+            <div class="mc-category" aria-label="Nhóm món">
+                <button type="button" data-loai="" aria-pressed="true">Tất cả</button>
+                <button type="button" data-loai="COMBO" aria-pressed="false">Combo</button>
+                <button type="button" data-loai="DO_AN" aria-pressed="false">Đồ ăn</button>
+                <button type="button" data-loai="THUC_UONG" aria-pressed="false">Thức uống</button>
+            </div>
+            <div id="mon"></div>
+        </div>
+        <aside class="chau-card mc-summary">
+            <h2>Tóm tắt đơn</h2>
+            <div id="tom-tat"></div>
+            <div class="chau-actions">
+                <button id="tiep" class="button primary" type="button" disabled>Tiếp tục</button>
+                <button id="bo-qua" class="button secondary" type="button" disabled>Bỏ qua bắp nước</button>
+                <a class="button secondary" id="quay-lai" href="chon-ghe.html">Về chọn ghế</a>
+            </div>
+        </aside>
+    </div>
+</main>
 <footer data-customer-footer></footer>
 </body>
 </html>

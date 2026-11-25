@@ -4,14 +4,22 @@ import {
     NHAN, TRANG, thoat
 } from './datve-common.js';
 
+const noiBo = document.body.hasAttribute('data-tra-cuu-noi-bo');
 const $ = (id) => document.getElementById(id);
 let laNhanVien = false;
+let vaiTro;
 
 khoiTao();
 
 async function khoiTao() {
     const toi = await layNguoiDungDatVe();
+    vaiTro = toi?.vaiTro;
     laNhanVien = toi && (toi.vaiTro === 'NHAN_VIEN' || toi.vaiTro === 'QUAN_LY');
+    if (noiBo && !laNhanVien) {
+        hienThongBao($('thong-bao'), 'Vui lòng đăng nhập bằng tài khoản nhân viên hoặc quản lý.', 'loi');
+        $('bo-loc').hidden = true;
+        return;
+    }
     if (laNhanVien) {
         $('nhan-tu-khoa').textContent = 'Mã đơn, mã vé hoặc số điện thoại khách';
         $('tu-khoa').placeholder = 'Ví dụ DH01, V01, 0901234567';
@@ -65,7 +73,12 @@ function ve(ds, coLoc) {
             <td class="so">${dinhDangTien(d.tongTien)}</td>
             <td>${chipTrangThai(d.trangThaiDon, NHAN.trangThaiDon)}</td>
             <td>${chipVe(d.soVeTheoTrangThai)}</td>
-            <td><a class="button secondary nho" href="${TRANG.chiTietVe}?maDonHang=${encodeURIComponent(d.maDonHang)}">Chi tiết</a></td>
+            <td><div class="chau-actions">
+                <a class="button secondary nho" href="${TRANG.chiTietVe}?maDonHang=${encodeURIComponent(d.maDonHang)}">Chi tiết</a>
+                ${noiBo && d.trangThaiDon === 'DA_THANH_TOAN' && d.soVeTheoTrangThai?.CHUA_SU_DUNG
+                    ? `${laNhanVien && vaiTro === 'NHAN_VIEN' ? `<a class="button secondary nho" href="doi-ve.html?maDonHang=${encodeURIComponent(d.maDonHang)}">Đổi vé</a>` : ''}
+                       <a class="button secondary nho" href="huy-ve.html?maDonHang=${encodeURIComponent(d.maDonHang)}">Hủy vé</a>` : ''}
+            </div></td>
         </tr>`).join('')}</tbody></table></div>`;
 }
 

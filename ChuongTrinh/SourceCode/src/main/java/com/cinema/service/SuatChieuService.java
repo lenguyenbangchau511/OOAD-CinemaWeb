@@ -77,6 +77,11 @@ public class SuatChieuService {
         return chuyenDanhSach(List.of(suat)).get(0);
     }
 
+    public boolean phimConBanVe(String maPhim) {
+        PhimTomTat phim = lienKet.layPhim(List.of(maPhim)).get(maPhim);
+        return phim != null && phim.conBanVe();
+    }
+
     private List<SuatChieuDto> chuyenDanhSach(List<SuatChieu> dsSuat) {
         LocalDateTime bayGio = ThoiGian.bayGio();
         Map<String, PhimTomTat> phim = lienKet.layPhim(dsSuat.stream().map(SuatChieu::getMaPhim).collect(Collectors.toSet()));
@@ -97,7 +102,7 @@ public class SuatChieuService {
                             s.getMaPhong(), pc != null ? pc.getTenPhong() : s.getMaPhong(),
                             pc != null ? pc.getLoaiPhong().getMa() : null,
                             s.getNgayChieu(), s.getGioBatDau(), s.getGioKetThuc(),
-                            s.getTrangThai().name(), s.conBanVe(bayGio) && pc != null && pc.dangHoatDong(),
+                            s.getTrangThai().name(), s.conBanVe(bayGio) && p != null && p.conBanVe() && pc != null && pc.dangHoatDong(),
                             ghe.size(), dem(ghe, TrangThaiGheSuat.TRONG), dem(ghe, TrangThaiGheSuat.DANG_GIU),
                             dem(ghe, TrangThaiGheSuat.DA_DAT));
                 }).toList();

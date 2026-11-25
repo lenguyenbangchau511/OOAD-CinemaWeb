@@ -11,11 +11,14 @@ const el = {
     gheChon: document.getElementById('ghe-chon'), chuaChon: document.getElementById('chua-chon'),
     tamTinh: document.getElementById('tam-tinh'), nutHuy: document.getElementById('nut-huy'),
     nutTiepTuc: document.getElementById('nut-tiep-tuc'), khoiDem: document.getElementById('khoi-dem'),
-    dem: document.getElementById('dem-nguoc'), soGheToiDa: document.getElementById('so-ghe-toi-da')
+    dem: document.getElementById('dem-nguoc'), soGheToiDa: document.getElementById('so-ghe-toi-da'),
+    buocChonSuat: document.getElementById('buoc-chon-suat'), linkChonSuat: document.getElementById('link-chon-suat'),
+    nutQuayLai: document.getElementById('nut-quay-lai')
 };
 
 let maPhienGiu = null;      // phiên giữ ghế hiện tại (lưu trong sessionStorage để sang bước sau vẫn dùng được)
 let phienHienTai = null;    // PhienGiuDto gần nhất
+let suatHienTai = null;
 let daDangNhap = true;
 let dangXuLy = false;
 const dongHo = taoDongHoDemNguoc(el.dem, hetGio);
@@ -23,12 +26,16 @@ const dongHo = taoDongHoDemNguoc(el.dem, hetGio);
 khoiTao();
 
 async function khoiTao() {
+    const luu = layPhienDatVe();
+    if (luu.daXacNhan && luu.maDonHang && (!maSuat || luu.maSuat === maSuat)) {
+        location.replace(`thanh-toan.html?maDonHang=${encodeURIComponent(luu.maDonHang)}`);
+        return;
+    }
     if (!maSuat) {
         el.soDo.innerHTML = '<div class="trong"><h2>Chưa chọn suất chiếu</h2><p>Vui lòng chọn suất chiếu từ trang phim.</p><a class="button primary" href="./">Về trang chủ</a></div>';
         el.thongTinSuat.textContent = '';
         return;
     }
-    const luu = layPhienDatVe();
     maPhienGiu = luu.maSuat === maSuat ? luu.maPhienGiu || null : null;
     const toi = await layNguoiDungDatVe();
     daDangNhap = !toi || toi.dangNhap;
@@ -62,9 +69,12 @@ async function taiSoDo(imLang = false) {
 
 function veThongTinSuat(sd) {
     const s = sd.suat;
+    suatHienTai = s;
     el.tieuDe.textContent = s.tenPhim + (s.gioiHanDoTuoi ? ` (${s.gioiHanDoTuoi})` : '');
     el.thongTinSuat.textContent = `${dinhDangNgay(s.ngayChieu)} · ${dinhDangGio(s.gioBatDau)} - ${dinhDangGio(s.gioKetThuc)} · ` +
         `${s.tenPhong} (${NHAN.loaiPhong[s.loaiPhong] || s.loaiPhong})`;
+    const suatHref = s.maPhim ? `chi-tiet-phim.html?maPhim=${encodeURIComponent(s.maPhim)}#lich-chieu` : './';
+    [el.buocChonSuat, el.linkChonSuat, el.nutQuayLai].forEach((a) => { if (a) a.href = suatHref; });
 }
 
 function veSoDo(sd) {
@@ -107,7 +117,12 @@ async function chonGhe(maGheSuat, laCuaToi) {
             : await goiApi('/api/giu-ghe', { method: 'POST', body: { maSuat, maPhienGiu, dsMaGheSuat: [maGheSuat] } });
         maPhienGiu = phienHienTai.maPhienGiu;
         if (layPhienDatVe().maPhienGiu !== maPhienGiu) xoaPhienDatVe();
-        luuPhienDatVe({ maSuat, maPhienGiu });
+        luuPhienDatVe({
+            maSuat,
+            maPhienGiu,
+            maPhim: suatHienTai?.maPhim || layPhienDatVe().maPhim || null,
+            tenPhim: suatHienTai?.tenPhim || layPhienDatVe().tenPhim || null
+        });
         veTomTat();
     } catch (loi) {
         hienThongBao(el.thongBao, loi.thongBao, 'loi');   // vd "Ghế đã có người chọn, vui lòng chọn ghế khác"
@@ -175,7 +190,11 @@ async function tiepTuc() {
         return;
     }
     luuPhienDatVe({
-        maSuat, maPhienGiu, tamTinh: phienHienTai.tamTinh,
+        maSuat,
+        maPhienGiu,
+        maPhim: suatHienTai?.maPhim || layPhienDatVe().maPhim || null,
+        tenPhim: suatHienTai?.tenPhim || layPhienDatVe().tenPhim || null,
+        tamTinh: phienHienTai.tamTinh,
         dsGhe: phienHienTai.dsGhe.map((g) => ({ maGheSuat: g.maGheSuat, tenGhe: g.tenGhe, loaiGhe: g.loaiGhe, giaVe: g.giaVe }))
     });
     let coTrangDoAn = false;

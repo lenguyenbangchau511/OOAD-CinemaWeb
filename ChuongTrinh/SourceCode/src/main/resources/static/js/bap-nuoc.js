@@ -1,30 +1,9 @@
-import { dinhDangTien, goiApi } from './datve-common.js';
+import { anhMon, dinhDangTien, goiApi } from './datve-common.js';
 
 const loaiMon = {
     DO_AN: { ten: 'Đồ ăn', bieuTuong: '🍿' },
     THUC_UONG: { ten: 'Thức uống', bieuTuong: '🥤' },
     COMBO: { ten: 'Combo', bieuTuong: '🍿🥤' }
-};
-
-// Ảnh có sẵn cho các món mẫu khi danh mục trong cơ sở dữ liệu chưa có hinhAnh.
-const anhMacDinh = {
-    SP01: 'images/butter-popcorn.png',
-    SP02: 'images/caramel-popcorn.png',
-    SP03: 'images/cheese-popcorn.png',
-    SP04: 'images/snack-khoai-tay.jpg',
-    SP05: 'images/snack-rong-bien.jpg',
-    SP06: 'images/nachos-sot-pho-mai.jpg',
-    SP07: 'images/xuc-xich-nuong.jpg',
-    SP08: 'images/khoai-tay-chien.jpg',
-    SP09: 'images/coca-cola.webp',
-    SP10: 'images/soda-chanh.jpg',
-    SP11: 'images/nuoc-suoi.webp',
-    SP12: 'images/tra-dao.jpg',
-    SP13: 'images/tra-xanh.jpg',
-    CB01: 'images/combo-ca-nhan.png',
-    CB02: 'images/combo-cap-doi-caramel.png',
-    CB03: 'images/combo-cap-doi-pho-mai.png',
-    CB04: 'images/combo-nhom.png'
 };
 
 const thucDon = document.querySelector('#thuc-don');
@@ -44,7 +23,7 @@ function taoTheMon(mon) {
     the.querySelector('.menu-description').textContent = mon.moTa || '';
     the.querySelector('strong').textContent = dinhDangTien(mon.gia);
     the.querySelector('.menu-price-row span').hidden = mon.khaDung > 0;
-    const duongDanAnh = mon.hinhAnh?.trim() || anhMacDinh[mon.ma];
+    const duongDanAnh = anhMon(mon);
     if (duongDanAnh) {
         const anh = the.querySelector('img');
         anh.addEventListener('error', () => { anh.hidden = true; }, { once: true });

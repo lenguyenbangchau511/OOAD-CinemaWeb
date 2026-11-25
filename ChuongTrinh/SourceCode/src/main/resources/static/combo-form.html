@@ -18,9 +18,8 @@
   <a href="phieu-nhap-kho.html">Phiếu nhập</a>
   <a href="phieu-kiem-ke.html">Kiểm kê</a>
 </nav>
-<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Thêm / sửa combo</div>
+<div class="breadcrumb"><a href="quan-ly-san-pham.html">Sản phẩm &amp; combo</a> / Thêm / sửa combo</div>
 <div class="page-title"><div><h1>Thêm / sửa combo</h1><p>Thiết lập giá bán và các sản phẩm thành phần của combo.</p></div></div>
-<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
 
 <form id="form-combo" class="form-card">
   <div class="form-grid-2">
@@ -28,7 +27,7 @@
     <div class="field"><label for="ten">Tên combo *</label><input id="ten" maxlength="100" required></div>
     <div class="field"><label for="gia">Giá combo (VND) *</label><input id="gia" type="number" min="0" step="1000" required></div>
     <div class="field"><label for="trang-thai">Trạng thái *</label><select id="trang-thai"><option value="DANG_BAN">Đang bán</option><option value="NGUNG_BAN">Ngừng bán</option></select></div>
-    <div class="field"><label for="anh">Đường dẫn hình ảnh</label><input id="anh" type="url" placeholder="https://..."></div>
+    <div class="field"><label for="anh">Đường dẫn hình ảnh</label><input id="anh" type="text" maxlength="255" placeholder="https://... hoặc images/..."></div>
     <div class="field"><label for="mo-ta">Mô tả *</label><input id="mo-ta" maxlength="255" required placeholder="Mô tả thành phần combo"></div>
   </div>
   <div class="kho-toolbar" style="margin-top:22px"><h2 style="font-size:18px">Sản phẩm thành phần *</h2><button class="button secondary" id="them-dong" type="button">+ Thêm thành phần</button></div>

@@ -15,24 +15,25 @@ export const menuItems = {
     report: ['Báo cáo', 'chart', 'bao-cao.html'],
     ban: ['Bán vé tại quầy', 'ticket', 'ban-ve-tai-quay.html'],
     scan: ['Soát vé', 'scan', 'soat-ve.html'],
-    history: ['Tra cứu vé', 'search', 'lich-su-ve.html']
+    history: ['Tra cứu vé', 'search', 'tra-cuu-ve.html']
 };
 
 export const nav = {
     ADMIN: ['home', 'accounts', 'employees', 'customers'],
-    QUAN_LY: ['home', 'phim', 'phong', 'lich', 'gia', 'customers', 'food', 'stock', 'promo', 'report'],
+    QUAN_LY: ['home', 'phim', 'phong', 'lich', 'gia', 'customers', 'food', 'stock', 'promo', 'report', 'history'],
     NHAN_VIEN: ['home', 'ban', 'scan', 'history', 'customers', 'phim', 'lich', 'gia', 'food']
 };
 
-// Staff không mở trang sửa suất/phim/đồ ăn của Manager; bán vé tại quầy chưa có giao diện riêng.
+// Nhân viên chỉ có quyền xem phim; menu phòng suất và đồ ăn quản lý giữ nguyên.
 export const ready = new Set([
     'home', 'accounts', 'employees', 'customers',
     'phong', 'lich', 'history', 'phim', 'food',
-    'gia', 'promo', 'report', 'stock', 'scan'
+    'gia', 'promo', 'report', 'stock', 'scan', 'ban'
 ]);
 
 export function menuHref(k, vaiTro) {
-    return ready.has(k) && !(vaiTro === 'NHAN_VIEN' && ['lich', 'phim', 'food'].includes(k))
+    if (vaiTro === 'NHAN_VIEN' && k === 'phim') return 'phim-noi-bo.html';
+    return ready.has(k) && !(vaiTro === 'NHAN_VIEN' && ['lich', 'food'].includes(k))
         ? menuItems[k][2]
         : 'noi-bo.html?module=' + encodeURIComponent(k);
 }
@@ -60,7 +61,7 @@ async function initShell() {
     const sidebar = document.getElementById('nb-sidebar');
     const footer = document.getElementById('nb-footer');
     const layout = document.querySelector('.nb-layout');
-    const fallbackRole = screen === 'employees' ? 'ADMIN' : screen === 'scan' ? 'NHAN_VIEN' : 'QUAN_LY';
+    const fallbackRole = screen === 'employees' ? 'ADMIN' : ['scan', 'ban'].includes(screen) ? 'NHAN_VIEN' : 'QUAN_LY';
 
     if (header) header.innerHTML = renderGuestHeader(fallbackRole);
     if (sidebar) sidebar.innerHTML = renderSidebar(fallbackRole, screen);

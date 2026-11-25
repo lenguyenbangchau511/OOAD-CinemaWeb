@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thông tin phim nội bộ | MegaCine</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
+    <script type="module" src="js/nghiep-vu-noi-bo.js"></script>
+</head>
+<body data-nb-screen="phim" data-nghiep-vu="phim">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout">
+    <aside class="nb-sidebar" id="nb-sidebar"></aside>
+    <main class="main nb-main">
+        <div class="page-title"><h1>Thông tin phim nội bộ</h1></div>
+        <p id="thong-bao" role="status" hidden></p>
+        <form id="form" class="chau-card chau-fields">
+            <label>Phim <select id="phim" required></select></label>
+            <button class="button primary" type="submit">Xem chi tiết</button>
+        </form>
+        <section id="ket-qua" class="chau-card" hidden></section>
+    </main>
+</div>
+<footer class="nb-footer" id="nb-footer"></footer>
+</body>
+</html>

@@ -411,7 +411,8 @@ public class ThanhToanService {
                     "Danh sách ghế đang giữ không khớp với đơn hàng đã xác nhận, vui lòng kiểm tra lại đơn hàng");
         }
         SuatChieu suat = suatRepo.findById(dsGhe.get(0).getMaSuat()).orElseThrow();
-        if (!suat.conBanVe(ThoiGian.bayGio())) {
+        var phim = lienKet.layPhim(List.of(suat.getMaPhim())).get(suat.getMaPhim());
+        if (!suat.conBanVe(ThoiGian.bayGio()) || phim == null || !phim.conBanVe()) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "SUAT_KHONG_KHA_DUNG", "Suất chiếu không khả dụng");
         }
         List<ChiTietDichVu> dsDichVu = dichVuRepo.findByMaDonHang(don.getMaDonHang());

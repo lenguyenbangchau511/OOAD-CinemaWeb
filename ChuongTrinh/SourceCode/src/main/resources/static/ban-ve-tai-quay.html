@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bán vé tại quầy | MegaCine</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
+    <script type="module" src="js/nghiep-vu-noi-bo.js"></script>
+</head>
+<body data-nb-screen="ban" data-nghiep-vu="ban">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout">
+    <aside class="nb-sidebar" id="nb-sidebar"></aside>
+    <main class="main nb-main">
+        <div class="page-title"><h1>Bán vé tại quầy</h1></div>
+        <p id="thong-bao" role="status" hidden></p>
+        <p class="muted">Chế độ xem trước. Thao tác trên màn này không ghi vào cơ sở dữ liệu.</p>
+        <form id="form" class="chau-card">
+            <div class="chau-fields">
+    <label>Ngày chiếu <input type="date" id="ngay" required></label>
+    <label>Suất chiếu <select id="suat-moi" required><option value="">Chọn suất</option></select></label>
+</div>
+<fieldset id="ghe-moi"><legend>Ghế trống</legend><p>Chọn suất để xem ghế.</p></fieldset>
+            <div class="chau-fields">
+                <label>Tên khách hàng <input name="khach" maxlength="100" placeholder="Khách lẻ"></label>
+                <label>Phương thức <select name="phuongThuc"><option>Tiền mặt</option><option>Thẻ ngân hàng</option></select></label>
+            </div>
+            <details><summary>Bắp nước và combo</summary><div id="mon" class="chau-fields"></div></details>
+            <p><strong>Tạm tính</strong> <output id="tong">0 ₫</output></p>
+            <button class="button primary" type="submit">Xem trước đơn tại quầy</button>
+        </form>
+        <section id="ket-qua" class="chau-card" hidden></section>
+    </main>
+</div>
+<footer class="nb-footer" id="nb-footer"></footer>
+</body>
+</html>

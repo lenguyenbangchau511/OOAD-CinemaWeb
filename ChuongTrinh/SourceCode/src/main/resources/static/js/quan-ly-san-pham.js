@@ -1,6 +1,6 @@
-import { dinhDangTien, goiApi, hienThongBao, thoat } from './datve-common.js';
+import { anhMon, dinhDangTien, goiApi, hienThongBao, thoat } from './datve-common.js';
 
-const $ = id => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 const loaiMon = { DO_AN: 'Đồ ăn', THUC_UONG: 'Thức uống', COMBO: 'Combo' };
 let mon = [];
 
@@ -10,54 +10,55 @@ async function tai() {
     try {
         mon = await goiApi('/api/quan-ly/san-pham?' + query);
         $('chi-so').innerHTML = [['Kết quả', mon.length], ...Object.entries(loaiMon)
-            .map(([ma, ten]) => [ten, mon.filter(m => m.loai === ma).length])]
+            .map(([ma, ten]) => [ten, mon.filter((m) => m.loai === ma).length])]
             .map(([ten, so]) => `<div><span>${ten}</span><strong>${so}</strong></div>`).join('');
-        $('ds').innerHTML = mon.map((m, i) => `<tr>
-            <td>${m.hinhAnh ? `<img src="${thoat(m.hinhAnh)}" alt="" loading="lazy">` : '—'}</td>
-            <td>${thoat(m.ma)}</td><td><strong>${thoat(m.ten)}</strong><small>${thoat(m.moTa)}</small></td>
-            <td>${thoat(loaiMon[m.loai])}</td><td>${dinhDangTien(m.gia)}</td>
-            <td><span class="mc-pill">${m.trangThai === 'DANG_BAN' ? 'Đang bán' : 'Ngừng bán'}</span></td>
-            <td><div class="mc-row-actions">
-                <button data-i="${i}" data-viec="xem">Chi tiết</button>
-                <button data-i="${i}" data-viec="sua">Sửa</button>
-                <button data-i="${i}" data-viec="ngung">Ngừng bán</button>
-            </div></td></tr>`).join('') || '<tr><td colspan="7">Không tìm thấy sản phẩm hoặc combo phù hợp.</td></tr>';
+        $('ds').innerHTML = mon.map((m, i) => {
+            const img = anhMon(m);
+            const ma = encodeURIComponent(m.ma);
+            const suaHref = m.loai === 'COMBO' ? `combo-form.html?ma=${ma}` : `san-pham-form.html?ma=${ma}`;
+            const dangBan = m.trangThai === 'DANG_BAN';
+            return `<tr>
+                <td>${img ? `<img src="${thoat(img)}" alt="" loading="lazy">` : '—'}</td>
+                <td>${thoat(m.ma)}</td>
+                <td><strong>${thoat(m.ten)}</strong><small>${thoat(m.moTa)}</small></td>
+                <td>${thoat(loaiMon[m.loai])}</td>
+                <td>${dinhDangTien(m.gia)}</td>
+                <td><span class="mc-pill">${dangBan ? 'Đang bán' : 'Ngừng bán'}</span></td>
+                <td><div class="mc-row-actions">
+                    <a href="san-pham-chi-tiet.html?ma=${ma}">Chi tiết</a>
+                    <a href="${suaHref}">Sửa</a>
+                    <button type="button" data-i="${i}">${dangBan ? 'Ngừng bán' : 'Mở bán lại'}</button>
+                </div></td>
+            </tr>`;
+        }).join('') || '<tr><td colspan="7">Không tìm thấy sản phẩm hoặc combo phù hợp.</td></tr>';
     } catch (loi) {
         hienThongBao($('thong-bao'), loi.message, 'loi');
     }
 }
 
-function moForm(m, chiXem = false) {
-    const form = $('form');
-    form.reset();
-    [...form.elements].forEach(el => { el.disabled = chiXem && el.id !== 'dong'; });
-    form.elements.ma.readOnly = Boolean(m);
-    if (m) {
-        for (const [ten, giaTri] of Object.entries(m)) {
-            const el = form.elements.namedItem(ten);
-            if (el) el.value = giaTri ?? '';
-        }
-    }
-    $('tieu-de').textContent = chiXem ? 'Chi tiết sản phẩm / combo' : m ? 'Sửa sản phẩm / combo' : 'Thêm sản phẩm / combo';
-    $('mon-form').showModal();
-}
-$('them').addEventListener('click', () => moForm(null));
-$('dong').addEventListener('click', () => $('mon-form').close());
-$('form').addEventListener('submit', e => {
-    e.preventDefault();
-    $('mon-form').close();
-    hienThongBao($('thong-bao'), 'Đã hoàn tất thao tác lưu mẫu.', 'thanh-cong');
-});
-$('ds').addEventListener('click', e => {
-    const nut = e.target.closest('[data-i]');
+$('ds').addEventListener('click', async (e) => {
+    const nut = e.target.closest('button[data-i]');
     if (!nut) return;
     const m = mon[Number(nut.dataset.i)];
-    if (nut.dataset.viec !== 'ngung') {
-        moForm(m, nut.dataset.viec === 'xem');
-    } else if (confirm(`Xác nhận ngừng bán ${m.ten}?`)) {
-        hienThongBao($('thong-bao'), 'Đã xác nhận thao tác mẫu. Trạng thái bán chưa thay đổi.');
+    if (!m) return;
+    const trangThaiMoi = m.trangThai === 'DANG_BAN' ? 'NGUNG_BAN' : 'DANG_BAN';
+    const hanhDong = trangThaiMoi === 'NGUNG_BAN' ? 'ngừng bán' : 'mở bán lại';
+    if (!confirm(`Xác nhận ${hanhDong} ${m.ten}?`)) return;
+    nut.disabled = true;
+    try {
+        await goiApi(`/api/quan-ly/san-pham/${encodeURIComponent(m.ma)}/trang-thai`, {
+            method: 'PATCH',
+            body: { trangThai: trangThaiMoi }
+        });
+        await tai();
+        hienThongBao($('thong-bao'), `Đã cập nhật trạng thái "${m.ten}" thành ${trangThaiMoi === 'DANG_BAN' ? 'Đang bán' : 'Ngừng bán'}.`, 'thanh-cong');
+    } catch (loi) {
+        hienThongBao($('thong-bao'), loi.thongBao || loi.message, 'loi');
+        nut.disabled = false;
     }
 });
-$('loc').addEventListener('submit', e => { e.preventDefault(); tai(); });
-['loai', 'tt'].forEach(id => $(id).addEventListener('change', tai));
+
+$('loc').addEventListener('submit', (e) => { e.preventDefault(); tai(); });
+$('loai').addEventListener('change', tai);
+$('tt').addEventListener('change', tai);
 tai();

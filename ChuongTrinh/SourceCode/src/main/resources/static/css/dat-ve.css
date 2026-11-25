@@ -13,6 +13,13 @@ h3 { margin: 0; font-size: 17px; line-height: 1.4; }
 .page-title p { font-size: 14px; color: var(--muted); }
 .breadcrumb { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
 .breadcrumb a { text-decoration: underline; text-underline-offset: 3px; }
+.mc-steps { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; padding: 0; margin: 0 0 24px; color: var(--muted); font-size: 13px; }
+.mc-steps li, .mc-steps a { display: inline-flex; gap: 6px; align-items: center; color: inherit; text-decoration: none; }
+.mc-steps a:hover { color: var(--primary-hover); text-decoration: underline; }
+.mc-steps li span { display: grid; place-items: center; border-radius: 50%; width: 24px; height: 24px; background: white; border: 1px solid var(--line); font-weight: 600; flex-shrink: 0; }
+.mc-steps .done span, .mc-steps .current span { color: white; background: var(--primary); border-color: var(--primary); }
+.mc-steps .done a { color: var(--text); font-weight: 500; }
+.mc-steps .current { color: var(--primary-hover); font-weight: 700; }
 
 /* ---------- thông báo, chip ---------- */
 .alert { padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--line); margin-bottom: 16px; font-size: 15px; }
