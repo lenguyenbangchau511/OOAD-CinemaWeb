@@ -94,7 +94,8 @@ public class GiuGheService {
         giaiPhongGheQuaHan();
         SuatChieu suat = laySuat(req.maSuat());
         PhongChieu phong = layPhong(suat);
-        if (!suat.conBanVe(ThoiGian.bayGio()) || !phong.dangHoatDong()) {
+        if (!suat.conBanVe(ThoiGian.bayGio()) || !phong.dangHoatDong()
+                || !suatChieuService.phimConBanVe(suat.getMaPhim())) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "SUAT_KHONG_KHA_DUNG", "Suất chiếu không khả dụng");
         }
 

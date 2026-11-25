@@ -50,6 +50,6 @@ function ve(ds, coLoc) {
             <td><div class="thanh-tien-do" role="progressbar" aria-valuenow="${phanTram}" aria-valuemin="0" aria-valuemax="100"><span style="width:${phanTram}%"></span></div>
                 <span class="muted">${s.soGheDaBan} bán · ${s.soGheDangGiu} giữ · ${s.soGheTrong} trống</span></td>
             <td>${chipTrangThai(s.trangThai, NHAN.trangThaiSuat)}</td>
-            <td><a class="button secondary nho" href="${TRANG.suatChieuChiTiet}?maSuat=${encodeURIComponent(s.maSuat)}">Chi tiết</a></td></tr>`;
+            <td><a class="button secondary nho" href="${TRANG.suatChieuChiTiet}?maSuat=${encodeURIComponent(s.maSuat)}&ngay=${encodeURIComponent(s.ngayChieu)}">Chi tiết</a></td></tr>`;
         }).join('')}</tbody></table></div>`;
 }

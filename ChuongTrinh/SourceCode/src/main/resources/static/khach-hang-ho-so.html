@@ -8,21 +8,13 @@
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/quan-ly.css">
     <link rel="stylesheet" href="css/megacine-pages.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
     <script type="module" src="js/khach-hang-ho-so.js"></script>
 </head>
-<body class="mc-page">
-<header class="header"><div class="container header-inner">
-    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
-    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
-</div></header>
-<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
-<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
-<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
-<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
-<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
-<p>Khách hàng và nhân sự</p><a href="khach-hang.html" aria-current="page">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
-<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
-</nav></aside><main class="main chau-page">
+<body class="mc-page" data-nb-screen="customers">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main chau-page nb-main">
     <p class="breadcrumb"><a href="khach-hang.html" id="ve-danh-sach">Khách hàng</a> / Hồ sơ</p>
     <div class="page-title">
         <div><h1 id="ten-kh">Hồ sơ khách hàng</h1><p id="phu-kh"></p></div>
@@ -77,5 +69,6 @@
         </section>
     </div>
 </main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>

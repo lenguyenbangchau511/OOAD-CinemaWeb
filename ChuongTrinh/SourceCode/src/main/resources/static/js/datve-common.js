@@ -18,6 +18,13 @@ export const TRANG = {
 };
 
 /** Khóa sessionStorage lưu "phiên đặt vé" chia sẻ giữa các bước 7 -> 8 -> 9 -> 10 -> 11. */
+export function duongDanChonSuat(maPhim, ngay) {
+    if (!maPhim) return './';
+    const query = new URLSearchParams({ maPhim });
+    if (ngay) query.set('ngay', ngay);
+    return `chi-tiet-phim.html?${query}#lich-chieu`;
+}
+
 const KHOA_DAT_VE = 'cinema.datVe';
 
 /**
@@ -111,6 +118,30 @@ export const NHAN = {
 };
 
 /** Màu chip theo trạng thái (kèm chữ nên không chỉ dựa vào màu). */
+export const ANH_MON_MAC_DINH = {
+    SP01: 'images/butter-popcorn.png',
+    SP02: 'images/caramel-popcorn.png',
+    SP03: 'images/cheese-popcorn.png',
+    SP04: 'images/snack-khoai-tay.jpg',
+    SP05: 'images/snack-rong-bien.jpg',
+    SP06: 'images/nachos-sot-pho-mai.jpg',
+    SP07: 'images/xuc-xich-nuong.jpg',
+    SP08: 'images/khoai-tay-chien.jpg',
+    SP09: 'images/coca-cola.webp',
+    SP10: 'images/soda-chanh.jpg',
+    SP11: 'images/nuoc-suoi.webp',
+    SP12: 'images/tra-dao.jpg',
+    SP13: 'images/tra-xanh.jpg',
+    CB01: 'images/combo-ca-nhan.png',
+    CB02: 'images/combo-cap-doi-caramel.png',
+    CB03: 'images/combo-cap-doi-pho-mai.png',
+    CB04: 'images/combo-nhom.png'
+};
+
+export function anhMon(mon) {
+    return mon?.hinhAnh?.trim() || ANH_MON_MAC_DINH[mon?.ma || mon?.maSanPham || mon?.maCombo] || '';
+}
+
 export function chipTrangThai(ma, bang) {
     const nhom = { DA_THANH_TOAN: 'tot', HOAT_DONG: 'tot', CHUA_SU_DUNG: 'tot', SAP_CHIEU: 'tot', DANG_CHIEU: 'tot',
         CHO_THANH_TOAN: 'cho', BAO_TRI: 'cho', DA_SU_DUNG: 'trung-tinh', KET_THUC: 'trung-tinh',
@@ -118,17 +149,12 @@ export function chipTrangThai(ma, bang) {
     return `<span class="chip ${nhom}">${thoat(bang[ma] || ma || '—')}</span>`;
 }
 
-/** Thanh trên cùng: hiện "Lịch sử vé" và trạng thái đăng nhập cho trang dành cho khách. */
-export async function capNhatThanhTren() {
-    const vung = document.getElementById('nguoi-dung');
-    if (!vung) return;
+export async function layNguoiDungDatVe() {
     try {
-        const toi = await goiApi('/api/dat-ve/toi', { chuyenKhiChuaDangNhap: false });
-        vung.innerHTML = toi.dangNhap
-            ? '<a class="button secondary" href="lich-su-ve.html">Vé của tôi</a>'
-            : `<a class="button secondary" href="${TRANG.dangNhap}?quayLai=${encodeURIComponent(location.pathname + location.search)}">Đăng nhập</a>`;
-        return toi;
-    } catch { return null; }
+        return await goiApi('/api/dat-ve/toi', { chuyenKhiChuaDangNhap: false });
+    } catch {
+        return null;
+    }
 }
 
 /** Đếm ngược mm:ss. dongHo.bat(soGiay) để bắt đầu / đồng bộ lại; hết giờ thì gọi khiHetGio(). */

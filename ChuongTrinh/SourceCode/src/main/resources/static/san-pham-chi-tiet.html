@@ -4,26 +4,20 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cinema 11 | Chi tiết sản phẩm / combo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
-
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css"><link rel="stylesheet" href="css/noi-bo-shell.css">
+<script type="module" src="js/noi-bo-shell.js"></script>
 <script type="module" src="js/san-pham-chi-tiet.js"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-  <div class="container header-inner">
-    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-    <nav class="kho-nav" aria-label="Menu quản lý kho">
-      <a href="ton-kho.html" >Tồn kho</a>
-      <a href="san-pham-form.html">Sản phẩm</a>
-      <a href="combo-form.html">Combo</a>
-      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
-      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
-      <a href="soat-ve.html" >Soát vé</a>
-    </nav>
-    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-  </div>
-</header>
-<main class="container main">
+<body data-nb-screen="stock">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+<nav class="kho-nav nb-subnav" aria-label="Menu quản lý kho">
+  <a href="ton-kho.html">Tồn kho</a>
+  <a href="san-pham-form.html">Sản phẩm</a>
+  <a href="combo-form.html">Combo</a>
+  <a href="phieu-nhap-kho.html">Phiếu nhập</a>
+  <a href="phieu-kiem-ke.html">Kiểm kê</a>
+</nav>
 <div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Chi tiết sản phẩm / combo</div>
 <div class="page-title"><div><h1>Chi tiết sản phẩm / combo</h1><p>Xem thông tin sản phẩm hoặc combo và thành phần liên quan.</p></div></div>
 <div id="api-status" class="alert thong-tin" role="status">Đang kết nối máy chủ...</div>
@@ -32,5 +26,6 @@
 <div id="thong-bao" class="alert" hidden role="status"></div>
 <div class="hanh-dong"><a class="button secondary" href="ton-kho.html">Quay lại tồn kho</a><a id="nut-sua" class="button primary" href="#">Chỉnh sửa</a></div>
 
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body></html>

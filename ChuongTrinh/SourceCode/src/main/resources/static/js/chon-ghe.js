@@ -1,6 +1,6 @@
 /* Giao diện 7 - Chọn ghế và giữ ghế (UC5.1, UC5.2). Chạy thật với API /api/suat-chieu/{maSuat}/so-do-ghe và /api/giu-ghe. */
 import {
-    TRANG, capNhatThanhTren, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
+    TRANG, layNguoiDungDatVe, dinhDangGio, dinhDangNgay, duongDanChonSuat, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
     luuPhienDatVe, NHAN, taoDongHoDemNguoc, thamSo, thoat, xoaPhienDatVe
 } from './datve-common.js';
 
@@ -11,26 +11,38 @@ const el = {
     gheChon: document.getElementById('ghe-chon'), chuaChon: document.getElementById('chua-chon'),
     tamTinh: document.getElementById('tam-tinh'), nutHuy: document.getElementById('nut-huy'),
     nutTiepTuc: document.getElementById('nut-tiep-tuc'), khoiDem: document.getElementById('khoi-dem'),
-    dem: document.getElementById('dem-nguoc'), soGheToiDa: document.getElementById('so-ghe-toi-da')
+    dem: document.getElementById('dem-nguoc'), soGheToiDa: document.getElementById('so-ghe-toi-da'),
+    buocChonSuat: document.getElementById('buoc-chon-suat'), linkChonSuat: document.getElementById('link-chon-suat'),
+    nutQuayLai: document.getElementById('nut-quay-lai')
 };
 
 let maPhienGiu = null;      // phiên giữ ghế hiện tại (lưu trong sessionStorage để sang bước sau vẫn dùng được)
 let phienHienTai = null;    // PhienGiuDto gần nhất
+let suatHienTai = null;
 let daDangNhap = true;
 let dangXuLy = false;
 const dongHo = taoDongHoDemNguoc(el.dem, hetGio);
 
+function veThanhToanNeuDaXacNhan() {
+    const phien = layPhienDatVe();
+    if (!phien.daXacNhan || !phien.maDonHang || (maSuat && phien.maSuat !== maSuat)) return false;
+    location.replace(`thanh-toan.html?maDonHang=${encodeURIComponent(phien.maDonHang)}`);
+    return true;
+}
+window.addEventListener('pageshow', e => { if (e.persisted) veThanhToanNeuDaXacNhan(); });
+
 khoiTao();
 
 async function khoiTao() {
+    const luu = layPhienDatVe();
+    if (veThanhToanNeuDaXacNhan()) return;
     if (!maSuat) {
         el.soDo.innerHTML = '<div class="trong"><h2>Chưa chọn suất chiếu</h2><p>Vui lòng chọn suất chiếu từ trang phim.</p><a class="button primary" href="./">Về trang chủ</a></div>';
         el.thongTinSuat.textContent = '';
         return;
     }
-    const luu = layPhienDatVe();
     maPhienGiu = luu.maSuat === maSuat ? luu.maPhienGiu || null : null;
-    const toi = await capNhatThanhTren();
+    const toi = await layNguoiDungDatVe();
     daDangNhap = !toi || toi.dangNhap;
     if (!daDangNhap) {
         hienThongBao(el.thongBao, 'Bạn có thể xem sơ đồ ghế. Vui lòng đăng nhập để giữ ghế.', 'thong-tin');
@@ -62,9 +74,12 @@ async function taiSoDo(imLang = false) {
 
 function veThongTinSuat(sd) {
     const s = sd.suat;
+    suatHienTai = s;
     el.tieuDe.textContent = s.tenPhim + (s.gioiHanDoTuoi ? ` (${s.gioiHanDoTuoi})` : '');
     el.thongTinSuat.textContent = `${dinhDangNgay(s.ngayChieu)} · ${dinhDangGio(s.gioBatDau)} - ${dinhDangGio(s.gioKetThuc)} · ` +
         `${s.tenPhong} (${NHAN.loaiPhong[s.loaiPhong] || s.loaiPhong})`;
+    const suatHref = duongDanChonSuat(s.maPhim, s.ngayChieu);
+    [el.buocChonSuat, el.linkChonSuat, el.nutQuayLai].forEach((a) => { if (a) a.href = suatHref; });
 }
 
 function veSoDo(sd) {
@@ -94,7 +109,7 @@ function nutGhe(g, choPhep) {
 
 /** Chọn ghế trống -> giữ ghế; bấm lại ghế của mình -> bỏ giữ. */
 async function chonGhe(maGheSuat, laCuaToi) {
-    if (dangXuLy) return;
+    if (dangXuLy || veThanhToanNeuDaXacNhan()) return;
     if (!daDangNhap) {
         location.href = `${TRANG.dangNhap}?quayLai=${encodeURIComponent(location.pathname + location.search)}`;
         return;
@@ -102,12 +117,26 @@ async function chonGhe(maGheSuat, laCuaToi) {
     dangXuLy = true;
     hienThongBao(el.thongBao, '');
     try {
+        const cu = layPhienDatVe();
+        if (cu.maPhienGiu && cu.maSuat !== maSuat && !cu.daXacNhan) {
+            try {
+                await goiApi(`/api/giu-ghe/${encodeURIComponent(cu.maPhienGiu)}`, { method: 'DELETE' });
+            } catch (loi) {
+                if (loi.status !== 404 && loi.status !== 410) throw loi;
+            }
+            xoaPhienDatVe();
+        }
         phienHienTai = laCuaToi
             ? await goiApi(`/api/giu-ghe/${encodeURIComponent(maPhienGiu)}/ghe/${encodeURIComponent(maGheSuat)}`, { method: 'DELETE' })
             : await goiApi('/api/giu-ghe', { method: 'POST', body: { maSuat, maPhienGiu, dsMaGheSuat: [maGheSuat] } });
         maPhienGiu = phienHienTai.maPhienGiu;
         if (layPhienDatVe().maPhienGiu !== maPhienGiu) xoaPhienDatVe();
-        luuPhienDatVe({ maSuat, maPhienGiu });
+        luuPhienDatVe({
+            maSuat,
+            maPhienGiu,
+            maPhim: suatHienTai?.maPhim || layPhienDatVe().maPhim || null,
+            tenPhim: suatHienTai?.tenPhim || layPhienDatVe().tenPhim || null
+        });
         veTomTat();
     } catch (loi) {
         hienThongBao(el.thongBao, loi.thongBao, 'loi');   // vd "Ghế đã có người chọn, vui lòng chọn ghế khác"
@@ -151,7 +180,7 @@ async function hetGio() {
 }
 
 async function huyGiuGhe() {
-    if (!maPhienGiu || dangXuLy) return;
+    if (!maPhienGiu || dangXuLy || veThanhToanNeuDaXacNhan()) return;
     dangXuLy = true;
     try {
         await goiApi(`/api/giu-ghe/${encodeURIComponent(maPhienGiu)}`, { method: 'DELETE' });
@@ -168,17 +197,19 @@ async function huyGiuGhe() {
     }
 }
 
-/** Sang bước chọn đồ ăn (giao diện 8 của Châu). Nếu trang đó chưa có thì đi thẳng sang thanh toán (đơn tạm). */
-async function tiepTuc() {
+function tiepTuc() {
+    if (dangXuLy || veThanhToanNeuDaXacNhan()) return;
     if (!phienHienTai || phienHienTai.dsGhe.length === 0) {
         hienThongBao(el.thongBao, 'Vui lòng chọn ít nhất một ghế', 'loi');
         return;
     }
     luuPhienDatVe({
-        maSuat, maPhienGiu, tamTinh: phienHienTai.tamTinh,
+        maSuat,
+        maPhienGiu,
+        maPhim: suatHienTai?.maPhim || layPhienDatVe().maPhim || null,
+        tenPhim: suatHienTai?.tenPhim || layPhienDatVe().tenPhim || null,
+        tamTinh: phienHienTai.tamTinh,
         dsGhe: phienHienTai.dsGhe.map((g) => ({ maGheSuat: g.maGheSuat, tenGhe: g.tenGhe, loaiGhe: g.loaiGhe, giaVe: g.giaVe }))
     });
-    let coTrangDoAn = false;
-    try { coTrangDoAn = (await fetch(TRANG.chonDoAn, { method: 'HEAD' })).ok; } catch { /* bỏ qua */ }
-    location.href = coTrangDoAn ? TRANG.chonDoAn : 'thanh-toan.html?tamThoi=1';
+    location.href = TRANG.chonDoAn;
 }

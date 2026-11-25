@@ -4,26 +4,20 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cinema 11 | Phiếu nhập kho</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
-
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css"><link rel="stylesheet" href="css/noi-bo-shell.css">
+<script type="module" src="js/noi-bo-shell.js"></script>
 <script type="module" src="js/phieu-nhap-kho.js"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-  <div class="container header-inner">
-    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-    <nav class="kho-nav" aria-label="Menu quản lý kho">
-      <a href="ton-kho.html" >Tồn kho</a>
-      <a href="san-pham-form.html">Sản phẩm</a>
-      <a href="combo-form.html">Combo</a>
-      <a href="phieu-nhap-kho.html" aria-current="page">Phiếu nhập</a>
-      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
-      <a href="soat-ve.html" >Soát vé</a>
-    </nav>
-    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-  </div>
-</header>
-<main class="container main">
+<body data-nb-screen="stock">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+<nav class="kho-nav nb-subnav" aria-label="Menu quản lý kho">
+  <a href="ton-kho.html">Tồn kho</a>
+  <a href="san-pham-form.html">Sản phẩm</a>
+  <a href="combo-form.html">Combo</a>
+  <a href="phieu-nhap-kho.html" aria-current="page">Phiếu nhập</a>
+  <a href="phieu-kiem-ke.html">Kiểm kê</a>
+</nav>
 <div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Phiếu nhập kho</div>
 <div class="page-title"><div><h1>Phiếu nhập kho</h1><p>Lập phiếu nhập sản phẩm, tính thành tiền và tổng giá trị phiếu.</p></div></div>
 <div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
@@ -49,5 +43,6 @@
   </section>
 </form>
 
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body></html>

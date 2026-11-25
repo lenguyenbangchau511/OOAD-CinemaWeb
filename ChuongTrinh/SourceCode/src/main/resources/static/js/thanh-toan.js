@@ -1,7 +1,7 @@
 /* Giao diện 10 - Thanh toán đơn hàng (UC5.5). Chạy thật: kiểm tra đơn, tạo giao dịch, ghi nhận kết quả từ cổng sandbox. */
 import {
-    capNhatThanhTren, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe, luuPhienDatVe,
-    NHAN, taoDongHoDemNguoc, thamSo, thoat
+    dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe, luuPhienDatVe,
+    NHAN, taoDongHoDemNguoc, thamSo, thoat, xoaPhienDatVe
 } from './datve-common.js';
 
 const $ = (id) => document.getElementById(id);
@@ -20,7 +20,6 @@ const dongHo = taoDongHoDemNguoc($('dem-nguoc'), () => {
 khoiTao();
 
 async function khoiTao() {
-    await capNhatThanhTren();
     try {
         if (!maDonHang && thamSo('tamThoi')) {          // chưa có giao diện 8/9: tạo đơn tạm chỉ gồm vé
             const moi = await goiApi('/api/thanh-toan/don-tam', { method: 'POST', body: { maPhienGiu } });
@@ -59,6 +58,9 @@ async function taiDon() {
         hienThongBao($('thong-bao'), don.lyDoKhongThanhToan, 'loi');
         khoaThanhToan();
         $('trang-thai-tt').innerHTML = '<span class="chip xau">Không thể thanh toán</span>';
+        if (don.trangThai === 'DA_HUY' || don.soGiayConLai <= 0) {
+            xoaPhienDatVe();
+        }
         return;
     }
     dongHo.bat(don.soGiayConLai);

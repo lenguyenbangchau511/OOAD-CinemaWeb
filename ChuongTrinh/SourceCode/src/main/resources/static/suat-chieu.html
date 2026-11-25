@@ -8,20 +8,13 @@
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
     <link rel="stylesheet" href="css/phong-suat.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
     <script type="module" src="js/suat-chieu.js"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-    <div class="container header-inner">
-        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-        <nav aria-label="Menu quản lý">
-            <a href="phong-chieu.html">Phòng chiếu</a>
-            <a href="suat-chieu.html" aria-current="page">Suất chiếu</a>
-        </nav>
-        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-    </div>
-</header>
-<main class="container main">
+<body data-nb-screen="lich">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
     <div class="page-title"><div><h1>Danh sách suất chiếu</h1><p>Lịch chiếu theo ngày; mặc định là hôm nay.</p></div>
         <a class="button primary" id="nut-them" href="#">+ Thêm suất chiếu</a></div>
     <form class="filters" id="bo-loc" role="search">
@@ -36,6 +29,7 @@
     <div class="alert" id="thong-bao" hidden></div>
     <p class="muted" id="so-ket-qua" aria-live="polite"></p>
     <div id="ket-qua"></div>
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 /* Giao diện 11 - Kết quả đặt vé và vé điện tử (UC5.6/5.8). Chạy thật với /api/dat-ve/ket-qua/{maDonHang}. */
 import {
-    capNhatThanhTren, dinhDangGio, dinhDangNgay, dinhDangNgayGio, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
+    dinhDangGio, dinhDangNgay, dinhDangNgayGio, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
     NHAN, thamSo, thoat, xoaPhienDatVe, chipTrangThai
 } from './datve-common.js';
 
@@ -10,7 +10,6 @@ const vung = document.getElementById('noi-dung');
 khoiTao();
 
 async function khoiTao() {
-    await capNhatThanhTren();
     if (!maDonHang) {
         vung.innerHTML = '<div class="trong"><h2>Chưa có đơn hàng</h2><p>Không tìm thấy mã đơn hàng cần xem.</p><a class="button primary" href="./">Về trang chủ</a></div>';
         return;

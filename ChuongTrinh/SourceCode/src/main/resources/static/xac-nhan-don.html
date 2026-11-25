@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="css/dat-ve.css">
     <script type="module" src="js/xac-nhan-don.js"></script>
     <link rel="stylesheet" href="css/megacine-pages.css">
+    <link rel="stylesheet" href="css/home-account.css">
+    <script type="module" src="js/customer-layout.js"></script>
 </head>
 <body class="mc-page xac-nhan-don">
-<header class="header"><div class="container header-inner">
-    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
-    <nav aria-label="Menu"><a href="./">Trang chủ</a><a href="./#phim">Phim</a><a href="./#combo">Bắp nước</a><a href="./#uu-dai">Khuyến mãi</a></nav>
-</div></header>
+<header data-customer-header></header>
 <main class="container main chau-page">
-    <ol class="mc-steps" aria-label="Tiến trình đặt vé"><li class="done"><span>1</span>Chọn suất</li><li class="done"><span>2</span>Chọn ghế</li><li class="done"><span>3</span>Bắp nước</li><li class="current" aria-current="step"><span>4</span>Xác nhận</li><li class=""><span>5</span>Thanh toán</li></ol><h1>Xác nhận đơn và áp dụng ưu đãi</h1><p class="mc-muted">Kiểm tra thông tin đơn trước khi thanh toán.</p>
+    <ol class="mc-steps" aria-label="Tiến trình đặt vé"><li class="done"><a id="buoc-chon-suat" href="./"><span>1</span>Chọn suất</a></li><li class="done"><a id="buoc-chon-ghe" href="chon-ghe.html"><span>2</span>Chọn ghế</a></li><li class="done"><a id="buoc-bap-nuoc" href="chon-do-an.html"><span>3</span>Bắp nước</a></li><li class="current" aria-current="step"><span>4</span>Xác nhận</li><li class=""><span>5</span>Thanh toán</li></ol><h1>Xác nhận đơn và áp dụng ưu đãi</h1><p class="mc-muted">Kiểm tra thông tin đơn trước khi thanh toán. Bạn vẫn có thể quay lại chỉnh ghế hoặc bắp nước trước khi bấm xác nhận.</p>
     <p id="thong-bao" role="status" hidden></p>
-    <div class="mc-hold">Giữ ghế còn <span id="han"></span></div><div class="mc-columns"><div><section id="don" class="chau-card"></section><form id="uu-dai" class="chau-card"><h2>Ưu đãi</h2><label>Mã khuyến mãi <input id="ma" placeholder="Các mã cách nhau bằng dấu phẩy"></label><label>Điểm sử dụng <input id="diem" type="number" min="0" step="1" value="0"></label><fieldset id="lua-chon" hidden><legend>Chọn một ưu đãi đồng hạng</legend></fieldset><button id="tinh" class="button secondary">Tính lại</button></form></div><aside class="chau-card mc-summary"><h2>Tổng kết đơn</h2><div id="tong-ket"></div><div class="chau-actions"><a href="chon-do-an.html">Chỉnh đồ ăn</a><label>Thanh toán <select id="phuong-thuc"><option value="MOMO">MoMo</option><option value="VNPAY">VNPAY</option><option value="THE_NGAN_HANG">Thẻ ngân hàng</option></select></label><button id="xac-nhan" class="button primary" disabled>Xác nhận và thanh toán</button></div>
+    <div class="mc-hold">Giữ ghế còn <span id="han"></span></div><div class="mc-columns"><div><section id="don" class="chau-card"></section><form id="uu-dai" class="chau-card"><h2>Ưu đãi</h2><label>Mã khuyến mãi <input id="ma" placeholder="Các mã cách nhau bằng dấu phẩy"></label><label>Điểm sử dụng <input id="diem" type="number" min="0" step="1" value="0"></label><fieldset id="lua-chon" hidden><legend>Chọn một ưu đãi đồng hạng</legend></fieldset><button id="tinh" class="button secondary">Tính lại</button></form></div><aside class="chau-card mc-summary"><h2>Tổng kết đơn</h2><div id="tong-ket"></div><div class="chau-actions"><label>Thanh toán <select id="phuong-thuc"><option value="MOMO">MoMo</option><option value="VNPAY">VNPAY</option><option value="THE_NGAN_HANG">Thẻ ngân hàng</option></select></label><button id="xac-nhan" class="button primary" disabled>Xác nhận và thanh toán</button><a class="booking-back" id="quay-lai-do-an" href="chon-do-an.html" aria-label="Chỉnh bắp nước" title="Chỉnh bắp nước"><span aria-hidden="true">←</span></a></div>
 </aside></div></main>
+<footer data-customer-footer></footer>
 </body>
 </html>

@@ -3,26 +3,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cinema 11 | Thanh toán</title>
+    <title>MegaCine | Thanh toán</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
     <script type="module" src="js/thanh-toan.js"></script>
+    <link rel="stylesheet" href="css/home-account.css">
+    <script type="module" src="js/customer-layout.js"></script>
 </head>
 <body>
-<header class="header">
-    <div class="container header-inner">
-        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
-        <nav aria-label="Menu chính">
-            <a href="./">Trang chủ</a>
-            <a href="./#phim">Phim</a>
-            <a href="lich-su-ve.html" >Lịch sử vé</a>
-        </nav>
-        <div class="header-right" id="nguoi-dung"></div>
-    </div>
-</header>
+<header data-customer-header></header>
 
 <main class="container main">
+    <ol class="mc-steps" aria-label="Tiến trình đặt vé">
+        <li class="done"><span>1</span>Chọn suất</li>
+        <li class="done"><span>2</span>Chọn ghế</li>
+        <li class="done"><span>3</span>Bắp nước</li>
+        <li class="done"><span>4</span>Xác nhận</li>
+        <li class="current" aria-current="step"><span>5</span>Thanh toán</li>
+    </ol>
     <p class="breadcrumb"><a href="./">Trang chủ</a> / Thanh toán</p>
     <div class="page-title">
         <div>
@@ -67,8 +66,8 @@
                     <label><input type="radio" name="pt" value="VNPAY"> VNPay</label>
                     <label><input type="radio" name="pt" value="THE_NGAN_HANG"> Thẻ ngân hàng</label>
                 </fieldset>
+                <p class="muted" id="ghi-chu-xac-nhan" style="margin-top:12px">Đơn hàng đã được xác nhận, không thể quay lại chỉnh sửa.</p>
                 <div class="hanh-dong">
-                    <a class="button secondary" id="nut-quay-lai" href="./">Quay lại</a>
                     <button type="submit" class="button primary" id="nut-thanh-toan">Thanh toán</button>
                 </div>
             </form>
@@ -86,13 +85,7 @@
     </div>
 </main>
 
-<footer class="footer">
-    <div class="container footer-inner">
-        <div><a class="brand" href="./"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11</a>
-            <p>Website quản lý rạp chiếu phim.</p></div>
-        <div><strong>Liên hệ demo</strong><p>hello@cinema11.example<br>TP. Hồ Chí Minh, Việt Nam</p></div>
-        <div><strong>Hỗ trợ</strong><p>Giao dịch lỗi hoặc cần hoàn tiền: liên hệ quầy vé với mã đơn hàng.</p></div>
-    </div>
-</footer>
+
+<footer data-customer-footer></footer>
 </body>
 </html>

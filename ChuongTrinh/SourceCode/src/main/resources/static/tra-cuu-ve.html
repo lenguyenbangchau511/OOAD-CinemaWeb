@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MegaCine | Danh sách và tra cứu vé nội bộ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <script type="module" src="js/lich-su-ve.js"></script>
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
+</head>
+<body data-nb-screen="history" data-tra-cuu-noi-bo>
+<header class="nb-header" id="nb-header"></header>
+
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+    <div class="page-title">
+        <div>
+            <h1>Danh sách và tra cứu vé nội bộ</h1>
+            <p id="ghi-chu">Tra cứu theo mã đơn, mã vé hoặc số điện thoại khách hàng.</p>
+        </div>
+    </div>
+
+    <form class="filters" id="bo-loc" role="search">
+        <div class="field">
+            <label for="tu-khoa" id="nhan-tu-khoa">Mã đơn hoặc mã vé</label>
+            <input id="tu-khoa" type="search" placeholder="Ví dụ DH01, V01">
+        </div>
+        <div class="field">
+            <label for="tu-ngay">Từ ngày</label>
+            <input id="tu-ngay" type="date">
+        </div>
+        <div class="field">
+            <label for="den-ngay">Đến ngày</label>
+            <input id="den-ngay" type="date">
+        </div>
+        <div class="field">
+            <label for="tt-don">Trạng thái đơn</label>
+            <select id="tt-don">
+                <option value="">Tất cả</option>
+                <option value="DA_THANH_TOAN">Đã thanh toán</option>
+                <option value="CHO_THANH_TOAN">Chờ thanh toán</option>
+                <option value="DA_HUY">Đã hủy</option>
+            </select>
+        </div>
+        <div class="field">
+            <label for="tt-ve">Trạng thái vé</label>
+            <select id="tt-ve">
+                <option value="">Tất cả</option>
+                <option value="CHUA_SU_DUNG">Chưa sử dụng</option>
+                <option value="DA_SU_DUNG">Đã sử dụng</option>
+                <option value="DA_HUY">Đã hủy</option>
+                <option value="HET_HAN">Hết hạn</option>
+                <option value="DA_DOI">Đã đổi</option>
+            </select>
+        </div>
+        <div class="actions">
+            <button type="submit" class="button primary">Tìm kiếm</button>
+            <button type="button" class="button secondary" id="xoa-loc">Xóa lọc</button>
+        </div>
+    </form>
+
+    <div id="thong-bao" role="status" hidden></div>
+    <p class="muted" id="so-ket-qua" role="status" style="margin-bottom:12px"></p>
+    <div id="ket-qua"></div>
+</main></div>
+
+
+<footer class="nb-footer" id="nb-footer"></footer>
+</body>
+</html>

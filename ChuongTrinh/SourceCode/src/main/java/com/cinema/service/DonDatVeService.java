@@ -8,7 +8,6 @@ import com.cinema.entity.ChiTietDichVu;
 import com.cinema.entity.DonHang;
 import com.cinema.enums.KenhBanVe;
 import com.cinema.enums.TrangThaiDonHang;
-import com.cinema.enums.TrangThaiThanhToan;
 import com.cinema.exception.NghiepVuException;
 import com.cinema.repository.*;
 import com.cinema.util.*;
@@ -31,20 +30,18 @@ public class DonDatVeService {
     private final SuatChieuService suatService;
     private final DonHangRepository donRepo;
     private final ChiTietDichVuRepository dichVuRepo;
-    private final ThanhToanRepository thanhToanRepo;
     private final LienKetModuleKhac lienKet;
     private final CauHinhRap cauHinh;
 
     public DonDatVeService(JdbcTemplate jdbc, GiuGheService giuGhe, SuatChieuRepository suatRepo,
                           SuatChieuService suatService, DonHangRepository donRepo, ChiTietDichVuRepository dichVuRepo,
-                          ThanhToanRepository thanhToanRepo, LienKetModuleKhac lienKet, CauHinhRap cauHinh) {
+                          LienKetModuleKhac lienKet, CauHinhRap cauHinh) {
         this.jdbc = jdbc;
         this.giuGhe = giuGhe;
         this.suatRepo = suatRepo;
         this.suatService = suatService;
         this.donRepo = donRepo;
         this.dichVuRepo = dichVuRepo;
-        this.thanhToanRepo = thanhToanRepo;
         this.lienKet = lienKet;
         this.cauHinh = cauHinh;
     }
@@ -81,11 +78,12 @@ public class DonDatVeService {
 
     @Transactional
     public DonHangMoiDto xacNhan(NguoiDung khach, XacNhanDonRequest req, String maDonCu) {
-        DonHang don = maDonCu == null ? new DonHang() : donRepo.khoaTheoMa(maDonCu).orElseThrow();
-        if (maDonCu != null && (don.getTrangThai() != TrangThaiDonHang.CHO_THANH_TOAN
-                || thanhToanRepo.findByMaDonHangOrderByThoiGianGiaoDichDesc(maDonCu).stream()
-                        .anyMatch(tt -> tt.getTrangThai() == TrangThaiThanhToan.CHO_XU_LY))) {
-            throw loi("Đơn đã được gửi thanh toán. Vui lòng tiếp tục tại màn hình thanh toán.");
+        if (maDonCu != null) {
+            DonHang donCu = donRepo.findById(maDonCu).orElseThrow(() -> loi("Không tìm thấy đơn đã xác nhận."));
+            if (!Objects.equals(donCu.getMaKhachHang(), khach.maKhachHang())) {
+                throw new NghiepVuException(HttpStatus.FORBIDDEN, "Đơn không thuộc về tài khoản của bạn.");
+            }
+            return new DonHangMoiDto(donCu.getMaDonHang(), donCu.getTongTien());
         }
 
         BaoGia gia = tinhGia(khach, req);
@@ -94,20 +92,18 @@ public class DonDatVeService {
             throw loi("Tổng tiền đã thay đổi. Vui lòng xem lại và xác nhận đơn.");
         }
 
-        if (maDonCu == null) {
-            don.setMaDonHang(SinhMa.ngauNhien("DH", 6));
-            don.setMaKhachHang(khach.maKhachHang());
-            don.setNgayDat(ThoiGian.bayGio());
-            don.setKenhBan(KenhBanVe.ONLINE);
-            don.setTrangThai(TrangThaiDonHang.CHO_THANH_TOAN);
-        }
+        DonHang don = new DonHang();
+        don.setMaDonHang(SinhMa.ngauNhien("DH", 6));
+        don.setMaKhachHang(khach.maKhachHang());
+        don.setNgayDat(ThoiGian.bayGio());
+        don.setKenhBan(KenhBanVe.ONLINE);
+        don.setTrangThai(TrangThaiDonHang.CHO_THANH_TOAN);
         don.setMaKhuyenMai(gia.khuyenMai() == null ? null : gia.khuyenMai().ma());
         don.setSoTienGiamTuKhuyenMai(gia.khuyenMai() == null ? BigDecimal.ZERO : gia.khuyenMai().soTienGiam());
         don.setDiemSuDung(gia.diemDung());
         don.setSoTienGiamTuDiem(gia.giamDiem());
         don.setTongTien(gia.tongTien());
-        donRepo.save(don);
-        if (maDonCu != null) dichVuRepo.deleteAll(dichVuRepo.findByMaDonHang(maDonCu));
+        donRepo.saveAndFlush(don);
         dichVuRepo.saveAll(gia.dichVu().stream().map(dong -> taoChiTiet(dong, don.getMaDonHang())).toList());
         return new DonHangMoiDto(don.getMaDonHang(), don.getTongTien());
     }
@@ -204,7 +200,7 @@ public class DonDatVeService {
 
     private ChiTietDichVu taoChiTiet(Dong dong, String maDon) {
         var ct = new ChiTietDichVu();
-        if (maDon != null) ct.setMaChiTietDV(SinhMa.ngauNhien("DV", 10));
+        if (maDon != null) ct.setMaChiTietDV(SinhMa.ngauNhien("DV", 8));
         ct.setMaDonHang(maDon);
         if ("COMBO".equals(dong.mon().loai())) ct.setMaCombo(dong.mon().ma());
         else ct.setMaSanPham(dong.mon().ma());

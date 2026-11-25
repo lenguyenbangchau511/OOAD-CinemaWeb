@@ -1,3 +1,4 @@
+import { mountCustomerLayout } from './customer-layout.js';
 import {$,icon,esc,brand,footer,account,bindLogout,notice,api,current,goLogin,safeReturn,emailOk,userOk,field,passField,userHint,bindEyes,clearFormErrors,formError,invalidField} from './cinema-ui.js';
 
 const screen=document.body.dataset.screen;
@@ -6,14 +7,19 @@ const back=t=>`<p class="auth-link"><a href="login.html">← ${t}</a></p>`;
 const passHint='Ít nhất 8 ký tự. Nên dùng cụm từ dễ nhớ.';
 let user=null;
 const internalRegistration=screen==='register'&&new URLSearchParams(location.search).get('noiBo')==='1';
-footer();
+
 async function init(){
     if(screen==='change'||internalRegistration){
         try{user=await current();}catch(e){if(e.status===401)goLogin();else render('Không thể tải dữ liệu',`<p>${esc(e.message)}</p>`);return;}
     }
     if(internalRegistration&&!['QUAN_LY','NHAN_VIEN'].includes(user?.vaiTro)){location.replace('dang-ky.html');return;}
-    $('#header').innerHTML=brand(false)+(user?account(user):'<a class="btn" href="login.html">Đăng nhập</a>');
-    bindLogout();
+    if (internalRegistration || (user && user.vaiTro !== 'KHACH_HANG')) {
+        footer();
+        $('#header').innerHTML=brand(false)+account(user);
+        bindLogout();
+    } else {
+        mountCustomerLayout($('#header').parentElement, $('#footer'), user || undefined);
+    }
     await ({login,forgot,reset,register,change})[screen]();
 }
 function render(title,body){

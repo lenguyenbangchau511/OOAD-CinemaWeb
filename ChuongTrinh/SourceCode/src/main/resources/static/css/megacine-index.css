@@ -99,7 +99,7 @@ dialog p { margin: 8px 0 16px; }
 .megacine-home { background: #fbf8f5; }
 .megacine-home .container { max-width: 1120px; }
 .megacine-home .header-inner { min-height: 70px; justify-content: flex-start; gap: 28px; }
-.megacine-home .login { margin-left: auto; border-radius: 24px; white-space: nowrap; }
+.megacine-home .login { border-radius: 24px; white-space: nowrap; }
 .megacine-home .brand-mark { background: var(--primary); color: white; }
 .brand-accent, .eyebrow { color: var(--primary-hover); }
 .megacine-home nav a { border-radius: 24px; }
@@ -121,7 +121,7 @@ dialog p { margin: 8px 0 16px; }
 .home-filters input { flex: 1 1 250px; background: #fbf8f5; }
 .home-filters select { min-height: 44px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: inherit; font: inherit; }
 .megacine-home .result-count { min-height: 22px; margin: 8px 0 16px; }
-.megacine-home .film-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.megacine-home .film-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px 26px; }
 .megacine-home .film { background: transparent; border: 0; border-radius: 0; }
 .megacine-home .poster { border-radius: 14px; }
 .megacine-home .age { top: 8px; left: 8px; color: white; background: #a94714; font-size: 12px; }
@@ -130,13 +130,15 @@ dialog p { margin: 8px 0 16px; }
 .megacine-home .age[data-rating="T18"] { background: #ad2227; }
 .megacine-home .film-body { padding: 9px 0 0; gap: 6px; }
 .megacine-home .film h2 { font-size: 15px; }
+.megacine-home .film-title:hover { text-decoration: underline; }
 .megacine-home .film .meta { white-space: pre-line; }
 .megacine-home .film .button { margin: 0; font-size: 13px; min-height: 40px; }
 .megacine-home .film .booking-link { margin-top: auto; }
 .home-offers { margin-top: 60px; }
 .offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; margin-top: 18px; }
-.offer-grid article { display: flex; gap: 14px; background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-.offer-grid article > span { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--accent); color: var(--primary-hover); }
+.offer-grid :is(article, .offer-link) { display: flex; gap: 14px; background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.offer-grid :is(article, .offer-link) > span { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--accent); color: var(--primary-hover); }
+.offer-grid .offer-link:hover { border-color: var(--primary); background: #fff4eb; }
 .offer-grid h3 { margin: 0 0 4px; font-size: 15px; }
 .offer-grid p { color: var(--muted); font-size: 13px; }
 .megacine-home .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
@@ -145,7 +147,7 @@ dialog p { margin: 8px 0 16px; }
     .megacine-home .header-inner { flex-wrap: wrap; gap: 8px 14px; padding-block: 10px; }
     .megacine-home nav { order: 3; justify-content: flex-start; width: 100%; }
     .megacine-home .section-head { align-items: flex-start; flex-direction: column; gap: 12px; }
-    .megacine-home .film-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .megacine-home .film-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; }
     .home-filters input { flex-basis: 100%; width: 100%; }
     .home-filters select { flex: 1 1 130px; min-width: 0; }
 }

@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="css/dat-ve.css">
     <script type="module" src="js/chi-tiet-phim.js"></script>
     <link rel="stylesheet" href="css/megacine-pages.css">
+    <link rel="stylesheet" href="css/home-account.css">
+    <script type="module" src="js/customer-layout.js"></script>
 </head>
 <body class="mc-page chi-tiet-phim">
-<header class="header"><div class="container header-inner">
-    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
-    <nav aria-label="Menu"><a href="./">Trang chủ</a><a href="./#phim">Phim</a><a href="./#combo">Bắp nước</a><a href="./#uu-dai">Khuyến mãi</a></nav>
-</div></header>
+<header data-customer-header></header>
 <main class="container main chau-page">
     <h1 class="sr-only">Chi tiết phim</h1>
     <p id="thong-bao" role="status" hidden></p>
     <div class="mc-backdrop" aria-hidden="true"></div><section id="phim" class="chau-card"></section><section class="chau-card" id="lich-chieu"><h2>Lịch chiếu</h2><label>Ngày chiếu <input id="ngay" type="date"></label><div id="chon-ngay" class="mc-category" aria-label="Chọn ngày chiếu"></div><div id="suat" class="chau-actions"></div></section>
 </main>
+<footer data-customer-footer></footer>
 </body>
 </html>

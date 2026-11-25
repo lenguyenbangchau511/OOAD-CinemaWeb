@@ -6,23 +6,13 @@
     <title>Bắp nước và combo | MegaCine</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/megacine-index.css">
-    <link rel="stylesheet" href="css/home-account.css">
     <link rel="stylesheet" href="css/bap-nuoc.css">
-    <script type="module" src="js/home-account.js"></script>
     <script type="module" src="js/bap-nuoc.js"></script>
+    <link rel="stylesheet" href="css/home-account.css">
+    <script type="module" src="js/customer-layout.js"></script>
 </head>
 <body>
-<header class="header">
-    <div class="container header-inner">
-        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="brand-accent">Cine</span></span></a>
-        <nav aria-label="Menu chính">
-            <a href="./">Trang chủ</a>
-            <a href="bap-nuoc.html" aria-current="page">Bắp nước</a>
-            <a href="index.html#uu-dai">Khuyến mãi</a>
-        </nav>
-        <div id="cinema-home-account"><a class="button secondary login" href="login.html?quayLai=%2Fbap-nuoc.html">Đăng nhập</a></div>
-    </div>
-</header>
+<header data-customer-header></header>
 <main class="container main">
     <section class="menu-intro" aria-labelledby="menu-title">
         <div>
@@ -42,9 +32,7 @@
     <div id="thuc-don" class="film-grid"></div>
     <noscript><p>Bật JavaScript để xem thực đơn.</p></noscript>
 </main>
-<footer class="footer">
-    <div class="container footer-inner"><p>© MegaCine · Đồ án OOAD Nhóm 11</p></div>
-</footer>
+
 
 <template id="the-mon">
     <article class="film">
@@ -60,5 +48,6 @@
         </div>
     </article>
 </template>
+<footer data-customer-footer></footer>
 </body>
 </html>

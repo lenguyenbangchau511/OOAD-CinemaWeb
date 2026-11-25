@@ -4,29 +4,22 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cinema 11 | Thêm / sửa sản phẩm</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
-
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css"><link rel="stylesheet" href="css/noi-bo-shell.css">
+<script type="module" src="js/noi-bo-shell.js"></script>
 <script type="module" src="js/san-pham-form.js"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-  <div class="container header-inner">
-    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-    <nav class="kho-nav" aria-label="Menu quản lý kho">
-      <a href="ton-kho.html" >Tồn kho</a>
-      <a href="san-pham-form.html">Sản phẩm</a>
-      <a href="combo-form.html">Combo</a>
-      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
-      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
-      <a href="soat-ve.html" >Soát vé</a>
-    </nav>
-    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-  </div>
-</header>
-<main class="container main">
-<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Thêm / sửa sản phẩm</div>
+<body data-nb-screen="stock">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+<nav class="kho-nav nb-subnav" aria-label="Menu quản lý kho">
+  <a href="ton-kho.html">Tồn kho</a>
+  <a href="san-pham-form.html" aria-current="page">Sản phẩm</a>
+  <a href="combo-form.html">Combo</a>
+  <a href="phieu-nhap-kho.html">Phiếu nhập</a>
+  <a href="phieu-kiem-ke.html">Kiểm kê</a>
+</nav>
+<div class="breadcrumb"><a href="quan-ly-san-pham.html">Sản phẩm &amp; combo</a> / Thêm / sửa sản phẩm</div>
 <div class="page-title"><div><h1>Thêm / sửa sản phẩm</h1><p>Nhập đầy đủ thông tin sản phẩm đồ ăn hoặc thức uống.</p></div></div>
-<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
 
 <form id="form-san-pham" class="form-card">
   <div class="form-grid-2">
@@ -36,7 +29,7 @@
     <div class="field"><label for="don-vi">Đơn vị tính *</label><input id="don-vi" required maxlength="20" placeholder="Hộp, Lon, Chai..."></div>
     <div class="field"><label for="gia">Giá bán (VND) *</label><input id="gia" type="number" min="0" step="1000" required></div>
     <div class="field"><label for="trang-thai">Trạng thái *</label><select id="trang-thai"><option value="DANG_BAN">Đang bán</option><option value="NGUNG_BAN">Ngừng bán</option></select></div>
-    <div class="field"><label for="anh">Đường dẫn hình ảnh</label><input id="anh" type="url" placeholder="https://..."><small class="hint">Có thể để trống, dùng biểu tượng minh họa.</small></div>
+    <div class="field"><label for="anh">Đường dẫn hình ảnh</label><input id="anh" type="text" maxlength="255" placeholder="https://... hoặc images/..."><small class="hint">Có thể để trống, dùng biểu tượng minh họa.</small></div>
     <div class="field"><label>Xem trước hình ảnh</label><div id="preview" class="kho-thumb">🍿</div></div>
     <div class="field" style="grid-column:1/-1"><label for="mo-ta">Mô tả *</label><textarea id="mo-ta" required maxlength="1000" placeholder="Mô tả sản phẩm"></textarea></div>
   </div>
@@ -45,5 +38,6 @@
   <div id="thong-bao" class="alert" hidden role="status"></div>
 </form>
 
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body></html>

@@ -1,27 +1,5 @@
 import { dinhDangNgay, goiApi } from './datve-common.js';
 
-// Danh mục minh họa của trang chủ, dựa trên lịch rạp ngày 24/11/2026.
-const demoFilms = [
-    { tenPhim: "Ngày Con Còn Mẹ", theLoai: "Tâm lý, Gia đình", thoiLuong: 113,
-        gioiHanDoTuoi: "T16", poster: "ngay-con-con-me.webp" },
-    { tenPhim: "Kiến Lé Phiêu Lưu Ké", theLoai: "Hoạt hình, Phiêu lưu, Hài", thoiLuong: 77,
-        gioiHanDoTuoi: "P", poster: "kien-le-phieu-luu-ke.webp" },
-    { tenPhim: "Đấu Trường Sinh Tử: Bình Minh Ngày Chiêu Quân",
-        theLoai: "Hành động, Phiêu lưu, Viễn tưởng", thoiLuong: 158,
-        gioiHanDoTuoi: "T16", poster: "dau-truong-sinh-tu-binh-minh-ngay-chieu-quan.webp" },
-    { tenPhim: "Ramayana: Khởi Nguồn Một Huyền Thoại",
-        theLoai: "Hành động, Phiêu lưu, Giả tưởng", thoiLuong: 168,
-        gioiHanDoTuoi: "T13", poster: "ramayana-khoi-nguon-mot-huyen-thoai.webp" },
-    { tenPhim: "Bò Sữa Bay", theLoai: "Hài, Hành động, Chính kịch", thoiLuong: 108,
-        gioiHanDoTuoi: "T18", poster: "bo-sua-bay.webp" },
-    { tenPhim: "Chàng Mèo Mang Mũ", theLoai: "Hoạt hình, Gia đình", thoiLuong: 107,
-        gioiHanDoTuoi: "P", poster: "chang-meo-mang-mu.webp" },
-    { tenPhim: "Kẻ hồi sinh",
-        theLoai: "Hành động, giả tưởng", thoiLuong: 101, gioiHanDoTuoi: "T16", poster: "ke-hoi-sinh.webp" },
-    { tenPhim: "Ebenezer Phép Màu Đêm Giáng Sinh", theLoai: "Hài, Giả tưởng", thoiLuong: 116,
-        gioiHanDoTuoi: "T13", poster: "ebenezer-phep-mau-dem-giang-sinh.webp" }
-];
-
 let films = null;
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 const panel = document.querySelector("#films");
@@ -63,17 +41,19 @@ function createCard(film) {
         image.src = film.poster;
     }
     card.querySelector(".age").textContent = film.rating;
-    card.querySelector("h2").textContent = film.name;
     card.querySelector(".meta").textContent = movieMeta(film);
     card.querySelector(".age").dataset.rating = film.rating || "";
     card.querySelector(".age").hidden = !film.rating;
-    const detail = card.querySelector(".detail-link");
+    const title = document.createElement("a");
+    title.className = "film-title";
     const booking = card.querySelector(".booking-link");
-    const maPhimDich = film.demo ? "P01" : film.id;
-    detail.href = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
-    detail.setAttribute("aria-label", `Xem chi tiết – ${film.name}`);
+    const filmUrl = `chi-tiet-phim.html?maPhim=${encodeURIComponent(film.id)}`;
+    title.textContent = film.name;
+    title.href = filmUrl;
+    card.querySelector("h2").replaceChildren(title);
+    card.querySelector(".detail-link")?.remove();
     booking.hidden = film.tab !== "now";
-    booking.href = detail.href + "#lich-chieu";
+    booking.href = filmUrl + "#lich-chieu";
     booking.setAttribute("aria-label", `Đặt vé – ${film.name}`);
     return card;
 }
@@ -155,16 +135,14 @@ async function loadFilms() {
     try {
         const phim = await goiApi("/api/phim", { chuyenKhiChuaDangNhap: false });
         if (!Array.isArray(phim)) throw new Error("Phản hồi danh sách phim không hợp lệ");
-        const catalogTitles = new Set(phim.map(p => normalize(p.tenPhim)));
-        const demo = demoFilms.filter(p => !catalogTitles.has(normalize(p.tenPhim)))
-            .map(p => ({ ...p, trangThai: "DANG_CHIEU", demo: true }));
-        films = [...phim, ...demo].filter(p => ["DANG_CHIEU", "SAP_CHIEU"].includes(p.trangThai)).map(p => ({
-            id: p.maPhim, demo: p.demo === true, name: p.tenPhim, rating: p.gioiHanDoTuoi, genre: p.theLoai, minutes: p.thoiLuong,
+        films = phim.filter(p => ["DANG_CHIEU", "SAP_CHIEU"].includes(p.trangThai)).map(p => ({
+            id: p.maPhim, name: p.tenPhim, rating: p.gioiHanDoTuoi, genre: p.theLoai, minutes: p.thoiLuong,
             genres: (p.theLoai || "").split(",").map(value => value.trim()).filter(Boolean),
             searchText: normalize([p.tenPhim, p.daoDien, p.dienVien].filter(Boolean).join(" ")),
             release: p.ngayKhoiChieu, tab: p.trangThai === "DANG_CHIEU" ? "now" : "soon",
             tones: ["#fff0e5", "#efc7b9"], poster: p.poster ? "images/" + encodeURIComponent(p.poster) : null
         }));
+        document.querySelector(".home-hero").hidden = !films.some(film => film.id === "P02" && film.name === "Godzilla Trừ Không");
         addOptions(genre, films.flatMap(film => film.genres));
         addOptions(rating, films.map(film => film.rating));
         render();
@@ -179,4 +157,3 @@ async function loadFilms() {
 
 document.querySelector("#retry").addEventListener("click", loadFilms);
 loadFilms();
-// Menu tài khoản do home-account.js phụ trách.

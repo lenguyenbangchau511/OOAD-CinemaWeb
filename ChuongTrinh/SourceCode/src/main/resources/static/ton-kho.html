@@ -4,26 +4,20 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cinema 11 | Tồn kho và lịch sử biến động</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
-
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css"><link rel="stylesheet" href="css/noi-bo-shell.css">
+<script type="module" src="js/noi-bo-shell.js"></script>
 <script type="module" src="js/ton-kho.js?v=20261125-2"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-  <div class="container header-inner">
-    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-    <nav class="kho-nav" aria-label="Menu quản lý kho">
-      <a href="ton-kho.html" aria-current="page">Tồn kho</a>
-      <a href="san-pham-form.html">Sản phẩm</a>
-      <a href="combo-form.html">Combo</a>
-      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
-      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
-      <a href="soat-ve.html" >Soát vé</a>
-    </nav>
-    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-  </div>
-</header>
-<main class="container main">
+<body data-nb-screen="stock">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+<nav class="kho-nav nb-subnav" aria-label="Menu quản lý kho">
+  <a href="ton-kho.html" aria-current="page">Tồn kho</a>
+  <a href="san-pham-form.html">Sản phẩm</a>
+  <a href="combo-form.html">Combo</a>
+  <a href="phieu-nhap-kho.html">Phiếu nhập</a>
+  <a href="phieu-kiem-ke.html">Kiểm kê</a>
+</nav>
 <div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Tồn kho và lịch sử biến động</div>
 <div class="page-title"><div><h1>Tồn kho và lịch sử biến động</h1><p>Theo dõi số lượng tồn, mức tối thiểu và các lần nhập/bán/kiểm kê.</p></div></div>
 <div id="api-status" class="alert thong-tin" role="status">Đang kết nối máy chủ...</div>
@@ -51,5 +45,6 @@
 <section id="bang-lichsu" hidden><div class="kho-toolbar"><div class="left"><select class="kho-select" id="loc-san-pham"><option value="">Tất cả sản phẩm</option></select><select class="kho-select" id="loc-bien-dong"><option value="">Tất cả biến động</option><option value="NHAP_KHO">Nhập kho</option><option value="BAN_HANG">Bán hàng</option><option value="KIEM_KE">Kiểm kê</option><option value="DIEU_CHINH">Điều chỉnh</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Thời điểm</th><th>Sản phẩm</th><th>Loại biến động</th><th class="so">Thay đổi</th><th class="so">Tồn trước</th><th class="so">Tồn sau</th><th>Mã tham chiếu</th><th>Ghi chú</th></tr></thead><tbody id="ds-lichsu"></tbody></table></div></section>
 <div class="hanh-dong"><a class="button secondary" href="phieu-nhap-kho.html">Lập phiếu nhập kho</a><a class="button secondary" href="phieu-kiem-ke.html">Lập phiếu kiểm kê</a></div>
 
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body></html>

@@ -1,4 +1,4 @@
-import { dinhDangTien, goiApi } from './datve-common.js';
+import { anhMon, dinhDangTien, goiApi } from './datve-common.js';
 
 const loaiMon = {
     DO_AN: { ten: 'Đồ ăn', bieuTuong: '🍿' },
@@ -23,10 +23,11 @@ function taoTheMon(mon) {
     the.querySelector('.menu-description').textContent = mon.moTa || '';
     the.querySelector('strong').textContent = dinhDangTien(mon.gia);
     the.querySelector('.menu-price-row span').hidden = mon.khaDung > 0;
-    if (mon.hinhAnh) {
+    const duongDanAnh = anhMon(mon);
+    if (duongDanAnh) {
         const anh = the.querySelector('img');
         anh.addEventListener('error', () => { anh.hidden = true; }, { once: true });
-        anh.src = mon.hinhAnh;
+        anh.src = duongDanAnh;
         anh.hidden = false;
     }
     return the;

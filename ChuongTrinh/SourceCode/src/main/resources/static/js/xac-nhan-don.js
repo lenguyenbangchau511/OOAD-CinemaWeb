@@ -1,8 +1,16 @@
-import { dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
+import { dinhDangGio, dinhDangNgay, duongDanChonSuat, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
     luuPhienDatVe, taoDongHoDemNguoc, thoat } from './datve-common.js';
 
 const $ = id => document.getElementById(id);
+window.addEventListener('pageshow', e => {
+    // Khôi phục lựa chọn mới nhất và kiểm tra lại phiên khi trình duyệt dùng bộ nhớ trang.
+    if (e.persisted) location.reload();
+});
+
 const phien = layPhienDatVe();
+if (phien.daXacNhan && phien.maDonHang) {
+    location.replace('thanh-toan.html?maDonHang=' + encodeURIComponent(phien.maDonHang));
+}
 const form = $('uu-dai');
 const xacNhan = $('xac-nhan');
 const tinh = $('tinh');
@@ -10,6 +18,13 @@ let gia;
 let khuyenMaiDaChon = null;
 let dangGui = false;
 let hetHan = false;
+let dangXacNhan = false;
+
+const linkGheMacDinh = phien.maSuat ? `chon-ghe.html?maSuat=${encodeURIComponent(phien.maSuat)}` : './';
+const linkSuatMacDinh = phien.maPhim ? `chi-tiet-phim.html?maPhim=${encodeURIComponent(phien.maPhim)}#lich-chieu` : './';
+$('buoc-chon-suat').href = linkSuatMacDinh;
+$('buoc-chon-ghe').href = linkGheMacDinh;
+if (phien.phuongThuc) $('phuong-thuc').value = phien.phuongThuc;
 
 const dongHo = taoDongHoDemNguoc($('han'), () => {
     hetHan = true;
@@ -57,6 +72,15 @@ async function tinhLai(body = yeuCau()) {
     try {
         gia = await goiApi('/api/don-dat-ve/tam-tinh', { method: 'POST', body });
         hienGia(gia);
+        const linkSuat = duongDanChonSuat(gia.suat?.maPhim, gia.suat?.ngayChieu);
+        const linkGhe = gia.suat?.maSuat ? `chon-ghe.html?maSuat=${encodeURIComponent(gia.suat.maSuat)}` : linkGheMacDinh;
+        $('buoc-chon-suat').href = linkSuat;
+        $('buoc-chon-ghe').href = linkGhe;
+        luuPhienDatVe({
+            maPhim: gia.suat?.maPhim || phien.maPhim,
+            tenPhim: gia.suat?.tenPhim || phien.tenPhim,
+            maSuat: gia.suat?.maSuat || phien.maSuat
+        });
         khuyenMaiDaChon = gia.khuyenMai?.ma || null;
         $('ma').value = (body.maKhuyenMai || []).join(', ');
         $('diem').value = gia.diemDung;
@@ -83,23 +107,37 @@ form.addEventListener('submit', event => {
     event.preventDefault();
     tinhLai();
 });
+['buoc-chon-suat', 'buoc-chon-ghe', 'buoc-bap-nuoc', 'quay-lai-do-an'].forEach(id => {
+    $(id)?.addEventListener('click', event => {
+        if (dangXacNhan) {
+            event.preventDefault();
+            return;
+        }
+        luuPhienDatVe({ phuongThuc: $('phuong-thuc').value, uuDai: yeuCau() });
+    });
+});
+
 xacNhan.addEventListener('click', async () => {
     if (!gia || hetHan || dangGui || !form.reportValidity()) return;
-    dangGui = true;
+    dangGui = dangXacNhan = true;
     xacNhan.disabled = tinh.disabled = true;
     try {
         const body = { ...yeuCau(), khuyenMaiChon: gia.khuyenMai?.ma || null };
         const don = await goiApi('/api/don-dat-ve/xac-nhan', { method: 'POST', body });
-        luuPhienDatVe({ maDonHang: don.maDonHang, phuongThuc: $('phuong-thuc').value, uuDai: body });
-        location.href = 'thanh-toan.html?maDonHang=' + encodeURIComponent(don.maDonHang);
+        luuPhienDatVe({ maDonHang: don.maDonHang, daXacNhan: true, phuongThuc: $('phuong-thuc').value, uuDai: body });
+        location.replace('thanh-toan.html?maDonHang=' + encodeURIComponent(don.maDonHang));
     } catch (loi) {
         hienThongBao($('thong-bao'), loi.message, 'loi');
         tinh.disabled = hetHan;
+        xacNhan.disabled = hetHan || gia.dongHang.length > 0 || loi.status === 409;
+        dangXacNhan = false;
     } finally {
         dangGui = false;
     }
 });
-if (phien.maPhienGiu) {
+if (phien.daXacNhan && phien.maDonHang) {
+    xacNhan.disabled = tinh.disabled = true;
+} else if (phien.maPhienGiu) {
     const cu = phien.uuDai;
     tinhLai(cu?.maPhienGiu === phien.maPhienGiu
         ? { ...cu, dichVu: phien.dichVu || [] } : yeuCau());

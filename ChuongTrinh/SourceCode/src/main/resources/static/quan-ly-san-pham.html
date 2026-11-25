@@ -4,25 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Danh sách sản phẩm và combo | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
-    <script type="module" src="js/quan-ly-san-pham.js"></script>
     <link rel="stylesheet" href="css/megacine-pages.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
+    <script type="module" src="js/quan-ly-san-pham.js"></script>
 </head>
-<body class="mc-page quan-ly-san-pham">
-<header class="header"><div class="container header-inner">
-    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
-    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
-</div></header>
-<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
-<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
-<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
-<a href="phong-chieu.html">Phòng chiếu</a><a href="lich-su-ve.html">Tra cứu vé</a>
-<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a>
-</nav></aside><main class="main chau-page">
+<body class="mc-page quan-ly-san-pham" data-nb-screen="food">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main chau-page nb-main">
     <h1>Danh sách sản phẩm và combo</h1>
     <p id="thong-bao" role="status" hidden></p>
-    <button id="them" class="button primary">Thêm sản phẩm / combo</button><div id="chi-so" class="mc-stats" aria-live="polite"></div><form id="loc" class="chau-actions"><label>Tìm món <input id="q" type="search"></label><label>Loại <select id="loai"><option value="">Tất cả</option><option value="DO_AN">Đồ ăn</option><option value="THUC_UONG">Thức uống</option><option value="COMBO">Combo</option></select></label><label>Trạng thái <select id="tt"><option value="">Tất cả</option><option value="DANG_BAN">Đang bán</option><option value="NGUNG_BAN">Ngừng bán</option></select></label><button class="button secondary">Tìm kiếm</button></form><div class="mc-table-wrap"><table class="mc-table"><thead><tr><th scope="col">Ảnh</th><th scope="col">Mã</th><th scope="col">Tên</th><th scope="col">Nhóm</th><th scope="col">Giá bán</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody id="ds"></tbody></table></div><dialog id="mon-form"><form id="form" class="chau-fields"><h2 id="tieu-de"></h2><label>Mã <input name="ma" required maxlength="10"></label><label>Tên <input name="ten" required></label><label>Loại <select name="loai"><option value="DO_AN">Đồ ăn</option><option value="THUC_UONG">Thức uống</option><option value="COMBO">Combo</option></select></label><label>Giá <input name="gia" type="number" min="0" required></label><label>Hình ảnh <input name="hinhAnh"></label><label>Mô tả <textarea name="moTa"></textarea></label><button class="button primary">Lưu mẫu</button><button type="button" id="dong" class="button secondary">Đóng</button></form></dialog>
+    <div class="chau-actions" style="margin-top:0"><a href="san-pham-form.html" class="button primary">+ Thêm sản phẩm</a><a href="combo-form.html" class="button secondary">+ Thêm combo</a></div><div id="chi-so" class="mc-stats" aria-live="polite"></div><form id="loc" class="chau-actions"><label>Tìm món <input id="q" type="search"></label><label>Loại <select id="loai"><option value="">Tất cả</option><option value="DO_AN">Đồ ăn</option><option value="THUC_UONG">Thức uống</option><option value="COMBO">Combo</option></select></label><label>Trạng thái <select id="tt"><option value="">Tất cả</option><option value="DANG_BAN">Đang bán</option><option value="NGUNG_BAN">Ngừng bán</option></select></label><button class="button secondary">Tìm kiếm</button></form><div class="mc-table-wrap"><table class="mc-table"><thead><tr><th scope="col">Ảnh</th><th scope="col">Mã</th><th scope="col">Tên</th><th scope="col">Nhóm</th><th scope="col">Giá bán</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody id="ds"></tbody></table></div>
 </main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>

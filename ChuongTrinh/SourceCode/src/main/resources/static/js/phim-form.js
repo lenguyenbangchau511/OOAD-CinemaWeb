@@ -4,6 +4,7 @@ const form = document.querySelector('#form');
 const thongBao = document.querySelector('#thong-bao');
 const ma = thamSo('maPhim');
 const chiXem = thamSo('xem') === '1';
+const apiPhim = '/api/quan-ly/phim' + (ma ? '/' + encodeURIComponent(ma) : '');
 const truong = [
     ['maPhim', 'Mã phim', 'text', 'required maxlength="10"'],
     ['tenPhim', 'Tên phim', 'text', 'required maxlength="100"'],
@@ -23,11 +24,12 @@ form.innerHTML = truong.map(([ten, nhan, type, thuocTinh]) =>
         .map(t => `<option>${t}</option>`).join('')}</select></label>
     <label>Trạng thái<select name="trangThai"><option value="SAP_CHIEU">Sắp chiếu</option>
     <option value="DANG_CHIEU">Đang chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label>
-    <label>Chọn poster<input id="tep-poster" type="file" accept="image/*"></label>
-    <button class="button primary">Lưu mẫu</button><a href="quan-ly-phim.html">Hủy</a>`;
+    <div class="film-form-actions">
+        <a href="quan-ly-phim.html" class="film-back-link"><span aria-hidden="true">←</span> Quay lại</a>
+        ${chiXem ? '' : '<button class="button primary" type="submit">Lưu phim</button>'}
+    </div>`;
 const posterPreview = document.querySelector('#poster-preview');
 const posterEmpty = document.querySelector('#poster-empty');
-let posterUrl;
 function xemPoster(url) {
     posterPreview.hidden = !url;
     posterEmpty.hidden = Boolean(url);
@@ -37,7 +39,7 @@ posterPreview.addEventListener('error', () => xemPoster(''));
 if (ma) {
     [...form.elements].forEach(e => { e.disabled = true; });
     try {
-        const p = await goiApi('/api/quan-ly/phim/' + encodeURIComponent(ma));
+        const p = await goiApi(apiPhim);
         for (const [ten, giaTri] of Object.entries(p)) {
             const el = form.elements.namedItem(ten);
             if (el) el.value = giaTri ?? '';
@@ -49,15 +51,24 @@ if (ma) {
         hienThongBao(thongBao, loi.message, 'loi');
     }
 }
-document.querySelector('#tep-poster').addEventListener('change', e => {
-    const tep = e.target.files[0];
-    if (!tep) return;
-    if (posterUrl) URL.revokeObjectURL(posterUrl);
-    posterUrl = URL.createObjectURL(tep);
-    form.elements.poster.value = tep.name;
-    xemPoster(posterUrl);
+form.elements.poster.addEventListener('input', () => {
+    const ten = form.elements.poster.value.trim();
+    xemPoster(ten ? 'images/' + encodeURIComponent(ten) : '');
 });
-form.addEventListener('submit', e => {
+
+form.addEventListener('submit', async e => {
     e.preventDefault();
-    hienThongBao(thongBao, 'Dữ liệu hợp lệ. Đã hoàn tất thao tác lưu mẫu.', 'thanh-cong');
+    const nutLuu = form.querySelector('button[type="submit"]');
+    if (chiXem || !nutLuu || nutLuu.disabled) return;
+    const phim = Object.fromEntries(new FormData(form));
+    phim.thoiLuong = Number(phim.thoiLuong);
+    nutLuu.disabled = true;
+    hienThongBao(thongBao, '');
+    try {
+        await goiApi(apiPhim, { method: ma ? 'PUT' : 'POST', body: phim });
+        location.replace('quan-ly-phim.html?daLuu=1');
+    } catch (loi) {
+        hienThongBao(thongBao, loi.message, 'loi');
+        nutLuu.disabled = false;
+    }
 });

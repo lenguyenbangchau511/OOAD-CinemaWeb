@@ -8,20 +8,13 @@
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
     <link rel="stylesheet" href="css/phong-suat.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
     <script type="module" src="js/phong-chieu-form.js"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-    <div class="container header-inner">
-        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-        <nav aria-label="Menu quản lý">
-            <a href="phong-chieu.html" aria-current="page">Phòng chiếu</a>
-            <a href="suat-chieu.html">Suất chiếu</a>
-        </nav>
-        <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-    </div>
-</header>
-<main class="container main">
+<body data-nb-screen="phong">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
     <div class="page-title"><div><h1 id="tieu-de">Thêm phòng chiếu</h1><p>Giao diện minh họa: kiểm tra dữ liệu nhập nhưng chưa lưu vào cơ sở dữ liệu.</p></div></div>
     <div class="alert" id="thong-bao" hidden></div>
     <div class="layout-2">
@@ -40,6 +33,7 @@
         </form>
         <aside class="card"><h2>Xem trước sơ đồ</h2><p class="muted" id="tong-ghe"></p><div class="xem-truoc-so-do" id="xem-truoc" aria-live="polite"></div></aside>
     </div>
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>
