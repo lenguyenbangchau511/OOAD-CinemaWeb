@@ -26,14 +26,12 @@ public class DonDatVeController {
     @PostMapping("/tam-tinh")
     public Object tamTinh(@RequestBody XacNhanDonRequest req, HttpSession session) {
         var khach = dangNhap.yeuCau(session, VaiTro.KHACH_HANG);
-        GiuGheController.yeuCauPhien(session, req.maPhienGiu());
         return service.tamTinh(khach, req);
     }
 
     @PostMapping("/xac-nhan")
     public Object xacNhan(@RequestBody XacNhanDonRequest req, HttpSession session) {
         var khach = dangNhap.yeuCau(session, VaiTro.KHACH_HANG);
-        GiuGheController.yeuCauPhien(session, req.maPhienGiu());
         synchronized (session) {
             String khoa = "donDatVe:" + req.maPhienGiu();
             var don = service.xacNhan(khach, req, (String) session.getAttribute(khoa));

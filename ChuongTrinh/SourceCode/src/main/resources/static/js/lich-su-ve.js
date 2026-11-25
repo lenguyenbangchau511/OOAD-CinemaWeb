@@ -64,7 +64,15 @@ function ve(ds, coLoc) {
             <td>${d.dsGhe.length ? thoat(d.dsGhe.join(', ')) : '—'}</td>
             <td class="so">${dinhDangTien(d.tongTien)}</td>
             <td>${chipTrangThai(d.trangThaiDon, NHAN.trangThaiDon)}</td>
-            <td>${d.trangThaiVe ? chipTrangThai(d.trangThaiVe, NHAN.trangThaiVe) : '—'}</td>
+            <td>${chipVe(d.soVeTheoTrangThai)}</td>
             <td><a class="button secondary nho" href="${TRANG.chiTietVe}?maDonHang=${encodeURIComponent(d.maDonHang)}">Chi tiết</a></td>
         </tr>`).join('')}</tbody></table></div>`;
+}
+
+/** Số vé theo từng trạng thái trong đơn; trạng thái đang được lọc thì đậm lên để kết quả lọc dễ hiểu. */
+function chipVe(soVe) {
+    const loc = $('tt-ve').value;
+    const ds = Object.entries(soVe || {});
+    if (!ds.length) return '—';
+    return ds.map(([tt, n]) => `<div style="${tt === loc ? 'font-weight:700' : ''}">${n} × ${chipTrangThai(tt, NHAN.trangThaiVe)}</div>`).join('');
 }

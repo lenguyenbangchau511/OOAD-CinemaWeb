@@ -6,6 +6,7 @@ import com.cinema.dto.DonThanhToanDto;
 import com.cinema.dto.KetQuaCongRequest;
 import com.cinema.dto.KetQuaThanhToanDto;
 import com.cinema.dto.KhoiTaoThanhToanRequest;
+import com.cinema.dto.PhatHanhLaiRequest;
 import com.cinema.dto.PhienGiuDto;
 import com.cinema.dto.ThanhToanDto;
 import com.cinema.entity.ChiTietDichVu;
@@ -37,12 +38,17 @@ import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * UC5.5 Thanh toán đơn hàng trực tuyến (giao diện 10).
@@ -51,6 +57,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ThanhToanService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ThanhToanService.class);
 
     private static final Set<PhuongThucThanhToan> PHUONG_THUC_ONLINE =
             EnumSet.of(PhuongThucThanhToan.MOMO, PhuongThucThanhToan.VNPAY, PhuongThucThanhToan.THE_NGAN_HANG);
@@ -66,12 +74,13 @@ public class ThanhToanService {
     private final VeService veService;
     private final LienKetModuleKhac lienKet;
     private final CauHinhRap cauHinh;
+    private final TransactionTemplate giaoDich;
 
     public ThanhToanService(DonHangRepository donHangRepo, ThanhToanRepository thanhToanRepo,
                             ChiTietDichVuRepository dichVuRepo, GheSuatChieuRepository gheSuatRepo,
                             GheRepository gheRepo, SuatChieuRepository suatRepo, PhongChieuRepository phongRepo,
                             GiuGheService giuGheService, VeService veService, LienKetModuleKhac lienKet,
-                            CauHinhRap cauHinh) {
+                            CauHinhRap cauHinh, PlatformTransactionManager quanLyGiaoDich) {
         this.donHangRepo = donHangRepo;
         this.thanhToanRepo = thanhToanRepo;
         this.dichVuRepo = dichVuRepo;
@@ -83,11 +92,13 @@ public class ThanhToanService {
         this.veService = veService;
         this.lienKet = lienKet;
         this.cauHinh = cauHinh;
+        this.giaoDich = new TransactionTemplate(quanLyGiaoDich);
     }
 
     // ------------------------------------------------- Giao diện 10: kiểm tra đơn
     @Transactional
-    public DonThanhToanDto xemDonDeThanhToan(NguoiDung nd, String maDonHang, String maPhienGiu) {
+    public DonThanhToanDto xemDonDeThanhToan(NguoiDung nd, String maDonHang, String maPhienGiu, List<String> dsMaGheChot) {
+        if (maPhienGiu != null && !maPhienGiu.isBlank()) giuGheService.kiemTraChuPhien(nd, maPhienGiu);
         giuGheService.giaiPhongGheQuaHan();
         DonHang don = layDon(maDonHang);
         veService.kiemTraQuyenXem(nd, don);
@@ -101,7 +112,12 @@ public class ThanhToanService {
         String lyDo = null;
         if (don.getTrangThai() == TrangThaiDonHang.DA_THANH_TOAN) lyDo = "Đơn hàng đã được thanh toán";
         else if (don.getTrangThai() == TrangThaiDonHang.DA_HUY) lyDo = "Đơn hàng đã bị hủy";
-        else if (dsGheGiu.isEmpty()) lyDo = "Hết thời gian giữ ghế. Vui lòng chọn lại ghế";
+        else if (daThuTien(maDonHang)) {
+            lyDo = "Cổng thanh toán đã thu tiền cho đơn này, vé đang chờ phát hành. Vui lòng không thanh toán lại";
+        } else if (dsGheGiu.isEmpty()) lyDo = "Hết thời gian giữ ghế. Vui lòng chọn lại ghế";
+        else if (dsMaGheChot != null && !dsMaGheChot.isEmpty() && !khopDanhSachGhe(dsGheGiu, dsMaGheChot)) {
+            lyDo = "Danh sách ghế đang giữ không khớp với đơn hàng đã xác nhận, vui lòng kiểm tra lại đơn hàng";
+        }
         else if (tongTienDuKien(don, tienVe, tienDichVu).compareTo(don.getTongTien()) != 0) {
             lyDo = "Thông tin đơn hàng đã thay đổi, vui lòng kiểm tra lại đơn hàng";
         }
@@ -139,6 +155,7 @@ public class ThanhToanService {
         DonHang don = donHangRepo.khoaTheoMa(req.maDonHang()).orElseThrow(() ->
                 new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy đơn hàng"));
         veService.kiemTraQuyenXem(nd, don);
+        giuGheService.kiemTraChuPhien(nd, req.maPhienGiu());
 
         if (don.getTrangThai() == TrangThaiDonHang.DA_THANH_TOAN) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "DA_THANH_TOAN", "Đơn hàng đã được thanh toán");
@@ -146,13 +163,17 @@ public class ThanhToanService {
         if (don.getTrangThai() == TrangThaiDonHang.DA_HUY) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "DON_DA_HUY", "Đơn hàng đã bị hủy");
         }
+        if (daThuTien(don.getMaDonHang())) {            // đã thu tiền, chờ phát hành vé: tuyệt đối không thu thêm lần nữa
+            throw new NghiepVuException(HttpStatus.CONFLICT, "DA_THU_TIEN",
+                    "Cổng thanh toán đã thu tiền cho đơn này, vé đang chờ phát hành. Vui lòng không thanh toán lại");
+        }
         ThanhToan dangCho = layThanhToanDangCho(don.getMaDonHang());
         if (dangCho != null) {                       // 6b: không tạo giao dịch thu tiền mới khi chưa biết kết quả cũ
             return chuyenDto(dangCho);
         }
 
         giuGheService.giaiPhongGheQuaHan();
-        List<GheSuatChieu> dsGhe = kiemTraDieuKienThanhToan(don, req.maPhienGiu());
+        List<GheSuatChieu> dsGhe = kiemTraDieuKienThanhToan(don, req.maPhienGiu(), req.dsMaGheSuat());
         LocalDateTime bayGio = ThoiGian.bayGio();
         dsGhe.forEach(g -> g.setThoiGianGiu(bayGio));  // đang thanh toán: tính lại thời hạn giữ ghế từ lúc này
         gheSuatRepo.saveAll(dsGhe);
@@ -172,57 +193,113 @@ public class ThanhToanService {
     }
 
     // ------------------------------------ Bước 2: cổng báo kết quả (sandbox)
-    @Transactional
+    /** Kết quả giai đoạn 1: ketThuc != null nghĩa là đã có câu trả lời cuối; ngược lại cổng đã thu tiền, cần hoàn tất đơn. */
+    private record GiaiDoanMot(KetQuaThanhToanDto ketThuc, String maDonHang) {
+    }
+
+    /**
+     * Gồm hai giao dịch CSDL riêng để KHÔNG bao giờ mất dấu khoản tiền đã thu:
+     * (1) ghi nhận ngay "cổng đã thu tiền" (THANH_CONG) và lưu lại; (2) hoàn tất đơn (ghế, vé, kho, điểm).
+     * Nếu (2) gặp lỗi hệ thống thì (1) vẫn còn, đơn ở trạng thái CHO_PHAT_HANH để thử phát hành lại hoặc đối soát.
+     */
     public KetQuaThanhToanDto ghiNhanKetQuaCong(NguoiDung nd, String maThanhToan, KetQuaCongRequest req) {
+        GiaiDoanMot gd1 = giaoDich.execute(st -> ghiNhanTuCong(nd, maThanhToan, req));
+        if (gd1.ketThuc() != null) {
+            return gd1.ketThuc();
+        }
+        return hoanTatDonDaThuTien(gd1.maDonHang(), maThanhToan, req.maPhienGiu(), req.dsMaGheSuat());
+    }
+
+    private GiaiDoanMot ghiNhanTuCong(NguoiDung nd, String maThanhToan, KetQuaCongRequest req) {
         // Khóa đơn hàng TRƯỚC khi đọc giao dịch để hai yêu cầu cùng lúc không hoàn tất đơn hai lần.
         String maDonHang = thanhToanRepo.findById(maThanhToan).map(ThanhToan::getMaDonHang).orElseThrow(() ->
                 new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy giao dịch"));
         DonHang don = donHangRepo.khoaTheoMa(maDonHang).orElseThrow();
         veService.kiemTraQuyenXem(nd, don);
+        if (req.maPhienGiu() != null && !req.maPhienGiu().isBlank()) giuGheService.kiemTraChuPhien(nd, req.maPhienGiu());
         ThanhToan tt = thanhToanRepo.findById(maThanhToan).orElseThrow();
         if (req.ketQua() == null) {
             throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Thiếu kết quả giao dịch");
         }
 
-        if (tt.getTrangThai() != TrangThaiThanhToan.CHO_XU_LY) {   // đã xử lý rồi: trả lại kết quả cũ, không làm lại
+        if (tt.getTrangThai() != TrangThaiThanhToan.CHO_XU_LY) {   // đã xử lý rồi: không làm lại
+            if (tt.getTrangThai() == TrangThaiThanhToan.THANH_CONG && don.getTrangThai() == TrangThaiDonHang.CHO_THANH_TOAN
+                    && "THANH_CONG".equals(req.ketQua())) {
+                return new GiaiDoanMot(null, maDonHang);           // cổng gọi lại sau khi lỗi phát hành vé: thử hoàn tất tiếp
+            }
             String kq = tt.getTrangThai() == TrangThaiThanhToan.THANH_CONG ? "THANH_CONG" : "THAT_BAI";
-            return new KetQuaThanhToanDto(tt.getMaThanhToan(), maDonHang, kq, "Giao dịch đã được xử lý trước đó");
+            return new GiaiDoanMot(new KetQuaThanhToanDto(tt.getMaThanhToan(), maDonHang, kq,
+                    "Giao dịch đã được xử lý trước đó"), maDonHang);
         }
         if ("THAT_BAI".equals(req.ketQua())) {
             tt.setTrangThai(TrangThaiThanhToan.THAT_BAI);
             thanhToanRepo.save(tt);
-            return new KetQuaThanhToanDto(maThanhToan, maDonHang, "THAT_BAI",
-                    "Giao dịch không thành công. Đơn hàng được giữ nguyên để bạn thử lại");
+            return new GiaiDoanMot(new KetQuaThanhToanDto(maThanhToan, maDonHang, "THAT_BAI",
+                    "Giao dịch không thành công. Đơn hàng được giữ nguyên để bạn thử lại"), maDonHang);
         }
         if ("CHO_XAC_MINH".equals(req.ketQua())) {
-            return new KetQuaThanhToanDto(maThanhToan, maDonHang, "CHO_XAC_MINH",
-                    "Giao dịch đang chờ xác minh. Vui lòng không thanh toán lại cho đến khi có kết quả");
+            return new GiaiDoanMot(new KetQuaThanhToanDto(maThanhToan, maDonHang, "CHO_XAC_MINH",
+                    "Giao dịch đang chờ xác minh. Vui lòng không thanh toán lại cho đến khi có kết quả"), maDonHang);
         }
         if ("THANH_CONG".equals(req.ketQua())) {
-            return hoanTatThanhToan(don, tt, req);
+            if (req.soTien() == null || req.soTien().compareTo(tt.getSoTien()) != 0) {
+                throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Số tiền thanh toán không khớp với giao dịch");
+            }
+            tt.setTrangThai(TrangThaiThanhToan.THANH_CONG);     // ghi nhận khoản tiền đã thu, lưu ngay
+            tt.setThoiGianGiaoDich(ThoiGian.bayGio());
+            thanhToanRepo.save(tt);
+            return new GiaiDoanMot(null, maDonHang);
         }
         throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Kết quả giao dịch không hợp lệ");
     }
 
-    /** Cổng báo đã thu tiền: hoàn tất đơn (ghế -> đã đặt, phát hành vé, trừ kho, trừ/cộng điểm, tính lượt khuyến mãi). */
-    private KetQuaThanhToanDto hoanTatThanhToan(DonHang don, ThanhToan tt, KetQuaCongRequest req) {
-        if (req.soTien() == null || req.soTien().compareTo(tt.getSoTien()) != 0) {
-            throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Số tiền thanh toán không khớp với giao dịch");
+    /** Hoàn tất đơn đã thu tiền. Lỗi hệ thống bất ngờ -> giữ nguyên giao dịch đã thu, báo CHO_PHAT_HANH. */
+    private KetQuaThanhToanDto hoanTatDonDaThuTien(String maDonHang, String maThanhToan, String maPhienGiu,
+                                                   List<String> dsMaGheChot) {
+        try {
+            return giaoDich.execute(st -> {
+                DonHang don = donHangRepo.khoaTheoMa(maDonHang).orElseThrow();
+                ThanhToan tt = thanhToanRepo.findById(maThanhToan).orElseThrow();
+                if (don.getTrangThai() == TrangThaiDonHang.DA_THANH_TOAN) {
+                    return new KetQuaThanhToanDto(maThanhToan, maDonHang, "THANH_CONG", "Thanh toán thành công");
+                }
+                return hoanTatThanhToan(don, tt, maPhienGiu, dsMaGheChot);
+            });
+        } catch (RuntimeException e) {
+            LOG.error("Đã thu tiền (giao dịch {}) nhưng lỗi khi hoàn tất đơn {}; giữ lại giao dịch để thử phát hành lại hoặc đối soát",
+                    maThanhToan, maDonHang, e);
+            return new KetQuaThanhToanDto(maThanhToan, maDonHang, "CHO_PHAT_HANH",
+                    "Cổng thanh toán đã thu tiền nhưng hệ thống chưa phát hành được vé do lỗi. Giao dịch đã được lưu, "
+                            + "vui lòng KHÔNG thanh toán lại. Hãy thử phát hành lại hoặc liên hệ quầy vé với mã đơn " + maDonHang);
         }
+    }
+
+    /** Thử phát hành lại vé cho đơn đã thu tiền nhưng chưa phát hành được (khách hoặc nhân viên bấm). */
+    public KetQuaThanhToanDto phatHanhLai(NguoiDung nd, String maDonHang, PhatHanhLaiRequest req) {
+        DonHang don = layDon(maDonHang);
+        veService.kiemTraQuyenXem(nd, don);
+        if (req.maPhienGiu() != null && !req.maPhienGiu().isBlank()) giuGheService.kiemTraChuPhien(nd, req.maPhienGiu());
+        ThanhToan tt = thanhToanRepo.findByMaDonHangOrderByThoiGianGiaoDichDesc(maDonHang).stream()
+                .filter(t -> t.getLoaiGiaoDich() == LoaiGiaoDich.THANH_TOAN && t.getTrangThai() == TrangThaiThanhToan.THANH_CONG)
+                .findFirst().orElseThrow(() -> new NghiepVuException(HttpStatus.CONFLICT, "Đơn hàng chưa có giao dịch đã thu tiền"));
+        if (don.getTrangThai() != TrangThaiDonHang.CHO_THANH_TOAN) {
+            throw new NghiepVuException(HttpStatus.CONFLICT, "Đơn hàng không ở trạng thái chờ phát hành vé");
+        }
+        return hoanTatDonDaThuTien(maDonHang, tt.getMaThanhToan(), req.maPhienGiu(), req.dsMaGheSuat());
+    }
+
+    /** Cổng báo đã thu tiền (đã ghi nhận ở giai đoạn 1): hoàn tất đơn (ghế -> đã đặt, phát hành vé, trừ kho, điểm, khuyến mãi). */
+    private KetQuaThanhToanDto hoanTatThanhToan(DonHang don, ThanhToan tt, String maPhienGiu, List<String> dsMaGheChot) {
         List<GheSuatChieu> dsGhe;
         try {
             if (don.getTrangThai() != TrangThaiDonHang.CHO_THANH_TOAN) {
                 throw new NghiepVuException(HttpStatus.CONFLICT, "Đơn hàng không còn ở trạng thái chờ thanh toán");
             }
-            dsGhe = kiemTraDieuKienThanhToan(don, req.maPhienGiu());
+            dsGhe = kiemTraDieuKienThanhToan(don, maPhienGiu, dsMaGheChot);
         } catch (NghiepVuException e) {
-            return ghiNhanCanDoiSoat(don, tt, req.maPhienGiu(), e.getMessage());
+            return ghiNhanCanDoiSoat(don, tt, maPhienGiu, e.getMessage());
         }
 
-        LocalDateTime bayGio = ThoiGian.bayGio();
-        tt.setTrangThai(TrangThaiThanhToan.THANH_CONG);
-        tt.setThoiGianGiaoDich(bayGio);
-        thanhToanRepo.save(tt);
         don.setTrangThai(TrangThaiDonHang.DA_THANH_TOAN);
         donHangRepo.save(don);
 
@@ -238,7 +315,7 @@ public class ThanhToanService {
         if (don.getMaKhachHang() != null) {
             if (don.getDiemSuDung() > 0
                     && !lienKet.capNhatDiem(don.getMaKhachHang(), -don.getDiemSuDung(), "Dùng điểm", don.getMaDonHang())) {
-                throw new IllegalStateException("Số điểm sử dụng vượt số dư");   // hiếm gặp: hủy cả giao dịch
+                throw new IllegalStateException("Số điểm sử dụng vượt số dư");   // hủy bước hoàn tất; giao dịch đã thu vẫn được giữ
             }
             int diemTich = cauHinh.diemTichDuoc(don.getTongTien());
             if (diemTich > 0) {
@@ -261,6 +338,9 @@ public class ThanhToanService {
         if (maPhienGiu != null && !maPhienGiu.isBlank()) {
             giuGheService.giaiPhongTheoPhien(maPhienGiu);
         }
+        boolean daCoHoanTien = thanhToanRepo.findByMaDonHangOrderByThoiGianGiaoDichDesc(don.getMaDonHang()).stream()
+                .anyMatch(t -> t.getLoaiGiaoDich() == LoaiGiaoDich.HOAN_TIEN);
+        if (!daCoHoanTien) {
         ThanhToan hoan = new ThanhToan();
         do {
             hoan.setMaThanhToan(SinhMa.ngauNhien("TT", 6));
@@ -273,6 +353,7 @@ public class ThanhToanService {
         hoan.setMaGiaoDichDoiTac(tt.getMaGiaoDichDoiTac());
         hoan.setTrangThai(TrangThaiThanhToan.CHO_XU_LY);
         thanhToanRepo.save(hoan);
+        }
         return new KetQuaThanhToanDto(tt.getMaThanhToan(), don.getMaDonHang(), "CAN_DOI_SOAT",
                 "Cổng thanh toán đã thu tiền nhưng đơn hàng không thể hoàn tất (" + lyDo
                         + "). Vé không được phát hành, khoản tiền sẽ được hoàn lại");
@@ -289,6 +370,7 @@ public class ThanhToanService {
         if (nd.maKhachHang() == null) {
             throw new NghiepVuException(HttpStatus.FORBIDDEN, "Chỉ khách hàng thành viên mới đặt vé trực tuyến");
         }
+        giuGheService.kiemTraChuPhien(nd, maPhienGiu);
         giuGheService.giaiPhongGheQuaHan();
         List<GheSuatChieu> dsGhe = maPhienGiu == null ? List.of() : gheSuatRepo.findByMaPhienGiu(maPhienGiu);
         if (dsGhe.isEmpty()) {
@@ -315,11 +397,18 @@ public class ThanhToanService {
      * Kiểm tra đơn trước khi thu tiền / hoàn tất (UC5.5 luồng ngoại lệ 3a, 3b, 3c).
      * Trả danh sách ghế đang giữ của phiên (đã khóa dòng). Ném NghiepVuException nếu có điều kiện không hợp lệ.
      */
-    private List<GheSuatChieu> kiemTraDieuKienThanhToan(DonHang don, String maPhienGiu) {
+    private List<GheSuatChieu> kiemTraDieuKienThanhToan(DonHang don, String maPhienGiu, List<String> dsMaGheChot) {
         List<GheSuatChieu> dsGhe = maPhienGiu == null || maPhienGiu.isBlank() ? List.of()
                 : gheSuatRepo.khoaTheoPhien(maPhienGiu);
         if (dsGhe.isEmpty()) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "HET_GIU_GHE", "Hết thời gian giữ ghế. Vui lòng chọn lại ghế");
+        }
+        if (dsMaGheChot == null || dsMaGheChot.isEmpty()) {
+            throw new NghiepVuException(HttpStatus.BAD_REQUEST, "THIEU_DS_GHE", "Thiếu danh sách ghế đã chốt của đơn hàng");
+        }
+        if (!khopDanhSachGhe(dsGhe, dsMaGheChot)) {       // đúng từng ghế đã chốt, không chỉ trùng tổng tiền
+            throw new NghiepVuException(HttpStatus.CONFLICT, "DON_THAY_DOI",
+                    "Danh sách ghế đang giữ không khớp với đơn hàng đã xác nhận, vui lòng kiểm tra lại đơn hàng");
         }
         SuatChieu suat = suatRepo.findById(dsGhe.get(0).getMaSuat()).orElseThrow();
         if (!suat.conBanVe(ThoiGian.bayGio())) {
@@ -347,6 +436,17 @@ public class ThanhToanService {
             throw new NghiepVuException(HttpStatus.CONFLICT, "TON_KHO_KHONG_DU", loi + ". Vui lòng điều chỉnh đơn hàng");
         }
         return dsGhe;
+    }
+
+    private boolean khopDanhSachGhe(List<GheSuatChieu> dsGheGiu, List<String> dsMaGheChot) {
+        Set<String> dangGiu = dsGheGiu.stream().map(GheSuatChieu::getMaGheSuat).collect(Collectors.toSet());
+        return dangGiu.equals(new HashSet<>(dsMaGheChot));
+    }
+
+    /** Cổng đã thu tiền cho đơn này (có giao dịch THANH_TOAN thành công). */
+    private boolean daThuTien(String maDonHang) {
+        return thanhToanRepo.findByMaDonHangOrderByThoiGianGiaoDichDesc(maDonHang).stream()
+                .anyMatch(t -> t.getLoaiGiaoDich() == LoaiGiaoDich.THANH_TOAN && t.getTrangThai() == TrangThaiThanhToan.THANH_CONG);
     }
 
     /** Tổng tiền đúng = vé + dịch vụ - giảm khuyến mãi - giảm điểm. */

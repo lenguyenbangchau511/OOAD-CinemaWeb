@@ -38,6 +38,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -208,17 +209,14 @@ public class VeService {
             ketQua.add(new LichSuVeDto(d.getMaDonHang(), d.getNgayDat(), d.getTongTien(), d.getTrangThai().name(),
                     d.getKenhBan().name(), p == null ? null : p.tenPhim(),
                     s == null ? null : s.getNgayChieu(), s == null ? null : s.getGioBatDau(),
-                    pc == null ? null : pc.getTenPhong(), tenGhe, dsVe.size(), tomTatTrangThaiVe(dsVe)));
+                    pc == null ? null : pc.getTenPhong(), tenGhe, dsVe.size(), demVeTheoTrangThai(dsVe)));
         }
         return ketQua;
     }
 
-    /** Trạng thái chung của các vé trong đơn: nếu khác nhau thì lấy "CHUA_SU_DUNG" nếu còn vé chưa dùng. */
-    private String tomTatTrangThaiVe(List<Ve> dsVe) {
-        if (dsVe.isEmpty()) return null;
-        Set<TrangThaiVe> tt = dsVe.stream().map(Ve::getTrangThai).collect(Collectors.toSet());
-        return tt.size() == 1 ? tt.iterator().next().name()
-                : (tt.contains(TrangThaiVe.CHUA_SU_DUNG) ? TrangThaiVe.CHUA_SU_DUNG.name() : tt.iterator().next().name());
+    /** Số vé của đơn theo từng trạng thái (vd {CHUA_SU_DUNG=1, DA_HUY=1}); đơn chưa có vé trả map rỗng. */
+    private Map<String, Long> demVeTheoTrangThai(List<Ve> dsVe) {
+        return dsVe.stream().collect(Collectors.groupingBy(v -> v.getTrangThai().name(), TreeMap::new, Collectors.counting()));
     }
 
     // ------------------------------------------------------ UC5.10 + giao diện 11
@@ -286,7 +284,9 @@ public class VeService {
         if (don.getTrangThai() == TrangThaiDonHang.DA_THANH_TOAN) return "THANH_CONG";
         boolean daThuTien = dsThanhToan.stream().anyMatch(t -> t.getLoaiGiaoDich() == LoaiGiaoDich.THANH_TOAN
                 && t.getTrangThai() == TrangThaiThanhToan.THANH_CONG);
-        if (daThuTien) return "CAN_DOI_SOAT";
+        if (daThuTien) {   // đã thu tiền nhưng đơn chưa hoàn tất: còn chờ phát hành vé (lỗi hệ thống) hoặc cần hoàn tiền
+            return don.getTrangThai() == TrangThaiDonHang.CHO_THANH_TOAN ? "CHO_PHAT_HANH" : "CAN_DOI_SOAT";
+        }
         ThanhToan moiNhat = dsThanhToan.stream().filter(t -> t.getLoaiGiaoDich() == LoaiGiaoDich.THANH_TOAN)
                 .findFirst().orElse(null);
         if (moiNhat == null) return "CHUA_THANH_TOAN";
@@ -298,6 +298,7 @@ public class VeService {
             case "THANH_CONG" -> "Thanh toán thành công";
             case "CHO_XAC_MINH" -> "Giao dịch đang chờ xác minh. Vui lòng không thanh toán lại cho đến khi có kết quả";
             case "THAT_BAI" -> "Giao dịch không thành công";
+            case "CHO_PHAT_HANH" -> "Cổng thanh toán đã thu tiền nhưng hệ thống chưa phát hành được vé do lỗi. Giao dịch đã được lưu, vui lòng KHÔNG thanh toán lại; hãy thử phát hành lại hoặc liên hệ quầy vé với mã đơn hàng";
             case "CAN_DOI_SOAT" -> "Cổng thanh toán đã thu tiền nhưng đơn hàng không thể hoàn tất. Vé không được phát hành, khoản tiền sẽ được hoàn lại";
             default -> "Đơn hàng chưa được thanh toán";
         };

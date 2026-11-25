@@ -24,9 +24,9 @@ async function khoiTao() {
     }
 }
 
-const BIEU_TUONG = { THANH_CONG: '✓', THAT_BAI: '!', CAN_DOI_SOAT: '!', CHO_XAC_MINH: '…', CHUA_THANH_TOAN: '…' };
+const BIEU_TUONG = { THANH_CONG: '✓', THAT_BAI: '!', CAN_DOI_SOAT: '!', CHO_PHAT_HANH: '…', CHO_XAC_MINH: '…', CHUA_THANH_TOAN: '…' };
 const TIEU_DE = {
-    THANH_CONG: 'Đặt vé thành công', THAT_BAI: 'Giao dịch không thành công', CAN_DOI_SOAT: 'Đơn hàng không thể hoàn tất',
+    THANH_CONG: 'Đặt vé thành công', THAT_BAI: 'Giao dịch không thành công', CAN_DOI_SOAT: 'Đơn hàng không thể hoàn tất', CHO_PHAT_HANH: 'Đã thu tiền, vé đang chờ phát hành',
     CHO_XAC_MINH: 'Giao dịch đang chờ xác minh', CHUA_THANH_TOAN: 'Đơn hàng chưa được thanh toán'
 };
 
@@ -44,6 +44,7 @@ function ve(kq) {
             ${thanhCong ? phanDichVu(kq) : '<div></div>'}
             ${phanThanhToan(kq)}
         </div>`;
+    document.getElementById('nut-phat-hanh-lai')?.addEventListener('click', phatHanhLai);
     if (thanhCong) {
         veMaQR(kq);
         xoaPhienDatVe();                           // giao dịch đã xong, bỏ dữ liệu phiên đặt vé
@@ -108,7 +109,25 @@ function phanThanhToan(kq) {
         <p class="muted">Đặt lúc ${dinhDangNgayGio(kq.ngayDat)}</p>
         <div class="hanh-dong">
             ${thanhCong ? '<a class="button secondary" href="lich-su-ve.html">Lịch sử mua vé</a><a class="button primary" href="./">Về trang chủ</a>'
-                : (kq.ketQua === 'CAN_DOI_SOAT' ? '<a class="button primary" href="./">Về trang chủ</a>'
+                : (kq.ketQua === 'CHO_PHAT_HANH' ? '<button class="button primary" type="button" id="nut-phat-hanh-lai">Thử phát hành lại vé</button><a class="button secondary" href="./">Về trang chủ</a>'
+                : kq.ketQua === 'CAN_DOI_SOAT' ? '<a class="button primary" href="./">Về trang chủ</a>'
                     : `<a class="button primary" href="thanh-toan.html?maDonHang=${encodeURIComponent(kq.maDonHang)}">${kq.ketQua === 'CHO_XAC_MINH' ? 'Kiểm tra lại kết quả' : 'Quay lại thanh toán'}</a>`)}
         </div></aside>`;
+}
+
+/** Đơn đã thu tiền nhưng chưa phát hành được vé: thử hoàn tất lại, tuyệt đối không bắt thanh toán lần nữa. */
+async function phatHanhLai(e) {
+    const nut = e.currentTarget;
+    const phien = layPhienDatVe();
+    nut.disabled = true;
+    try {
+        await goiApi(`/api/thanh-toan/don-hang/${encodeURIComponent(maDonHang)}/phat-hanh-lai`, {
+            method: 'POST',
+            body: { maPhienGiu: phien.maPhienGiu, dsMaGheSuat: (phien.dsGhe || []).map((g) => g.maGheSuat) }
+        });
+        location.reload();
+    } catch (loi) {
+        hienThongBao(document.getElementById('thong-bao'), loi.thongBao, 'loi');
+        nut.disabled = false;
+    }
 }

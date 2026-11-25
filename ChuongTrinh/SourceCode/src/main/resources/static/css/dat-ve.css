@@ -104,8 +104,8 @@ td.so, th.so { text-align: right; white-space: nowrap; }
 .banner-ket-qua.THANH_CONG .bieu-tuong { background: var(--ok); color: #fff; }
 .banner-ket-qua.THAT_BAI, .banner-ket-qua.CAN_DOI_SOAT { background: var(--bad-bg); border-color: #f1b8b3; }
 .banner-ket-qua.THAT_BAI .bieu-tuong, .banner-ket-qua.CAN_DOI_SOAT .bieu-tuong { background: var(--bad); color: #fff; }
-.banner-ket-qua.CHO_XAC_MINH, .banner-ket-qua.CHUA_THANH_TOAN { background: var(--warn-bg); border-color: #f0d89c; }
-.banner-ket-qua.CHO_XAC_MINH .bieu-tuong, .banner-ket-qua.CHUA_THANH_TOAN .bieu-tuong { background: var(--warn); color: #fff; }
+.banner-ket-qua.CHO_XAC_MINH, .banner-ket-qua.CHO_PHAT_HANH, .banner-ket-qua.CHUA_THANH_TOAN { background: var(--warn-bg); border-color: #f0d89c; }
+.banner-ket-qua.CHO_XAC_MINH .bieu-tuong, .banner-ket-qua.CHO_PHAT_HANH .bieu-tuong, .banner-ket-qua.CHUA_THANH_TOAN .bieu-tuong { background: var(--warn); color: #fff; }
 
 /* ---------- thanh toán (giao diện 10) ---------- */
 .phuong-thuc { display: grid; gap: 8px; }

@@ -113,7 +113,7 @@ public class DonDatVeService {
     }
 
     private BaoGia tinhGia(NguoiDung khach, XacNhanDonRequest req) {
-        PhienGiuDto phien = giuGhe.xemPhien(req.maPhienGiu());
+        PhienGiuDto phien = giuGhe.xemPhien(khach, req.maPhienGiu());
         if (phien.soGiayConLai() <= 0 || phien.dsGhe().isEmpty()) throw loi("Hết thời gian giữ ghế.");
         SuatChieuDto suat = suatRepo.findById(phien.maSuat()).map(suatService::chuyenDto)
                 .filter(SuatChieuDto::conBanVe).orElseThrow(() -> loi("Suất chiếu không khả dụng."));
