@@ -51,7 +51,7 @@ async function khoiTao() {
         $('nut-xem').hidden = false;
         $('nut-sua').href = `gia-ve-form.html?ma=${gv.maGiaVe}`;
     }
-    document.title = `Cinema 11 | ${$('tieu-de').textContent}`;
+    document.title = `$('tieu-de').textContent}`;
 }
 
 function dienForm(g) {

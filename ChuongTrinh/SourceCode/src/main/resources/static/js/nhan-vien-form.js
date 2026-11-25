@@ -51,7 +51,7 @@ async function khoiTao() {
         $('nut-xem').hidden = false;
         $('nut-sua').href = `nhan-vien-form.html?mode=edit&maNhanVien=${nv.maNhanVien}`;
     }
-    document.title = `Cinema 11 | ${$('tieu-de').textContent}`;
+    document.title = `$('tieu-de').textContent}`;
 }
 
 /** Kiểm tra theo UC10.1 / UC10.4. Trùng định danh xét theo số điện thoại, không so với chính nó. */

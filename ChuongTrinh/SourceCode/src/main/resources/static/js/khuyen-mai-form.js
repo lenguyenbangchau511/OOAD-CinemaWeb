@@ -58,7 +58,7 @@ async function khoiTao() {
         $('nut-xem').hidden = false;
         $('nut-sua').href = `khuyen-mai-form.html?ma=${km.maKhuyenMai}`;
     }
-    document.title = `Cinema 11 | ${$('tieu-de').textContent}`;
+    document.title = `$('tieu-de').textContent}`;
 }
 
 function dienForm(km) {

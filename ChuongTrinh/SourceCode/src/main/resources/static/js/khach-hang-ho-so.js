@@ -28,7 +28,7 @@ async function khoiTao() {
         hienThongBao($('thong-bao'), 'Không tìm thấy hồ sơ khách hàng.', 'loi');
         return;
     }
-    document.title = `Cinema 11 | Hồ sơ ${kh.hoTen}`;
+    document.title = `Hồ sơ ${kh.hoTen}`;
     $('ten-kh').textContent = kh.hoTen;
     $('phu-kh').textContent = `${kh.maKhachHang} · ${kh.soDienThoai} · ${kh.email}`;
     $('diem-dau').textContent = `${dinhDangSo(kh.diemTichLuy)} điểm`;
