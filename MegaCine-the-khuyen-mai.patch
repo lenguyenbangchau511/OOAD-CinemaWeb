@@ -1,0 +1,27 @@
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/index.html
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/index.html
+@@ -53,9 +53,8 @@
+     </section>
+     <section id="uu-dai" class="home-offers" aria-labelledby="offer-title">
+         <h2 id="offer-title">Ưu đãi tại MegaCine</h2>
+-        <p><a href="uu-dai.html"><u>Xem khuyến mãi đang áp dụng</u></a></p>
+         <div class="offer-grid">
+-            <article><span aria-hidden="true">▣</span><div><h3>Mã khuyến mãi</h3><p>Nhập mã khi xác nhận đơn để xem mức giảm áp dụng.</p></div></article>
++            <a class="offer-link" href="uu-dai.html"><span aria-hidden="true">▣</span><div><h3>Mã khuyến mãi</h3><p>Nhập mã khi xác nhận đơn để xem mức giảm áp dụng.</p></div></a>
+             <article><span aria-hidden="true">✦</span><div><h3>Combo bắp nước</h3><p><a href="bap-nuoc.html"><u>Xem thực đơn bắp nước và combo</u></a></p></div></article>
+             <article><span aria-hidden="true">★</span><div><h3>Tích điểm thành viên</h3><p>Tích điểm khi thanh toán và dùng điểm cho lần đặt vé tiếp theo.</p></div></article>
+         </div>
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/css/megacine-index.css
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/css/megacine-index.css
+@@ -136,8 +136,9 @@
+ .megacine-home .film .booking-link { margin-top: auto; }
+ .home-offers { margin-top: 60px; }
+ .offer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; margin-top: 18px; }
+-.offer-grid article { display: flex; gap: 14px; background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+-.offer-grid article > span { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--accent); color: var(--primary-hover); }
++.offer-grid :is(article, .offer-link) { display: flex; gap: 14px; background: white; border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
++.offer-grid :is(article, .offer-link) > span { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 14px; background: var(--accent); color: var(--primary-hover); }
++.offer-grid .offer-link:hover { border-color: var(--primary); background: #fff4eb; }
+ .offer-grid h3 { margin: 0 0 4px; font-size: 15px; }
+ .offer-grid p { color: var(--muted); font-size: 13px; }
+ .megacine-home .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
