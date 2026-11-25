@@ -30,26 +30,22 @@ public class GiuGheController {
     /** Giữ thêm ghế; chưa có maPhienGiu thì hệ thống tạo phiên mới. */
     @PostMapping
     public PhienGiuDto giuGhe(@RequestBody GiuGheRequest req, HttpSession session) {
-        phienDangNhap.yeuCau(session);
-        return giuGheService.giuGhe(req);
+        return giuGheService.giuGhe(phienDangNhap.yeuCau(session), req);
     }
 
     @GetMapping("/{maPhienGiu}")
     public PhienGiuDto xemPhien(@PathVariable String maPhienGiu, HttpSession session) {
-        phienDangNhap.yeuCau(session);
-        return giuGheService.xemPhien(maPhienGiu);
+        return giuGheService.xemPhien(phienDangNhap.yeuCau(session), maPhienGiu);
     }
 
     @DeleteMapping("/{maPhienGiu}/ghe/{maGheSuat}")
     public PhienGiuDto boGiuGhe(@PathVariable String maPhienGiu, @PathVariable String maGheSuat, HttpSession session) {
-        phienDangNhap.yeuCau(session);
-        return giuGheService.boGiuGhe(maPhienGiu, maGheSuat);
+        return giuGheService.boGiuGhe(phienDangNhap.yeuCau(session), maPhienGiu, maGheSuat);
     }
 
     @DeleteMapping("/{maPhienGiu}")
     public ResponseEntity<Void> huyPhien(@PathVariable String maPhienGiu, HttpSession session) {
-        phienDangNhap.yeuCau(session);
-        giuGheService.huyPhien(maPhienGiu);
+        giuGheService.huyPhien(phienDangNhap.yeuCau(session), maPhienGiu);
         return ResponseEntity.noContent().build();
     }
 }

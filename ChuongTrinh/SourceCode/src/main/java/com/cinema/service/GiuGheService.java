@@ -14,6 +14,7 @@ import com.cinema.repository.GheSuatChieuRepository;
 import com.cinema.repository.PhongChieuRepository;
 import com.cinema.repository.SuatChieuRepository;
 import com.cinema.util.CauHinhRap;
+import com.cinema.util.NguoiDung;
 import com.cinema.util.SinhMa;
 import com.cinema.util.ThoiGian;
 import java.math.BigDecimal;
@@ -86,7 +87,7 @@ public class GiuGheService {
     // ------------------------------------------------------------------ UC5.2
     /** Giữ thêm ghế cho một phiên (tạo phiên mới nếu chưa có). Tất cả ghế được giữ hoặc không ghế nào được giữ. */
     @Transactional
-    public PhienGiuDto giuGhe(GiuGheRequest req) {
+    public PhienGiuDto giuGhe(NguoiDung nd, GiuGheRequest req) {
         if (req.maSuat() == null || req.dsMaGheSuat() == null || req.dsMaGheSuat().isEmpty()) {
             throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Vui lòng chọn ít nhất một ghế");
         }
@@ -97,8 +98,13 @@ public class GiuGheService {
             throw new NghiepVuException(HttpStatus.CONFLICT, "SUAT_KHONG_KHA_DUNG", "Suất chiếu không khả dụng");
         }
 
-        String maPhien = (req.maPhienGiu() == null || req.maPhienGiu().isBlank())
-                ? SinhMa.ngauNhien("PG", 12) : req.maPhienGiu();
+        boolean phienMoi = req.maPhienGiu() == null || req.maPhienGiu().isBlank();
+        if (phienMoi && nd.maChuPhien() == null) {
+            throw new NghiepVuException(HttpStatus.FORBIDDEN, "Tài khoản chưa gắn với khách hàng hoặc nhân viên");
+        }
+        if (!phienMoi) kiemTraChuPhien(nd, req.maPhienGiu());
+        // Mã phiên mang mã chủ phiên ("KH01-ab12cd34ef") để mọi bước sau kiểm tra được phiên thuộc đúng người dùng.
+        String maPhien = phienMoi ? nd.maChuPhien() + "-" + SinhMa.ngauNhien("", 10) : req.maPhienGiu();
         List<GheSuatChieu> daGiu = gheSuatRepo.khoaTheoPhien(maPhien);
         if (daGiu.stream().anyMatch(g -> !g.getMaSuat().equals(suat.getMaSuat()))) {
             throw new NghiepVuException(HttpStatus.CONFLICT, "PHIEN_KHAC_SUAT",
@@ -137,7 +143,8 @@ public class GiuGheService {
 
     /** Bỏ giữ một ghế của phiên. Trả lại trạng thái phiên sau khi bỏ. */
     @Transactional
-    public PhienGiuDto boGiuGhe(String maPhien, String maGheSuat) {
+    public PhienGiuDto boGiuGhe(NguoiDung nd, String maPhien, String maGheSuat) {
+        kiemTraChuPhien(nd, maPhien);
         List<GheSuatChieu> ds = gheSuatRepo.khoaTheoMa(List.of(maGheSuat));
         if (ds.isEmpty()) {
             throw new NghiepVuException(HttpStatus.NOT_FOUND, "Ghế được chọn không tồn tại");
@@ -153,8 +160,18 @@ public class GiuGheService {
 
     /** Hủy cả phiên: giải phóng mọi ghế đang giữ của phiên (khách bấm hủy hoặc rời khỏi giao dịch). */
     @Transactional
-    public void huyPhien(String maPhien) {
+    public void huyPhien(NguoiDung nd, String maPhien) {
+        kiemTraChuPhien(nd, maPhien);
         giaiPhongTheoPhien(maPhien);
+    }
+
+    /** Phiên giữ ghế chỉ được thao tác bởi chính người đã tạo ra nó (mã phiên bắt đầu bằng mã chủ phiên). */
+    public void kiemTraChuPhien(NguoiDung nd, String maPhien) {
+        String chu = nd.maChuPhien();
+        if (maPhien == null || chu == null || !maPhien.startsWith(chu + "-")) {
+            throw new NghiepVuException(HttpStatus.FORBIDDEN, "PHIEN_KHONG_THUOC_BAN",
+                    "Phiên giữ ghế không thuộc về tài khoản của bạn");
+        }
     }
 
     /** Giải phóng mọi ghế đang giữ của phiên; dùng được từ service khác trong cùng giao dịch CSDL. */
@@ -166,7 +183,8 @@ public class GiuGheService {
 
     /** Xem trạng thái phiên (khách tải lại trang hoặc quay lại từ bước sau). */
     @Transactional
-    public PhienGiuDto xemPhien(String maPhien) {
+    public PhienGiuDto xemPhien(NguoiDung nd, String maPhien) {
+        kiemTraChuPhien(nd, maPhien);
         giaiPhongGheQuaHan();
         List<GheSuatChieu> ds = gheSuatRepo.findByMaPhienGiu(maPhien);
         if (ds.isEmpty()) {

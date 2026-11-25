@@ -7,6 +7,8 @@ import {
 const $ = (id) => document.getElementById(id);
 let maDonHang = thamSo('maDonHang') || layPhienDatVe().maDonHang;
 const maPhienGiu = layPhienDatVe().maPhienGiu;
+/** Danh sách ghế đã chốt của đơn (lưu từ bước chọn ghế); server đối chiếu đúng với ghế đang giữ. */
+const dsMaGheSuat = (layPhienDatVe().dsGhe || []).map((g) => g.maGheSuat);
 let don = null;          // DonThanhToanDto
 let giaoDich = null;     // ThanhToanDto đang xử lý (CHO_XU_LY)
 let dangXuLy = false;
@@ -42,7 +44,8 @@ async function khoiTao() {
 
 async function taiDon() {
     don = await goiApi(`/api/thanh-toan/don-hang/${encodeURIComponent(maDonHang)}` +
-        (maPhienGiu ? `?maPhienGiu=${encodeURIComponent(maPhienGiu)}` : ''));
+        (maPhienGiu ? `?maPhienGiu=${encodeURIComponent(maPhienGiu)}` +
+            (dsMaGheSuat.length ? `&dsMaGheSuat=${dsMaGheSuat.map(encodeURIComponent).join(',')}` : '') : ''));
     if (don.trangThai === 'DA_THANH_TOAN') {          // 3c: đã thanh toán rồi -> xem kết quả
         location.replace(`ket-qua-dat-ve.html?maDonHang=${encodeURIComponent(maDonHang)}`);
         return;
@@ -126,12 +129,12 @@ async function khoiTaoThanhToan(e) {
     dangXuLy = true;
     hienThongBao($('thong-bao'), '');
     try {
-        giaoDich = await goiApi('/api/thanh-toan/khoi-tao', { method: 'POST', body: { maDonHang, maPhienGiu, phuongThuc: pt } });
+        giaoDich = await goiApi('/api/thanh-toan/khoi-tao', { method: 'POST', body: { maDonHang, maPhienGiu, phuongThuc: pt, dsMaGheSuat } });
         luuPhienDatVe({ phuongThuc: pt });
         hienSandbox();
         hienThongBao($('thong-bao'), `Đã tạo giao dịch qua ${NHAN.phuongThuc[giaoDich.phuongThuc]}. Đang chờ cổng thanh toán báo kết quả.`, 'thong-tin');
     } catch (loi) {
-        if (loi.ma === 'DA_THANH_TOAN') {
+        if (loi.ma === 'DA_THANH_TOAN' || loi.ma === 'DA_THU_TIEN') {
             location.replace(`ket-qua-dat-ve.html?maDonHang=${encodeURIComponent(maDonHang)}`);
             return;
         }
@@ -148,9 +151,9 @@ async function baoKetQua(ketQua) {
     dangXuLy = true;
     try {
         const kq = await goiApi(`/api/thanh-toan/${encodeURIComponent(giaoDich.maThanhToan)}/ket-qua`, {
-            method: 'POST', body: { maPhienGiu, ketQua, soTien: giaoDich.soTien }
+            method: 'POST', body: { maPhienGiu, ketQua, soTien: giaoDich.soTien, dsMaGheSuat }
         });
-        if (kq.ketQua === 'THANH_CONG' || kq.ketQua === 'CAN_DOI_SOAT') {
+        if (['THANH_CONG', 'CAN_DOI_SOAT', 'CHO_PHAT_HANH'].includes(kq.ketQua)) {
             location.href = `ket-qua-dat-ve.html?maDonHang=${encodeURIComponent(maDonHang)}`;
         } else if (kq.ketQua === 'THAT_BAI') {
             giaoDich = null;
