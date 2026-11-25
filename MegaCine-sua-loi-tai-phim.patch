@@ -1,0 +1,39 @@
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/index.html
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/index.html
+@@ -6,7 +6,7 @@
+     <title>MegaCine | Trang chủ</title>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+     <link rel="stylesheet" href="css/megacine-index.css">
+-    <script type="module" src="js/home.js"></script>
++    <script type="module" src="js/home.js?v=2"></script>
+     <link rel="stylesheet" href="css/home-account.css">
+     <script type="module" src="js/home-account.js"></script>
+ </head>
+@@ -86,7 +86,7 @@
+             <span class="age"></span>
+         </div>
+         <div class="film-body">
+-            <h2><a class="film-title"></a></h2>
++            <h2></h2>
+             <p class="meta"></p>
+             <a class="button primary booking-link">Đặt vé</a>
+         </div>
+--- a/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js
++++ b/ChuongTrinh/SourceCode/src/main/resources/static/js/home.js
+@@ -66,12 +66,15 @@
+     card.querySelector(".meta").textContent = movieMeta(film);
+     card.querySelector(".age").dataset.rating = film.rating || "";
+     card.querySelector(".age").hidden = !film.rating;
+-    const title = card.querySelector(".film-title");
++    const title = document.createElement("a");
++    title.className = "film-title";
+     const booking = card.querySelector(".booking-link");
+     const maPhimDich = film.demo ? "P01" : film.id;
+     const filmUrl = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
+     title.textContent = film.name;
+     title.href = filmUrl;
++    card.querySelector("h2").replaceChildren(title);
++    card.querySelector(".detail-link")?.remove();
+     booking.hidden = film.tab !== "now";
+     booking.href = filmUrl + "#lich-chieu";
+     booking.setAttribute("aria-label", `Đặt vé – ${film.name}`);
