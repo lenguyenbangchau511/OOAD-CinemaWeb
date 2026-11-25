@@ -63,17 +63,20 @@ function createCard(film) {
         image.src = film.poster;
     }
     card.querySelector(".age").textContent = film.rating;
-    card.querySelector("h2").textContent = film.name;
     card.querySelector(".meta").textContent = movieMeta(film);
     card.querySelector(".age").dataset.rating = film.rating || "";
     card.querySelector(".age").hidden = !film.rating;
-    const detail = card.querySelector(".detail-link");
+    const title = document.createElement("a");
+    title.className = "film-title";
     const booking = card.querySelector(".booking-link");
     const maPhimDich = film.demo ? "P01" : film.id;
-    detail.href = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
-    detail.setAttribute("aria-label", `Xem chi tiết – ${film.name}`);
+    const filmUrl = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
+    title.textContent = film.name;
+    title.href = filmUrl;
+    card.querySelector("h2").replaceChildren(title);
+    card.querySelector(".detail-link")?.remove();
     booking.hidden = film.tab !== "now";
-    booking.href = detail.href + "#lich-chieu";
+    booking.href = filmUrl + "#lich-chieu";
     booking.setAttribute("aria-label", `Đặt vé – ${film.name}`);
     return card;
 }
@@ -179,4 +182,3 @@ async function loadFilms() {
 
 document.querySelector("#retry").addEventListener("click", loadFilms);
 loadFilms();
-// Menu tài khoản do home-account.js phụ trách.

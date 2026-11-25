@@ -1,12 +1,8 @@
 import {$,icon,iconBtn,esc,val,labels,norm,brand,footer,account,bindLogout,notice,api,current,goLogin,emailOk,userOk,field,passField,userHint,bindEyes,clearFormErrors,formError,invalidField} from './cinema-ui.js';
+import {menuItems,nav,renderSidebar} from './noi-bo-shell.js';
 
 const screen=document.body.dataset.screen;
 const pageTitles={home:'Trang chủ nội bộ',customers:'Danh sách khách hàng',employees:'Danh sách nhân viên',accounts:'Quản lý tài khoản và quyền'};
-// Các URL chưa ghép tập trung tại đây, tránh tạo lại module của thành viên khác.
-const menuItems={home:['Trang chủ','home','noi-bo.html'],accounts:['Tài khoản và quyền','shield','tai-khoan.html'],employees:['Nhân viên','users','nhan-vien.html'],customers:['Khách hàng','users','khach-hang.html'],phim:['Phim','film','quan-ly-phim.html'],phong:['Phòng chiếu','screen','phong-chieu.html'],lich:['Lịch suất chiếu','calendar','suat-chieu.html'],gia:['Giá vé','tag','gia-ve.html'],food:['Đồ ăn và thức uống','cup','quan-ly-san-pham.html'],stock:['Kho hàng','box','ton-kho.html'],promo:['Khuyến mãi','gift','khuyen-mai.html'],report:['Báo cáo','chart','bao-cao.html'],ve:['Quản lý vé','ticket','tra-cuu-ve.html'],ban:['Bán vé tại quầy','ticket','ban-ve-tai-quay.html'],scan:['Soát vé','scan','soat-ve.html'],history:['Tra cứu vé','search','lich-su-ve.html']};
-const nav={ADMIN:['home','accounts','employees','customers'],QUAN_LY:['home','phim','phong','lich','gia','customers','food','stock','promo','employees','report','ve'],NHAN_VIEN:['home','ban','scan','history','customers','phim','lich','gia','food']};
-// Staff không mở trang sửa suất/phim của Manager; các trang tra cứu riêng đang chờ ghép.
-const ready=new Set(['home','accounts','employees','customers','phong','lich','history','phim','food','gia','promo','report','stock','scan']);
 // Điểm nối tới giao diện 28/39 đã merge của Giang.
 const linkedPages={customerProfile:'khach-hang-ho-so.html',employeeProfile:'nhan-vien-form.html'};
 const params=new URLSearchParams(location.search);
@@ -15,13 +11,12 @@ const pageSize=10;
 const maskPhone=s=>s?String(s).slice(0,3)+'****'+String(s).slice(-3):null;
 
 footer();
-function menuHref(k){return ready.has(k)&&!(me.vaiTro==='NHAN_VIEN'&&['lich','phim','food'].includes(k))?menuItems[k][2]:'noi-bo.html?module='+encodeURIComponent(k);}
 async function init(){
     try{me=await current();}catch(e){if(e.status===401)goLogin();else $('#main').textContent=e.message;return;}
     if(!nav[me.vaiTro]){location.replace('./');return;}
     $('#header').innerHTML=brand(true)+account(me);
     const menu=nav[me.vaiTro],selected=screen==='home'?(params.get('module')||'home'):screen;
-    $('#main').innerHTML=`<aside class="sidebar"><small>KHÔNG GIAN NỘI BỘ</small><nav aria-label="Menu nội bộ">${menu.map(k=>`<a ${selected===k?'aria-current="page"':''} href="${menuHref(k)}">${icon(menuItems[k][1])}${menuItems[k][0]}</a>`).join('')}</nav><div class="access"><strong>${icon('shield')} Quyền truy cập</strong><p class="muted">Chỉ hiển thị chức năng được cấp theo vai trò của bạn.</p></div></aside><section id="content"><div id="notice" class="notice" role="status" aria-live="polite" hidden></div><div id="view"></div></section>`;
+    $('#main').innerHTML=`<aside class="sidebar">${renderSidebar(me.vaiTro,selected)}</aside><section id="content"><div id="notice" class="notice" role="status" aria-live="polite" hidden></div><div id="view"></div></section>`;
     $('#main').removeAttribute('aria-busy');bindLogout();
     if(!menu.includes(selected)){ $('#view').innerHTML='<div class="card empty"><h2>Bạn không có quyền truy cập</h2><a href="noi-bo.html">Về trang chủ</a></div>';return; }
     if(screen==='home'){home(selected);return;}

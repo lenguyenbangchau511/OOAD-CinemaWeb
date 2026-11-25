@@ -118,17 +118,12 @@ export function chipTrangThai(ma, bang) {
     return `<span class="chip ${nhom}">${thoat(bang[ma] || ma || '—')}</span>`;
 }
 
-/** Thanh trên cùng: hiện "Lịch sử vé" và trạng thái đăng nhập cho trang dành cho khách. */
-export async function capNhatThanhTren() {
-    const vung = document.getElementById('nguoi-dung');
-    if (!vung) return;
+export async function layNguoiDungDatVe() {
     try {
-        const toi = await goiApi('/api/dat-ve/toi', { chuyenKhiChuaDangNhap: false });
-        vung.innerHTML = toi.dangNhap
-            ? '<a class="button secondary" href="lich-su-ve.html">Vé của tôi</a>'
-            : `<a class="button secondary" href="${TRANG.dangNhap}?quayLai=${encodeURIComponent(location.pathname + location.search)}">Đăng nhập</a>`;
-        return toi;
-    } catch { return null; }
+        return await goiApi('/api/dat-ve/toi', { chuyenKhiChuaDangNhap: false });
+    } catch {
+        return null;
+    }
 }
 
 /** Đếm ngược mm:ss. dongHo.bat(soGiay) để bắt đầu / đồng bộ lại; hết giờ thì gọi khiHetGio(). */

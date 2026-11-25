@@ -32,8 +32,10 @@ async function taiSuat() {
         const ds = await goiApi('/api/suat-chieu/dang-ban?' + query);
         if (lan !== lanTai) return;
         suat.innerHTML = ds.filter(s => s.conBanVe).map(s =>
-            `<a class="button secondary" href="chon-ghe.html?maSuat=${encodeURIComponent(s.maSuat)}">
-            ${dinhDangGio(s.gioBatDau)} · ${thoat(s.tenPhong)} · ${thoat(s.loaiPhong)}</a>`).join('')
+            `<a class="button secondary suat-link" href="chon-ghe.html?maSuat=${encodeURIComponent(s.maSuat)}">
+                <strong>${dinhDangGio(s.gioBatDau)}</strong>
+                <span>${thoat(s.loaiPhong === 'STANDARD' ? 'Tiêu chuẩn' : s.loaiPhong)}</span>
+            </a>`).join('')
             || '<p>Không có suất chiếu cho ngày đã chọn.</p>';
     } catch (loi) {
         if (lan === lanTai) suat.textContent = loi.message;

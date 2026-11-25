@@ -1,6 +1,6 @@
 /* Giao diện 12 - Lịch sử mua vé (UC5.9). Chạy thật với /api/lich-su-ve. Khách chỉ thấy đơn của mình; nhân viên / quản lý tra cứu thêm theo SĐT. */
 import {
-    capNhatThanhTren, chipTrangThai, dinhDangGio, dinhDangNgay, dinhDangNgayGio, dinhDangTien, goiApi, hienThongBao,
+    layNguoiDungDatVe, chipTrangThai, dinhDangGio, dinhDangNgay, dinhDangNgayGio, dinhDangTien, goiApi, hienThongBao,
     NHAN, TRANG, thoat
 } from './datve-common.js';
 
@@ -10,7 +10,7 @@ let laNhanVien = false;
 khoiTao();
 
 async function khoiTao() {
-    const toi = await capNhatThanhTren();
+    const toi = await layNguoiDungDatVe();
     laNhanVien = toi && (toi.vaiTro === 'NHAN_VIEN' || toi.vaiTro === 'QUAN_LY');
     if (laNhanVien) {
         $('nhan-tu-khoa').textContent = 'Mã đơn, mã vé hoặc số điện thoại khách';

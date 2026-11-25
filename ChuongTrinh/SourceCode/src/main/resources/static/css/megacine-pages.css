@@ -24,8 +24,36 @@
 .mc-film-info dt { color: var(--muted); font-size: 13px; }
 .mc-film-info dd { margin: 0; }
 .mc-film-info h3 { border-top: 1px solid var(--line); padding-top: 14px; }
-#lich-chieu .button { min-height: 54px; }
-#lich-chieu { scroll-margin-top: 14px; }
+.chi-tiet-phim #lich-chieu {
+    scroll-margin-top: 14px;
+    padding: clamp(16px, 3vw, 30px);
+    border-color: #efc5a7;
+    background: #fff5ec;
+}
+.chi-tiet-phim #lich-chieu h2 {
+    margin: 0 0 16px;
+    color: var(--primary-hover);
+    font-size: clamp(23px, 3vw, 30px);
+}
+.chi-tiet-phim #suat {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 126px), 1fr));
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 0;
+}
+.chi-tiet-phim #suat p { grid-column: 1 / -1; }
+.chi-tiet-phim .suat-link {
+    flex-direction: column;
+    gap: 2px;
+    min-height: 74px;
+    border-color: #efc5a7;
+}
+.chi-tiet-phim .suat-link strong {
+    color: var(--primary-hover);
+    font-size: 20px;
+}
+.chi-tiet-phim .suat-link span { font-size: 14px; }
 
 .mc-steps { display: flex; gap: 16px; flex-wrap: wrap; list-style: none; padding: 0; margin: 0 0 24px; color: var(--muted); font-size: 13px; }
 .mc-steps li { display: inline-flex; gap: 6px; align-items: center; }

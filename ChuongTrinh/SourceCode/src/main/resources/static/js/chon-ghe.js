@@ -1,6 +1,6 @@
 /* Giao diện 7 - Chọn ghế và giữ ghế (UC5.1, UC5.2). Chạy thật với API /api/suat-chieu/{maSuat}/so-do-ghe và /api/giu-ghe. */
 import {
-    TRANG, capNhatThanhTren, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
+    TRANG, layNguoiDungDatVe, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
     luuPhienDatVe, NHAN, taoDongHoDemNguoc, thamSo, thoat, xoaPhienDatVe
 } from './datve-common.js';
 
@@ -30,7 +30,7 @@ async function khoiTao() {
     }
     const luu = layPhienDatVe();
     maPhienGiu = luu.maSuat === maSuat ? luu.maPhienGiu || null : null;
-    const toi = await capNhatThanhTren();
+    const toi = await layNguoiDungDatVe();
     daDangNhap = !toi || toi.dangNhap;
     if (!daDangNhap) {
         hienThongBao(el.thongBao, 'Bạn có thể xem sơ đồ ghế. Vui lòng đăng nhập để giữ ghế.', 'thong-tin');

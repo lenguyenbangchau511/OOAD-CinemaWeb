@@ -1,0 +1,38 @@
+.offers-intro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 18px;
+    padding: clamp(22px, 5vw, 48px);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: linear-gradient(120deg, #fff4eb, var(--accent));
+}
+.offers-intro h1 { font-size: clamp(30px, 5vw, 46px); }
+#offer-status { margin-block: 20px 12px; color: var(--muted); }
+#offer-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 18px;
+}
+.promotion-card {
+    padding: clamp(18px, 4vw, 28px);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+.promotion-card h2 { font-size: 20px; margin: 4px 0 8px; }
+.promotion-value { color: var(--primary-hover); font-size: 24px; font-weight: 700; }
+.promotion-card dl { margin: 14px 0 0; }
+.promotion-card dl div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 16px;
+    padding-block: 6px;
+    border-top: 1px solid var(--line);
+}
+.promotion-card dt { color: var(--muted); }
+.promotion-card dd { margin: 0; }
+.promotion-card code { background: var(--accent); padding: 2px 8px; border-radius: 4px; }

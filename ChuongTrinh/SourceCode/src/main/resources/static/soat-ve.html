@@ -4,27 +4,14 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cinema 11 | Soát vé</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
-
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css"><link rel="stylesheet" href="css/noi-bo-shell.css">
+<script type="module" src="js/noi-bo-shell.js"></script>
 <script type="module" src="js/soat-ve.js?v=20261125-checkin-1"></script>
 </head>
-<body>
-<header class="header header-noi-bo">
-  <div class="container header-inner">
-    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
-    <nav class="kho-nav" aria-label="Menu quản lý kho">
-      <a href="ton-kho.html" >Tồn kho</a>
-      <a href="san-pham-form.html">Sản phẩm</a>
-      <a href="combo-form.html">Combo</a>
-      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
-      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
-      <a href="soat-ve.html" aria-current="page">Soát vé</a>
-    </nav>
-    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
-  </div>
-</header>
-<main class="container main">
-<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Soát vé</div>
+<body data-nb-screen="scan">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main nb-main">
+<div class="breadcrumb"><a href="noi-bo.html">Nội bộ</a> / Soát vé</div>
 <div class="page-title"><div><h1>Soát vé</h1><p>Tra cứu mã vé, kiểm tra điều kiện và xác nhận khách vào phòng chiếu.</p></div></div>
 <div id="api-status" class="alert thong-tin" role="status">Đang chuẩn bị kết nối dịch vụ soát vé...</div>
 
@@ -39,5 +26,6 @@
 <div id="thong-bao" class="alert" hidden role="status"></div>
 <div id="ket-qua-ve"></div>
 
-</main>
+</main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body></html>

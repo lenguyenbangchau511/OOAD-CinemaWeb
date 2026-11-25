@@ -4,25 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Danh sách quản lý phim | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
-    <script type="module" src="js/quan-ly-phim.js"></script>
     <link rel="stylesheet" href="css/megacine-pages.css">
+    <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <script type="module" src="js/noi-bo-shell.js"></script>
+    <script type="module" src="js/quan-ly-phim.js"></script>
 </head>
-<body class="mc-page quan-ly-phim">
-<header class="header"><div class="container header-inner">
-    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
-    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
-</div></header>
-<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
-<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
-<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
-<a href="phong-chieu.html">Phòng chiếu</a><a href="lich-su-ve.html">Tra cứu vé</a>
-<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a>
-</nav></aside><main class="main chau-page">
+<body class="mc-page quan-ly-phim" data-nb-screen="phim">
+<header class="nb-header" id="nb-header"></header>
+<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main chau-page nb-main">
     <h1>Danh sách quản lý phim</h1>
     <p id="thong-bao" role="status" hidden></p>
     <a href="phim-form.html" class="button primary">Thêm phim</a><div id="chi-so" class="mc-stats" aria-live="polite"></div><form id="loc" class="chau-actions"><label>Tìm phim <input id="q" type="search"></label><label>Trạng thái <select id="tt"><option value="">Tất cả</option><option value="DANG_CHIEU">Đang chiếu</option><option value="SAP_CHIEU">Sắp chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label><button class="button secondary">Tìm kiếm</button></form><div class="mc-table-wrap"><table class="mc-table"><thead><tr><th scope="col">Poster</th><th scope="col">Mã phim</th><th scope="col">Tên phim</th><th scope="col">Thể loại</th><th scope="col">Thời lượng</th><th scope="col">Độ tuổi</th><th scope="col">Khởi chiếu</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody id="ds"></tbody></table></div>
 </main></div>
+<footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>
