@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/** Chỉ đọc CSDL, không ghi dữ liệu từ các giao diện mẫu. */
+/** Tra cứu và cập nhật dữ liệu tài khoản; mọi tham số SQL được truyền riêng. */
 @Repository
 public class TaiKhoanTraCuuRepository {
     private final JdbcTemplate jdbc;
@@ -56,10 +56,62 @@ public class TaiKhoanTraCuuRepository {
     }
     public boolean trungSoDienThoai(String so, String maLoaiTru) {
         return Boolean.TRUE.equals(jdbc.queryForObject("""
-            SELECT EXISTS(SELECT 1 FROM KHACHHANG WHERE soDienThoai = ? AND maTaiKhoan <> ?
-                UNION ALL SELECT 1 FROM NHANVIEN WHERE soDienThoai = ? AND maTaiKhoan <> ?)
+            SELECT EXISTS(SELECT 1 FROM KHACHHANG WHERE soDienThoai = ? AND (maTaiKhoan IS NULL OR maTaiKhoan <> ?)
+                UNION ALL SELECT 1 FROM NHANVIEN WHERE soDienThoai = ? AND (maTaiKhoan IS NULL OR maTaiKhoan <> ?))
             """, Boolean.class, so, maLoaiTru, so, maLoaiTru));
     }
+    // So sánh hash cũ để hai yêu cầu đồng thời không ghi đè lên nhau.
+    public boolean doiMatKhau(String ma, String vaiTro, String hashCu, String hashMoi) {
+        return jdbc.update("""
+            UPDATE TAIKHOAN SET matKhauHash = ?
+            WHERE maTaiKhoan = ? AND vaiTro = ? AND trangThai = 'HOAT_DONG'
+              AND BINARY matKhauHash = BINARY ?
+            """, hashMoi, ma, vaiTro, hashCu) == 1;
+    }
+    public void taoTaiKhoanKhachHang(String ma, String ten, String email, String hash) {
+        jdbc.update("INSERT INTO TAIKHOAN (maTaiKhoan, tenDangNhap, email, matKhauHash, vaiTro, trangThai) "
+                + "VALUES (?, ?, ?, ?, 'KHACH_HANG', 'HOAT_DONG')", ma, ten, email, hash);
+    }
+    public void taoHoSoKhachHang(String ma, String maTaiKhoan, String hoTen, String so) {
+        jdbc.update("INSERT INTO KHACHHANG (maKhachHang, maTaiKhoan, hoTen, soDienThoai, diemTichLuy) "
+                + "VALUES (?, ?, ?, ?, 0)", ma, maTaiKhoan, hoTen, so);
+    }
+    public TaiKhoan theoEmail(String email) {
+        var ds = jdbc.query(SQL + " WHERE t.email = ?", this::doc, email);
+        return ds.size() == 1 ? ds.get(0) : null;
+    }
+    public boolean capNhatHoSo(TaiKhoan tk, String hoTen, String so) {
+        String bang = tk.maKhachHang() != null ? "KHACHHANG" : tk.maNhanVien() != null ? "NHANVIEN" : null;
+        if (bang == null) return false;
+        return jdbc.update("UPDATE " + bang + " SET hoTen = ?, soDienThoai = ? WHERE maTaiKhoan = ?",
+                hoTen, so, tk.maTaiKhoan()) == 1;
+    }
+    public boolean capNhatVaiTro(String ma, String cu, String moi) {
+        return jdbc.update("UPDATE TAIKHOAN SET vaiTro = ? WHERE maTaiKhoan = ? AND vaiTro = ? AND vaiTro IN ('NHAN_VIEN','QUAN_LY')",
+                moi, ma, cu) == 1;
+    }
+    public boolean capNhatTrangThai(String ma, String cu, String moi) {
+        return jdbc.update("UPDATE TAIKHOAN SET trangThai = ? WHERE maTaiKhoan = ? AND trangThai = ? AND vaiTro IN ('NHAN_VIEN','QUAN_LY')",
+                moi, ma, cu) == 1;
+    }
+    // Chỉ cấp tài khoản cho hồ sơ thật chưa được liên kết. Schema hiện tại chưa cho phép NULL.
+    public boolean nhanVienChuaCoTaiKhoan(String ma) {
+        return !jdbc.queryForList("SELECT maNhanVien FROM NHANVIEN WHERE maNhanVien = ? AND maTaiKhoan IS NULL FOR UPDATE", ma).isEmpty();
+    }
+    public void taoTaiKhoanNhanVien(String ma, String ten, String email, String hash) {
+        jdbc.update("INSERT INTO TAIKHOAN (maTaiKhoan, tenDangNhap, email, matKhauHash, vaiTro, trangThai) VALUES (?, ?, ?, ?, 'NHAN_VIEN', 'HOAT_DONG')", ma, ten, email, hash);
+    }
+    public boolean ganTaiKhoanNhanVien(String nv, String tk) {
+        return jdbc.update("UPDATE NHANVIEN SET maTaiKhoan = ? WHERE maNhanVien = ? AND maTaiKhoan IS NULL", tk, nv) == 1;
+    }
+    public List<Map<String, Object>> hoSoNhanVien() {
+        return jdbc.queryForList("""
+            SELECT n.maNhanVien, n.hoTen, n.soDienThoai, n.chucVu, t.maTaiKhoan, t.tenDangNhap,
+                   t.email, t.vaiTro, t.trangThai AS trangThaiTaiKhoan
+            FROM NHANVIEN n LEFT JOIN TAIKHOAN t ON t.maTaiKhoan = n.maTaiKhoan ORDER BY n.maNhanVien
+            """);
+    }
+
     public boolean trungEmail(String email) {
         return Boolean.TRUE.equals(jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM TAIKHOAN WHERE email = ?)", Boolean.class, email));
     }
