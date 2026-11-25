@@ -223,6 +223,17 @@ public class VeService {
     /** Chi tiết đơn hàng, vé và kết quả thanh toán. Khách hàng chỉ xem đơn của mình. */
     @Transactional(readOnly = true)
     public KetQuaDatVeDto xemKetQuaDatVe(NguoiDung nd, String maDonHang) {
+        return chiTietDon(nd, maDonHang, null);
+    }
+
+    @Transactional(readOnly = true)
+    public KetQuaDatVeDto xemChiTietVe(NguoiDung nd, String maVe) {
+        Ve ve = veRepo.findById(maVe).orElseThrow(() ->
+                new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy vé"));
+        return chiTietDon(nd, ve.getMaDonHang(), ve);
+    }
+
+    private KetQuaDatVeDto chiTietDon(NguoiDung nd, String maDonHang, Ve veDangXem) {
         DonHang don = donHangRepo.findById(maDonHang).orElseThrow(() ->
                 new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy đơn hàng"));
         kiemTraQuyenXem(nd, don);
@@ -235,12 +246,14 @@ public class VeService {
                 .stream().collect(Collectors.toMap(GheSuatChieu::getMaGheSuat, Function.identity()));
         Map<String, Ghe> ghe = gheRepo.findAllById(gheSuat.values().stream().map(GheSuatChieu::getMaGhe).toList())
                 .stream().collect(Collectors.toMap(Ghe::getMaGhe, Function.identity()));
-        SuatChieu suat = dsVe.isEmpty() ? null
-                : suatRepo.findById(gheSuat.get(dsVe.get(0).getMaGheSuat()).getMaSuat()).orElse(null);
+        Ve veDaiDien = veDangXem != null ? veDangXem : dsVe.stream().findFirst().orElse(null);
+        SuatChieu suat = veDaiDien == null ? null
+                : suatRepo.findById(gheSuat.get(veDaiDien.getMaGheSuat()).getMaSuat()).orElse(null);
         PhimTomTat phim = suat == null ? null : lienKet.layPhim(List.of(suat.getMaPhim())).get(suat.getMaPhim());
         PhongChieu phong = suat == null ? null : phongRepo.findById(suat.getMaPhong()).orElse(null);
 
-        List<KetQuaDatVeDto.Ve> dsVeDto = dsVe.stream().map(v -> {
+        List<Ve> veHienThi = veDangXem == null ? dsVe : List.of(veDangXem);
+        List<KetQuaDatVeDto.Ve> dsVeDto = veHienThi.stream().map(v -> {
             Ghe g = ghe.get(gheSuat.get(v.getMaGheSuat()).getMaGhe());
             return new KetQuaDatVeDto.Ve(v.getMaVe(), v.getMaQR(), g.getTenGhe(), g.getLoaiGhe().name(),
                     v.getDonGia(), v.getTrangThai().name());

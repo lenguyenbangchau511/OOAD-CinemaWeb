@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinema 11 | Tồn kho và lịch sử biến động</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
+
+<script type="module" src="js/ton-kho.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+  <div class="container header-inner">
+    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+    <nav class="kho-nav" aria-label="Menu quản lý kho">
+      <a href="ton-kho.html" aria-current="page">Tồn kho</a>
+      <a href="san-pham-form.html">Sản phẩm</a>
+      <a href="combo-form.html">Combo</a>
+      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
+      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
+      <a href="soat-ve.html" >Soát vé</a>
+    </nav>
+    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+  </div>
+</header>
+<main class="container main">
+<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Tồn kho và lịch sử biến động</div>
+<div class="page-title"><div><h1>Tồn kho và lịch sử biến động</h1><p>Theo dõi số lượng tồn, mức tối thiểu và các lần nhập/bán/kiểm kê.</p></div></div>
+<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
+
+<div class="kho-stats">
+  <div class="kho-stat"><small>Tổng mặt hàng</small><strong id="tong-mat-hang">—</strong></div>
+  <div class="kho-stat"><small>Đang kinh doanh</small><strong id="dang-ban">—</strong></div>
+  <div class="kho-stat"><small>Sắp hết hàng</small><strong id="sap-het">—</strong></div>
+  <div class="kho-stat"><small>Đã hết hàng</small><strong id="het-hang">—</strong></div>
+</div>
+<div class="kho-toolbar">
+  <div class="left">
+    <input class="kho-search" id="tu-khoa" type="search" placeholder="Tìm mã hoặc tên sản phẩm">
+    <select class="kho-select" id="loai"><option value="">Tất cả nhóm</option><option value="DO_AN">Đồ ăn</option><option value="THUC_UONG">Thức uống</option></select>
+    <select class="kho-select" id="tinh-trang"><option value="">Tất cả tình trạng</option><option value="binh-thuong">Bình thường</option><option value="sap-het">Sắp hết</option><option value="het-hang">Hết hàng</option></select>
+    <button class="button secondary" id="xoa-loc" type="button">Xóa lọc</button>
+  </div>
+  <div class="right">
+    <a class="button primary" href="san-pham-form.html">+ Thêm sản phẩm</a>
+    <a class="button secondary" href="combo-form.html">+ Tạo combo</a>
+  </div>
+</div>
+<div class="tabs-kho"><button class="active" type="button" data-tab="ton">Danh sách tồn kho</button><button type="button" data-tab="lichsu">Lịch sử biến động</button></div>
+<section id="bang-ton"><div class="table-wrap"><table><thead><tr><th>Mã SP</th><th>Sản phẩm</th><th>Nhóm</th><th>Đơn vị</th><th class="so">Tồn hiện tại</th><th class="so">Tồn tối thiểu</th><th>Tình trạng</th><th></th></tr></thead><tbody id="ds-ton"></tbody></table></div></section>
+<section id="bang-lichsu" hidden><div class="kho-toolbar"><div class="left"><select class="kho-select" id="loc-san-pham"><option value="">Tất cả sản phẩm</option></select><select class="kho-select" id="loc-bien-dong"><option value="">Tất cả biến động</option><option value="NHAP_KHO">Nhập kho</option><option value="BAN_HANG">Bán hàng</option><option value="KIEM_KE">Kiểm kê</option><option value="DIEU_CHINH">Điều chỉnh</option></select></div></div><div class="table-wrap"><table><thead><tr><th>Thời điểm</th><th>Sản phẩm</th><th>Loại biến động</th><th class="so">Thay đổi</th><th class="so">Tồn trước</th><th class="so">Tồn sau</th><th>Mã tham chiếu</th><th>Ghi chú</th></tr></thead><tbody id="ds-lichsu"></tbody></table></div></section>
+<div class="hanh-dong"><a class="button secondary" href="phieu-nhap-kho.html">Lập phiếu nhập kho</a><a class="button secondary" href="phieu-kiem-ke.html">Lập phiếu kiểm kê</a></div>
+
+</main>
+</body></html>

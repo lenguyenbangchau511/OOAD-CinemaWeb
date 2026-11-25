@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinema 11 | Soát vé</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
+
+<script type="module" src="js/soat-ve.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+  <div class="container header-inner">
+    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+    <nav class="kho-nav" aria-label="Menu quản lý kho">
+      <a href="ton-kho.html" >Tồn kho</a>
+      <a href="san-pham-form.html">Sản phẩm</a>
+      <a href="combo-form.html">Combo</a>
+      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
+      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
+      <a href="soat-ve.html" aria-current="page">Soát vé</a>
+    </nav>
+    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+  </div>
+</header>
+<main class="container main">
+<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Soát vé</div>
+<div class="page-title"><div><h1>Soát vé</h1><p>Tra cứu mã vé, kiểm tra điều kiện và xác nhận khách vào phòng chiếu.</p></div></div>
+<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
+
+<section class="form-card">
+  <h2>Tra cứu vé</h2>
+  <form id="form-tra-cuu" class="scan-box">
+    <input id="ma-ve" autocomplete="off" placeholder="Nhập mã vé hoặc mã QR, ví dụ CINEMA-DEMO-OK" required>
+    <button class="button primary" type="submit">Tra cứu vé</button>
+  </form>
+  <p class="muted" style="margin-top:10px">Mã demo: CINEMA-DEMO-OK (chưa sử dụng), CINEMA-DEMO-01 (đã sử dụng), CINEMA-DEMO-05 (đã hủy).</p>
+</section>
+<div id="thong-bao" class="alert" hidden role="status"></div>
+<div id="ket-qua-ve"></div>
+
+</main>
+</body></html>

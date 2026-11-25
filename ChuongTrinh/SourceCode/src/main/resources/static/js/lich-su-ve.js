@@ -33,6 +33,9 @@ async function tim() {
     [['tuKhoa', $('tu-khoa').value.trim()], ['tuNgay', tuNgay], ['denNgay', denNgay],
         ['trangThaiDon', $('tt-don').value], ['trangThaiVe', $('tt-ve').value]]
         .forEach(([k, v]) => { if (v) q.set(k, v); });
+    // Điểm nối giao diện 27: chỉ tra cứu khách hàng đã chọn.
+    const maKhachHang = new URLSearchParams(location.search).get('maKhachHang');
+    if (laNhanVien && maKhachHang) q.set('maKhachHang', maKhachHang);
     try {
         const ds = await goiApi('/api/lich-su-ve?' + q);
         ve(ds, q.size > 0);

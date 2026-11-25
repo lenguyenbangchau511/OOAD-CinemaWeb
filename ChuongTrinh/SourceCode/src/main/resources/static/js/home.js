@@ -1,42 +1,38 @@
-const films = [
-    {
-        name: "Ma Mút Con Vượt Kỷ Băng Hà", rating: "P", genre: "Hoạt hình", minutes: 90, tab: "now",
-        tones: ["#eef8fa", "#b9dce8"],
-        description: "Tỉnh dậy sau hàng nghìn năm, chú ma mút Fluffy lên đường tìm mẹ cùng một chú chim nhỏ mơ làm rapper."
-    },
-    {
-        name: "Godzilla Trừ Không", rating: "T16", genre: "Khoa học viễn tưởng", minutes: 135, tab: "now",
-        tones: ["#eeeaf3", "#cec3dc"],
-        poster: "https://images.squarespace-cdn.com/content/v1/5bbcad0f2727be3646b9fee1/23b248aa-b236-4ecd-a1af-e926ea528e81/IMG_1910.jpeg",
-        description: "Khi Nhật Bản đang tái thiết sau chiến tranh, sự trở lại của Godzilla đe dọa nền hòa bình vừa được khôi phục."
-    },
-    {
-        name: "Trại Giam Hạnh Phúc", rating: "T16", genre: "Hài, Tâm lý", minutes: 127, tab: "now",
-        tones: ["#f5f5df", "#dbe2be"],
-        poster: "https://cdn.cinenjoy.com/cinematimes/posters/69cad2ba0e4f4.jpg",
-        description: "Một thầy giáo nhận tội thay để bảo vệ em gái. Trong tù, lòng tốt của anh dần thay đổi những người xung quanh."
-    },
-    {
-        name: "Chị Chị Em Em 3", rating: "T18", genre: "Tâm lý, Tình cảm", minutes: 122, tab: "now",
-        tones: ["#f8edda", "#e5cda5"],
-        poster: "https://cdn.moveek.com/storage/media/cache/mini/6ab3c75a0c379466815413.webp",
-        description: "Ở vùng Kinh Bắc xưa, Thị Mầu vướng vào những mối tình đan xen, nơi mỗi lựa chọn đều có thể làm lung lay danh dự."
-    },
-    {
-        name: "Bắt Cá Ba Tay", rating: "T13", genre: "Hài, Tình cảm", minutes: 100, tab: "soon",
-        tones: ["#fff0e5", "#efc7b9"],
-        description: 'Trong BẮT CÁ BA TAY, sau một lần cầu duyên, Yên (Thúy Ngân) bất ngờ chứng kiến cả ba người yêu cũ là Tùng (Steven Nguyễn), Phong (Ngô Kiến Huy) và Minh (Otis) đồng loạt muốn nối lại tình xưa. Đứng trước ba chàng trai với ba tính cách và ba màu sắc tình yêu khác biệt, Yên quyết định cho cả ba cơ hội cùng lúc. Nhưng khi những cuộc hẹn chồng chéo và bí mật dần có nguy cơ bị phanh phui, liệu cô nàng có thể tìm được tình yêu đích thực hay sẽ nhận về một cú "nghiệp quật" nhớ đời?'
-    }
+import { dinhDangNgay, goiApi } from './datve-common.js';
+
+// Danh mục minh họa của trang chủ, dựa trên lịch rạp ngày 24/11/2026.
+const demoFilms = [
+    { tenPhim: "Ngày Con Còn Mẹ", theLoai: "Tâm lý, Gia đình", thoiLuong: 113,
+        gioiHanDoTuoi: "T16", poster: "ngay-con-con-me.webp" },
+    { tenPhim: "Kiến Lé Phiêu Lưu Ké", theLoai: "Hoạt hình, Phiêu lưu, Hài", thoiLuong: 77,
+        gioiHanDoTuoi: "P", poster: "kien-le-phieu-luu-ke.webp" },
+    { tenPhim: "Đấu Trường Sinh Tử: Bình Minh Ngày Chiêu Quân",
+        theLoai: "Hành động, Phiêu lưu, Viễn tưởng", thoiLuong: 158,
+        gioiHanDoTuoi: "T16", poster: "dau-truong-sinh-tu-binh-minh-ngay-chieu-quan.webp" },
+    { tenPhim: "Ramayana: Khởi Nguồn Một Huyền Thoại",
+        theLoai: "Hành động, Phiêu lưu, Giả tưởng", thoiLuong: 168,
+        gioiHanDoTuoi: "T13", poster: "ramayana-khoi-nguon-mot-huyen-thoai.webp" },
+    { tenPhim: "Bò Sữa Bay", theLoai: "Hài, Hành động, Chính kịch", thoiLuong: 108,
+        gioiHanDoTuoi: "T18", poster: "bo-sua-bay.webp" },
+    { tenPhim: "Chàng Mèo Mang Mũ", theLoai: "Hoạt hình, Gia đình", thoiLuong: 107,
+        gioiHanDoTuoi: "P", poster: "chang-meo-mang-mu.webp" },
+    { tenPhim: "Kẻ hồi sinh",
+        theLoai: "Hành động, giả tưởng", thoiLuong: 101, gioiHanDoTuoi: "T16", poster: "ke-hoi-sinh.webp" },
+    { tenPhim: "Ebenezer Phép Màu Đêm Giáng Sinh", theLoai: "Hài, Giả tưởng", thoiLuong: 116,
+        gioiHanDoTuoi: "T13", poster: "ebenezer-phep-mau-dem-giang-sinh.webp" }
 ];
 
+let films = null;
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 const panel = document.querySelector("#films");
 const grid = document.querySelector(".film-grid");
-const empty = document.querySelector(".empty");
+const empty = document.querySelector("#films .empty:not(#load-error)");
+const loadError = document.querySelector("#load-error");
 const count = document.querySelector("#count");
 const search = document.querySelector(".search");
 const input = document.querySelector("#query");
-const detail = document.querySelector("#detail");
+const genre = document.querySelector("#genre");
+const rating = document.querySelector("#rating");
 const template = document.querySelector("#film-card");
 let currentTab = "now";
 let query = "";
@@ -46,14 +42,9 @@ function normalize(value) {
 }
 
 function movieMeta(film) {
-    return `${film.genre} · ${film.minutes} phút`;
-}
-
-function showDetails(film) {
-    document.querySelector("#detail-title").textContent = film.name;
-    document.querySelector("#detail-meta").textContent = `${film.rating} · ${movieMeta(film)}`;
-    document.querySelector("#detail-description").textContent = film.description;
-    detail.showModal();
+    const details = [film.genre, film.minutes ? `${film.minutes} phút` : ""];
+    if (film.tab === "soon" && film.release) details.push(`Khởi chiếu ${dinhDangNgay(film.release)}`);
+    return details.filter(Boolean).join("\n");
 }
 
 function createCard(film) {
@@ -74,17 +65,39 @@ function createCard(film) {
     card.querySelector(".age").textContent = film.rating;
     card.querySelector("h2").textContent = film.name;
     card.querySelector(".meta").textContent = movieMeta(film);
-    const button = card.querySelector("button");
-    button.setAttribute("aria-label", `Xem chi tiết ${film.name}`);
-    button.addEventListener("click", () => showDetails(film));
+    card.querySelector(".age").dataset.rating = film.rating || "";
+    card.querySelector(".age").hidden = !film.rating;
+    const detail = card.querySelector(".detail-link");
+    const booking = card.querySelector(".booking-link");
+    const maPhimDich = film.demo ? "P01" : film.id;
+    detail.href = `chi-tiet-phim.html?maPhim=${encodeURIComponent(maPhimDich)}`;
+    detail.setAttribute("aria-label", `Xem chi tiết – ${film.name}`);
+    booking.hidden = film.tab !== "now";
+    booking.href = detail.href + "#lich-chieu";
+    booking.setAttribute("aria-label", `Đặt vé – ${film.name}`);
     return card;
 }
 
 function render() {
-    const visible = films.filter(film => film.tab === currentTab && normalize(film.name).includes(query));
+    if (films === null) return;
+    const filtered = Boolean(query || genre.value || rating.value);
+    const visible = films.filter(film => film.tab === currentTab
+        && (!query || film.searchText.includes(query))
+        && (!genre.value || film.genres.includes(genre.value))
+        && (!rating.value || film.rating === rating.value));
+    for (const tab of tabs) {
+        const label = tab.id === "now" ? "Đang chiếu" : "Sắp chiếu";
+        tab.textContent = `${label} (${films.filter(film => film.tab === tab.id).length})`;
+    }
     grid.replaceChildren(...visible.map(createCard));
     empty.hidden = visible.length > 0;
     count.textContent = `${visible.length} phim`;
+    document.querySelector("#empty-title").textContent = filtered
+        ? "Không có phim phù hợp"
+        : currentTab === "now" ? "Hiện chưa có phim đang chiếu" : "Hiện chưa có phim sắp chiếu";
+    document.querySelector("#empty-message").textContent = filtered
+        ? "Thử thay đổi từ khóa hoặc bộ lọc." : "";
+    document.querySelector("#clear").hidden = !filtered;
 }
 
 function selectTab(tab) {
@@ -114,17 +127,56 @@ for (const [index, tab] of tabs.entries()) {
     });
 }
 
-search.addEventListener("submit", event => {
-    event.preventDefault();
+search.addEventListener("submit", event => event.preventDefault());
+input.addEventListener("input", () => {
     query = normalize(input.value);
     render();
 });
-
+genre.addEventListener("change", render);
+rating.addEventListener("change", render);
+search.addEventListener("reset", () => {
+    query = "";
+    queueMicrotask(render);
+});
 document.querySelector("#clear").addEventListener("click", () => {
     search.reset();
-    query = "";
-    render();
     input.focus();
 });
 
-render();
+function addOptions(select, values) {
+    for (const value of [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "vi"))) {
+        select.append(new Option(value, value));
+    }
+}
+
+async function loadFilms() {
+    loadError.hidden = true;
+    count.textContent = "Đang tải danh sách phim…";
+    try {
+        const phim = await goiApi("/api/phim", { chuyenKhiChuaDangNhap: false });
+        if (!Array.isArray(phim)) throw new Error("Phản hồi danh sách phim không hợp lệ");
+        const catalogTitles = new Set(phim.map(p => normalize(p.tenPhim)));
+        const demo = demoFilms.filter(p => !catalogTitles.has(normalize(p.tenPhim)))
+            .map(p => ({ ...p, trangThai: "DANG_CHIEU", demo: true }));
+        films = [...phim, ...demo].filter(p => ["DANG_CHIEU", "SAP_CHIEU"].includes(p.trangThai)).map(p => ({
+            id: p.maPhim, demo: p.demo === true, name: p.tenPhim, rating: p.gioiHanDoTuoi, genre: p.theLoai, minutes: p.thoiLuong,
+            genres: (p.theLoai || "").split(",").map(value => value.trim()).filter(Boolean),
+            searchText: normalize([p.tenPhim, p.daoDien, p.dienVien].filter(Boolean).join(" ")),
+            release: p.ngayKhoiChieu, tab: p.trangThai === "DANG_CHIEU" ? "now" : "soon",
+            tones: ["#fff0e5", "#efc7b9"], poster: p.poster ? "images/" + encodeURIComponent(p.poster) : null
+        }));
+        addOptions(genre, films.flatMap(film => film.genres));
+        addOptions(rating, films.map(film => film.rating));
+        render();
+    } catch {
+        count.textContent = "";
+        document.querySelector("#load-error-message").textContent = location.port === "63342"
+            ? "Cậu đang mở bản preview của IntelliJ. Hãy chạy Spring Boot và mở trang qua cổng của ứng dụng."
+            : "Vui lòng kiểm tra kết nối máy chủ rồi thử lại.";
+        loadError.hidden = false;
+    }
+}
+
+document.querySelector("#retry").addEventListener("click", loadFilms);
+loadFilms();
+// Menu tài khoản do home-account.js phụ trách.

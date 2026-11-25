@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinema 11 | Thêm / sửa combo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/dat-ve.css"><link rel="stylesheet" href="css/kho.css">
+
+<script type="module" src="js/combo-form.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+  <div class="container header-inner">
+    <a class="brand" href="ton-kho.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quản lý</a>
+    <nav class="kho-nav" aria-label="Menu quản lý kho">
+      <a href="ton-kho.html" >Tồn kho</a>
+      <a href="san-pham-form.html">Sản phẩm</a>
+      <a href="combo-form.html">Combo</a>
+      <a href="phieu-nhap-kho.html" >Phiếu nhập</a>
+      <a href="phieu-kiem-ke.html" >Kiểm kê</a>
+      <a href="soat-ve.html" >Soát vé</a>
+    </nav>
+    <div class="header-right"><a class="button secondary" href="./">Trang khách</a></div>
+  </div>
+</header>
+<main class="container main">
+<div class="breadcrumb"><a href="ton-kho.html">Quản lý</a> / Thêm / sửa combo</div>
+<div class="page-title"><div><h1>Thêm / sửa combo</h1><p>Thiết lập giá bán và các sản phẩm thành phần của combo.</p></div></div>
+<div class="banner-demo">Chế độ giao diện mẫu – dữ liệu đang lưu trên trình duyệt để trình diễn, chưa kết nối API/CSDL Spring Boot.</div>
+
+<form id="form-combo" class="form-card">
+  <div class="form-grid-2">
+    <div class="field"><label for="ma">Mã combo *</label><input id="ma" maxlength="10" required placeholder="VD: CB05"></div>
+    <div class="field"><label for="ten">Tên combo *</label><input id="ten" maxlength="100" required></div>
+    <div class="field"><label for="gia">Giá combo (VND) *</label><input id="gia" type="number" min="0" step="1000" required></div>
+    <div class="field"><label for="trang-thai">Trạng thái *</label><select id="trang-thai"><option value="DANG_BAN">Đang bán</option><option value="NGUNG_BAN">Ngừng bán</option></select></div>
+    <div class="field"><label for="anh">Đường dẫn hình ảnh</label><input id="anh" type="url" placeholder="https://..."></div>
+    <div class="field"><label for="mo-ta">Mô tả *</label><input id="mo-ta" maxlength="255" required placeholder="Mô tả thành phần combo"></div>
+  </div>
+  <div class="kho-toolbar" style="margin-top:22px"><h2 style="font-size:18px">Sản phẩm thành phần *</h2><button class="button secondary" id="them-dong" type="button">+ Thêm thành phần</button></div>
+  <div id="thanh-phan"></div>
+  <div id="thong-bao" class="alert" hidden role="status"></div>
+  <div class="hanh-dong"><button class="button primary" type="submit">Lưu combo</button><a class="button secondary" href="ton-kho.html">Hủy</a></div>
+</form>
+
+</main>
+</body></html>

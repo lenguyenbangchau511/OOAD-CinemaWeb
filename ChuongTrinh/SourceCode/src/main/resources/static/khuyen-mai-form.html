@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Khuyến mãi | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/khuyen-mai-form.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html" aria-current="page">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page form-hep">
+    <p class="breadcrumb"><a href="khuyen-mai.html">Khuyến mãi</a> / <span id="duong-dan">Thêm mới</span></p>
+    <div class="page-title">
+        <div><h1 id="tieu-de">Thêm khuyến mãi</h1><p id="mo-ta">Nhập thông tin chương trình, mức giảm và điều kiện áp dụng.</p></div>
+    </div>
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <form class="card" id="form" novalidate>
+        <div class="form-grid">
+            <h3>Thông tin chương trình</h3>
+            <div class="field"><label for="ma-km">Mã khuyến mãi *</label>
+                <input id="ma-km" maxlength="20" autocomplete="off" placeholder="Ví dụ THANHVIEN10">
+                <span class="hint" id="goi-y-ma">Chữ in hoa và số, 3–20 ký tự. Khách nhập mã này khi đặt vé</span></div>
+            <div class="field"><label for="trang-thai">Trạng thái *</label><select id="trang-thai"></select></div>
+            <div class="field full"><label for="ten">Tên chương trình *</label><input id="ten" maxlength="100"></div>
+            <div class="field full"><label for="noi-dung">Nội dung *</label><textarea id="noi-dung" rows="3" maxlength="1000" placeholder="Mô tả ưu đãi hiển thị cho khách hàng"></textarea></div>
+
+            <h3>Mức giảm</h3>
+            <div class="field"><label for="hinh-thuc">Hình thức giảm *</label><select id="hinh-thuc"></select></div>
+            <div class="field"><label for="muc-giam" id="nhan-muc-giam">Mức giảm (₫) *</label>
+                <input id="muc-giam" type="number" min="0" inputmode="numeric">
+                <span class="hint" id="goi-y-giam"></span></div>
+            <div class="field"><label for="pham-vi">Phạm vi áp dụng *</label><select id="pham-vi"></select></div>
+            <div class="field"><label for="don-toi-thieu">Giá trị đơn tối thiểu (₫) *</label>
+                <input id="don-toi-thieu" type="number" min="0" step="1000" inputmode="numeric">
+                <span class="hint">Nhập 0 nếu không yêu cầu</span></div>
+
+            <h3>Điều kiện và giới hạn</h3>
+            <div class="field"><label for="doi-tuong">Đối tượng áp dụng *</label><select id="doi-tuong"></select></div>
+            <div class="field"><label for="kenh-ban">Kênh bán *</label><select id="kenh-ban"></select></div>
+            <div class="field"><label for="ngay-bat-dau">Ngày bắt đầu *</label><input id="ngay-bat-dau" type="date"></div>
+            <div class="field"><label for="ngay-ket-thuc">Ngày kết thúc *</label><input id="ngay-ket-thuc" type="date"></div>
+            <div class="field"><label for="gioi-han">Giới hạn lượt sử dụng *</label>
+                <input id="gioi-han" type="number" min="1" inputmode="numeric">
+                <span class="hint" id="da-dung">Đã dùng: 0 lượt</span></div>
+            <div class="field"><label for="uu-tien">Mức ưu tiên *</label>
+                <input id="uu-tien" type="number" min="1" inputmode="numeric">
+                <span class="hint" id="goi-y-uu-tien">Số nhỏ hơn được ưu tiên trước khi nhiều khuyến mãi cùng hợp lệ</span></div>
+        </div>
+
+        <div class="hanh-dong" id="nut-form">
+            <a class="button secondary" href="khuyen-mai.html">Hủy</a>
+            <button class="button primary" type="submit">Lưu khuyến mãi</button>
+        </div>
+        <div class="hanh-dong" id="nut-xem" hidden>
+            <a class="button secondary" href="khuyen-mai.html">Quay lại danh sách</a>
+            <a class="button primary" id="nut-sua" href="#">Chỉnh sửa</a>
+        </div>
+    </form>
+</main></div>
+</body>
+</html>
