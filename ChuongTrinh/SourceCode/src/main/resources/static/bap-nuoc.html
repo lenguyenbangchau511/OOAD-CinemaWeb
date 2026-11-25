@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bắp nước và combo | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/megacine-index.css">
+    <link rel="stylesheet" href="css/home-account.css">
+    <link rel="stylesheet" href="css/bap-nuoc.css">
+    <script type="module" src="js/home-account.js"></script>
+    <script type="module" src="js/bap-nuoc.js"></script>
+</head>
+<body>
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="brand-accent">Cine</span></span></a>
+        <nav aria-label="Menu chính">
+            <a href="./">Trang chủ</a>
+            <a href="bap-nuoc.html" aria-current="page">Bắp nước</a>
+            <a href="index.html#uu-dai">Khuyến mãi</a>
+        </nav>
+        <div id="cinema-home-account"><a class="button secondary login" href="login.html?quayLai=%2Fbap-nuoc.html">Đăng nhập</a></div>
+    </div>
+</header>
+<main class="container main">
+    <section class="menu-intro" aria-labelledby="menu-title">
+        <div>
+            <h1 id="menu-title">Bắp nước và combo</h1>
+            <p>Xem thực đơn và giá. Bạn có thể thêm món sau khi chọn ghế.</p>
+        </div>
+        <a class="button primary" href="index.html#phim">Xem lịch chiếu</a>
+    </section>
+    <div class="menu-filters" role="group" aria-label="Lọc theo loại món">
+        <button class="button secondary" type="button" data-loai="" aria-pressed="true" aria-controls="thuc-don">Tất cả</button>
+        <button class="button secondary" type="button" data-loai="DO_AN" aria-pressed="false" aria-controls="thuc-don">Đồ ăn</button>
+        <button class="button secondary" type="button" data-loai="THUC_UONG" aria-pressed="false" aria-controls="thuc-don">Thức uống</button>
+        <button class="button secondary" type="button" data-loai="COMBO" aria-pressed="false" aria-controls="thuc-don">Combo</button>
+    </div>
+    <p id="trang-thai" class="result-count" role="status">Đang tải thực đơn…</p>
+    <button type="button" id="thu-lai" class="button secondary" hidden>Thử lại</button>
+    <div id="thuc-don" class="film-grid"></div>
+    <noscript><p>Bật JavaScript để xem thực đơn.</p></noscript>
+</main>
+<footer class="footer">
+    <div class="container footer-inner"><p>© MegaCine · Đồ án OOAD Nhóm 11</p></div>
+</footer>
+
+<template id="the-mon">
+    <article class="film">
+        <div class="menu-photo">
+            <span class="menu-icon" aria-hidden="true"></span>
+            <img alt="" loading="lazy" hidden>
+        </div>
+        <div class="film-body">
+            <p class="menu-category"></p>
+            <h2></h2>
+            <p class="menu-description"></p>
+            <div class="menu-price-row"><strong></strong><span hidden>Hết hàng</span></div>
+        </div>
+    </article>
+</template>
+</body>
+</html>
