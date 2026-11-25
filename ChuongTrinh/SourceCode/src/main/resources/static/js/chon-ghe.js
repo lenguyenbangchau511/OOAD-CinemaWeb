@@ -1,6 +1,6 @@
 /* Giao diện 7 - Chọn ghế và giữ ghế (UC5.1, UC5.2). Chạy thật với API /api/suat-chieu/{maSuat}/so-do-ghe và /api/giu-ghe. */
 import {
-    TRANG, layNguoiDungDatVe, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
+    TRANG, layNguoiDungDatVe, dinhDangGio, dinhDangNgay, duongDanChonSuat, dinhDangTien, goiApi, hienThongBao, layPhienDatVe,
     luuPhienDatVe, NHAN, taoDongHoDemNguoc, thamSo, thoat, xoaPhienDatVe
 } from './datve-common.js';
 
@@ -23,14 +23,19 @@ let daDangNhap = true;
 let dangXuLy = false;
 const dongHo = taoDongHoDemNguoc(el.dem, hetGio);
 
+function veThanhToanNeuDaXacNhan() {
+    const phien = layPhienDatVe();
+    if (!phien.daXacNhan || !phien.maDonHang || (maSuat && phien.maSuat !== maSuat)) return false;
+    location.replace(`thanh-toan.html?maDonHang=${encodeURIComponent(phien.maDonHang)}`);
+    return true;
+}
+window.addEventListener('pageshow', e => { if (e.persisted) veThanhToanNeuDaXacNhan(); });
+
 khoiTao();
 
 async function khoiTao() {
     const luu = layPhienDatVe();
-    if (luu.daXacNhan && luu.maDonHang && (!maSuat || luu.maSuat === maSuat)) {
-        location.replace(`thanh-toan.html?maDonHang=${encodeURIComponent(luu.maDonHang)}`);
-        return;
-    }
+    if (veThanhToanNeuDaXacNhan()) return;
     if (!maSuat) {
         el.soDo.innerHTML = '<div class="trong"><h2>Chưa chọn suất chiếu</h2><p>Vui lòng chọn suất chiếu từ trang phim.</p><a class="button primary" href="./">Về trang chủ</a></div>';
         el.thongTinSuat.textContent = '';
@@ -73,7 +78,7 @@ function veThongTinSuat(sd) {
     el.tieuDe.textContent = s.tenPhim + (s.gioiHanDoTuoi ? ` (${s.gioiHanDoTuoi})` : '');
     el.thongTinSuat.textContent = `${dinhDangNgay(s.ngayChieu)} · ${dinhDangGio(s.gioBatDau)} - ${dinhDangGio(s.gioKetThuc)} · ` +
         `${s.tenPhong} (${NHAN.loaiPhong[s.loaiPhong] || s.loaiPhong})`;
-    const suatHref = s.maPhim ? `chi-tiet-phim.html?maPhim=${encodeURIComponent(s.maPhim)}#lich-chieu` : './';
+    const suatHref = duongDanChonSuat(s.maPhim, s.ngayChieu);
     [el.buocChonSuat, el.linkChonSuat, el.nutQuayLai].forEach((a) => { if (a) a.href = suatHref; });
 }
 
@@ -104,7 +109,7 @@ function nutGhe(g, choPhep) {
 
 /** Chọn ghế trống -> giữ ghế; bấm lại ghế của mình -> bỏ giữ. */
 async function chonGhe(maGheSuat, laCuaToi) {
-    if (dangXuLy) return;
+    if (dangXuLy || veThanhToanNeuDaXacNhan()) return;
     if (!daDangNhap) {
         location.href = `${TRANG.dangNhap}?quayLai=${encodeURIComponent(location.pathname + location.search)}`;
         return;
@@ -112,6 +117,15 @@ async function chonGhe(maGheSuat, laCuaToi) {
     dangXuLy = true;
     hienThongBao(el.thongBao, '');
     try {
+        const cu = layPhienDatVe();
+        if (cu.maPhienGiu && cu.maSuat !== maSuat && !cu.daXacNhan) {
+            try {
+                await goiApi(`/api/giu-ghe/${encodeURIComponent(cu.maPhienGiu)}`, { method: 'DELETE' });
+            } catch (loi) {
+                if (loi.status !== 404 && loi.status !== 410) throw loi;
+            }
+            xoaPhienDatVe();
+        }
         phienHienTai = laCuaToi
             ? await goiApi(`/api/giu-ghe/${encodeURIComponent(maPhienGiu)}/ghe/${encodeURIComponent(maGheSuat)}`, { method: 'DELETE' })
             : await goiApi('/api/giu-ghe', { method: 'POST', body: { maSuat, maPhienGiu, dsMaGheSuat: [maGheSuat] } });
@@ -166,7 +180,7 @@ async function hetGio() {
 }
 
 async function huyGiuGhe() {
-    if (!maPhienGiu || dangXuLy) return;
+    if (!maPhienGiu || dangXuLy || veThanhToanNeuDaXacNhan()) return;
     dangXuLy = true;
     try {
         await goiApi(`/api/giu-ghe/${encodeURIComponent(maPhienGiu)}`, { method: 'DELETE' });
@@ -183,8 +197,8 @@ async function huyGiuGhe() {
     }
 }
 
-/** Sang bước chọn đồ ăn (giao diện 8 của Châu). Nếu trang đó chưa có thì đi thẳng sang thanh toán (đơn tạm). */
-async function tiepTuc() {
+function tiepTuc() {
+    if (dangXuLy || veThanhToanNeuDaXacNhan()) return;
     if (!phienHienTai || phienHienTai.dsGhe.length === 0) {
         hienThongBao(el.thongBao, 'Vui lòng chọn ít nhất một ghế', 'loi');
         return;
@@ -197,7 +211,5 @@ async function tiepTuc() {
         tamTinh: phienHienTai.tamTinh,
         dsGhe: phienHienTai.dsGhe.map((g) => ({ maGheSuat: g.maGheSuat, tenGhe: g.tenGhe, loaiGhe: g.loaiGhe, giaVe: g.giaVe }))
     });
-    let coTrangDoAn = false;
-    try { coTrangDoAn = (await fetch(TRANG.chonDoAn, { method: 'HEAD' })).ok; } catch { /* bỏ qua */ }
-    location.href = coTrangDoAn ? TRANG.chonDoAn : 'thanh-toan.html?tamThoi=1';
+    location.href = TRANG.chonDoAn;
 }

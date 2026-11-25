@@ -4,7 +4,10 @@ const maPhim = thamSo('maPhim');
 const ngay = document.querySelector('#ngay');
 const suat = document.querySelector('#suat');
 const thongBao = document.querySelector('#thong-bao');
-ngay.min = ngay.value = homNay();
+const ngayChon = thamSo('ngay');
+ngay.min = homNay();
+ngay.value = /^\d{4}-\d{2}-\d{2}$/.test(ngayChon || '') && ngayChon >= ngay.min ? ngayChon : ngay.min;
+if (!ngay.value) ngay.value = ngay.min;
 let lanTai = 0;
 
 function hienNgay() {

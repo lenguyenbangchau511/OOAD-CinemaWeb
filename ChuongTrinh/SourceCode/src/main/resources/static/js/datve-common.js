@@ -18,6 +18,13 @@ export const TRANG = {
 };
 
 /** Khóa sessionStorage lưu "phiên đặt vé" chia sẻ giữa các bước 7 -> 8 -> 9 -> 10 -> 11. */
+export function duongDanChonSuat(maPhim, ngay) {
+    if (!maPhim) return './';
+    const query = new URLSearchParams({ maPhim });
+    if (ngay) query.set('ngay', ngay);
+    return `chi-tiet-phim.html?${query}#lich-chieu`;
+}
+
 const KHOA_DAT_VE = 'cinema.datVe';
 
 /**

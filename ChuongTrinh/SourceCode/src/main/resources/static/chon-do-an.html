@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="css/dat-ve.css">
     <link rel="stylesheet" href="css/megacine-pages.css">
     <link rel="stylesheet" href="css/home-account.css">
+    <link rel="stylesheet" href="css/chon-do-an.css">
     <script type="module" src="js/customer-layout.js"></script>
     <script type="module" src="js/chon-do-an.js"></script>
 </head>
@@ -22,7 +23,7 @@
         <li><span>4</span>Xác nhận</li>
         <li><span>5</span>Thanh toán</li>
     </ol>
-    <h1>Chọn đồ ăn, thức uống và combo</h1>
+    <h1>Chọn bắp nước</h1>
     <p class="mc-muted">Thêm bắp nước cho suất chiếu của bạn hoặc bỏ qua để sang bước xác nhận đơn.</p>
     <p id="thong-bao" role="status" hidden></p>
     <div class="mc-hold">
@@ -38,15 +39,15 @@
                 <button type="button" data-loai="DO_AN" aria-pressed="false">Đồ ăn</button>
                 <button type="button" data-loai="THUC_UONG" aria-pressed="false">Thức uống</button>
             </div>
-            <div id="mon"></div>
+            <div id="mon"><p class="mc-muted">Đang tải thực đơn…</p></div>
         </div>
         <aside class="chau-card mc-summary">
             <h2>Tóm tắt đơn</h2>
             <div id="tom-tat"></div>
             <div class="chau-actions">
-                <button id="tiep" class="button primary" type="button" disabled>Tiếp tục</button>
+                <button id="tiep" class="button primary" type="button" disabled>Tiếp tục xác nhận</button>
                 <button id="bo-qua" class="button secondary" type="button" disabled>Bỏ qua bắp nước</button>
-                <a class="button secondary" id="quay-lai" href="chon-ghe.html">Về chọn ghế</a>
+                <a class="booking-back" id="quay-lai" href="chon-ghe.html" aria-label="Về chọn ghế" title="Về chọn ghế"><span aria-hidden="true">←</span></a>
             </div>
         </aside>
     </div>

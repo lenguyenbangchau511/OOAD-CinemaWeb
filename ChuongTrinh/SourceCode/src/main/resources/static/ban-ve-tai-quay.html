@@ -6,6 +6,7 @@
     <title>Bán vé tại quầy | MegaCine</title>
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
     <link rel="stylesheet" href="css/noi-bo-shell.css">
     <script type="module" src="js/noi-bo-shell.js"></script>
     <script type="module" src="js/nghiep-vu-noi-bo.js"></script>
@@ -19,18 +20,47 @@
         <p id="thong-bao" role="status" hidden></p>
         <p class="muted">Chế độ xem trước. Thao tác trên màn này không ghi vào cơ sở dữ liệu.</p>
         <form id="form" class="chau-card">
-            <div class="chau-fields">
-    <label>Ngày chiếu <input type="date" id="ngay" required></label>
-    <label>Suất chiếu <select id="suat-moi" required><option value="">Chọn suất</option></select></label>
-</div>
-<fieldset id="ghe-moi"><legend>Ghế trống</legend><p>Chọn suất để xem ghế.</p></fieldset>
-            <div class="chau-fields">
+            <div class="chau-fields quay-fields">
+                <label>Ngày chiếu <input type="date" id="ngay" required></label>
+                <label>Suất chiếu <select id="suat-moi" required><option value="">Chọn suất</option></select></label>
+            </div>
+            <section aria-labelledby="quay-so-do">
+                <h2 id="quay-so-do">Sơ đồ ghế</h2>
+                <div class="man-hinh" aria-hidden="true"></div>
+                <p class="man-hinh-nhan">MÀN HÌNH</p>
+                <div id="ghe-moi" class="so-do"><p>Chọn suất để xem ghế.</p></div>
+                <div class="chu-thich" aria-label="Chú thích">
+                    <span><span class="seat" aria-hidden="true"></span>Trống</span>
+                    <span><span class="seat CUA_TOI" aria-hidden="true">✓</span>Đang chọn</span>
+                    <span><span class="seat DANG_GIU" aria-hidden="true">…</span>Đang được giữ</span>
+                    <span><span class="seat DA_DAT" aria-hidden="true">✕</span>Đã bán</span>
+                    <span><span class="seat BAO_TRI" aria-hidden="true">–</span>Bảo trì</span>
+                    <span><span class="seat vip" aria-hidden="true"></span>VIP</span>
+                    <span><span class="seat sweetbox" aria-hidden="true"></span>Sweetbox</span>
+                </div>
+                <p id="ghe-da-chon" class="ghe-chon" aria-live="polite"></p>
+            </section>
+            <div class="chau-fields quay-fields">
                 <label>Tên khách hàng <input name="khach" maxlength="100" placeholder="Khách lẻ"></label>
                 <label>Phương thức <select name="phuongThuc"><option>Tiền mặt</option><option>Thẻ ngân hàng</option></select></label>
             </div>
-            <details><summary>Bắp nước và combo</summary><div id="mon" class="chau-fields"></div></details>
-            <p><strong>Tạm tính</strong> <output id="tong">0 ₫</output></p>
-            <button class="button primary" type="submit">Xem trước đơn tại quầy</button>
+            <section aria-labelledby="quay-bap-nuoc" class="chon-do-an">
+                <h2 id="quay-bap-nuoc">Bắp nước và combo</h2>
+                <div id="loc-mon" class="mc-category" aria-label="Nhóm món">
+                    <button type="button" data-loai="" aria-pressed="true">Tất cả</button>
+                    <button type="button" data-loai="COMBO" aria-pressed="false">Combo</button>
+                    <button type="button" data-loai="DO_AN" aria-pressed="false">Đồ ăn</button>
+                    <button type="button" data-loai="THUC_UONG" aria-pressed="false">Thức uống</button>
+                </div>
+                <div id="mon"><p>Đang tải thực đơn…</p></div>
+            </section>
+            <div class="quay-summary">
+                <div>
+                    <label for="tong">Tạm tính</label>
+                    <output id="tong">0 ₫</output>
+                </div>
+                <button class="button primary" type="submit">Xem trước đơn tại quầy</button>
+            </div>
         </form>
         <section id="ket-qua" class="chau-card" hidden></section>
     </main>

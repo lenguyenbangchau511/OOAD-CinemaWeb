@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/don-dat-ve")
 public class DonDatVeController {
+    static final String KHOA_DON_DAT_VE = "donDatVe:";
     private final DonDatVeService service;
     private final PhienDangNhap dangNhap;
 
@@ -33,7 +34,7 @@ public class DonDatVeController {
     public Object xacNhan(@RequestBody XacNhanDonRequest req, HttpSession session) {
         var khach = dangNhap.yeuCau(session, VaiTro.KHACH_HANG);
         synchronized (session) {
-            String khoa = "donDatVe:" + req.maPhienGiu();
+            String khoa = KHOA_DON_DAT_VE + req.maPhienGiu();
             var don = service.xacNhan(khach, req, (String) session.getAttribute(khoa));
             session.setAttribute(khoa, don.maDonHang());
             return don;

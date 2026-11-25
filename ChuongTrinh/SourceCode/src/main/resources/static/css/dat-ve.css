@@ -149,3 +149,21 @@ td.so, th.so { text-align: right; white-space: nowrap; }
 .chau-page input, .chau-page select, .chau-page textarea { max-width: 100%; padding: .5rem; border: 1px solid #c9b7a9; border-radius: 6px; font: inherit; }
 .chau-page dialog { width: min(90vw, 540px); border: 1px solid #eadfd7; border-radius: 14px; padding: 1.25rem; }
 .chau-page dialog::backdrop { background: #301d1766; }
+
+a.booking-back {
+    display: inline-grid;
+    place-items: center;
+    justify-self: start;
+    width: 52px;
+    height: 46px;
+    border: 1px solid #a9d1b8;
+    border-radius: 10px;
+    background: #e9f6ed;
+    color: #17643a;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+}
+a.booking-back:hover { background: #d5efdf; color: #104d2c; }
+a.booking-back:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }

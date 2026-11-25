@@ -3,22 +3,60 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Danh sách quản lý phim | MegaCine</title>
+    <title>Quản lý phim | MegaCine</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/dat-ve.css">
     <link rel="stylesheet" href="css/megacine-pages.css">
     <link rel="stylesheet" href="css/noi-bo-shell.css">
+    <link rel="stylesheet" href="css/quan-ly-phim.css">
     <script type="module" src="js/noi-bo-shell.js"></script>
     <script type="module" src="js/quan-ly-phim.js"></script>
 </head>
 <body class="mc-page quan-ly-phim" data-nb-screen="phim">
 <header class="nb-header" id="nb-header"></header>
-<div class="nb-layout"><aside class="nb-sidebar" id="nb-sidebar"></aside><main class="main chau-page nb-main">
-    <h1>Danh sách quản lý phim</h1>
-    <p id="thong-bao" role="status" hidden></p>
-    <a href="phim-form.html" class="button primary">Thêm phim</a><div id="chi-so" class="mc-stats" aria-live="polite"></div><form id="loc" class="chau-actions"><label>Tìm phim <input id="q" type="search"></label><label>Trạng thái <select id="tt"><option value="">Tất cả</option><option value="DANG_CHIEU">Đang chiếu</option><option value="SAP_CHIEU">Sắp chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label><button class="button secondary">Tìm kiếm</button></form><div class="mc-table-wrap"><table class="mc-table"><thead><tr><th scope="col">Poster</th><th scope="col">Mã phim</th><th scope="col">Tên phim</th><th scope="col">Thể loại</th><th scope="col">Thời lượng</th><th scope="col">Độ tuổi</th><th scope="col">Khởi chiếu</th><th scope="col">Trạng thái</th><th scope="col">Thao tác</th></tr></thead><tbody id="ds"></tbody></table></div>
-</main></div>
+<div class="nb-layout">
+    <aside class="nb-sidebar" id="nb-sidebar"></aside>
+    <main class="main chau-page nb-main">
+        <div class="film-heading">
+            <h1>Quản lý phim</h1>
+            <a href="phim-form.html" class="button primary"><span aria-hidden="true">+</span> Thêm phim</a>
+        </div>
+        <p id="thong-bao" role="status" hidden></p>
+        <div id="chi-so" class="mc-stats" aria-live="polite"></div>
+        <section class="film-list" aria-labelledby="film-list-title">
+            <h2 id="film-list-title">Danh sách phim</h2>
+            <form id="loc" class="chau-actions">
+                <label>Tìm phim <input id="q" type="search" placeholder="Nhập tên hoặc mã phim"></label>
+                <label>Trạng thái
+                    <select id="tt">
+                        <option value="">Tất cả</option>
+                        <option value="DANG_CHIEU">Đang chiếu</option>
+                        <option value="SAP_CHIEU">Sắp chiếu</option>
+                        <option value="NGUNG_CHIEU">Ngừng chiếu</option>
+                    </select>
+                </label>
+                <button class="button secondary" type="submit">Tìm kiếm</button>
+            </form>
+            <div class="mc-table-wrap" tabindex="0" role="region" aria-label="Bảng danh sách phim">
+                <table class="mc-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Phim</th>
+                            <th scope="col">Thể loại</th>
+                            <th scope="col">Thời lượng</th>
+                            <th scope="col">Độ tuổi</th>
+                            <th scope="col">Khởi chiếu</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ds"><tr><td colspan="7" class="film-empty">Đang tải danh sách phim…</td></tr></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
 <footer class="nb-footer" id="nb-footer"></footer>
 </body>
 </html>

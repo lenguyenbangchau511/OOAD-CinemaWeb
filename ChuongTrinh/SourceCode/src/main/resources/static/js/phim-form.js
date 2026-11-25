@@ -24,7 +24,10 @@ form.innerHTML = truong.map(([ten, nhan, type, thuocTinh]) =>
         .map(t => `<option>${t}</option>`).join('')}</select></label>
     <label>Trạng thái<select name="trangThai"><option value="SAP_CHIEU">Sắp chiếu</option>
     <option value="DANG_CHIEU">Đang chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label>
-    ${chiXem ? '' : '<button class="button primary" type="submit">Lưu phim</button>'}<a href="quan-ly-phim.html">Hủy</a>`;
+    <div class="film-form-actions">
+        <a href="quan-ly-phim.html" class="film-back-link"><span aria-hidden="true">←</span> Quay lại</a>
+        ${chiXem ? '' : '<button class="button primary" type="submit">Lưu phim</button>'}
+    </div>`;
 const posterPreview = document.querySelector('#poster-preview');
 const posterEmpty = document.querySelector('#poster-empty');
 function xemPoster(url) {

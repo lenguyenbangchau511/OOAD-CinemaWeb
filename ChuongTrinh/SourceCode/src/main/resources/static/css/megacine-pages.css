@@ -158,3 +158,106 @@
     .mc-ticket, .phim-form #form { grid-template-columns: 1fr; }
     .mc-ticket-code { border-left: 0; border-top: 1px dashed var(--line); padding: 10px 0 0; }
 }
+
+[data-nb-screen="ban"] .snack-card[hidden] { display: none; }
+[data-nb-screen="ban"] .snack-photo img { object-fit: contain; }
+[data-nb-screen="ban"] .snack-footer { flex-wrap: wrap; }
+[data-nb-screen="ban"] .so-do { margin-bottom: 12px; }
+
+[data-nb-screen="ban"] .quay-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 14px;
+    align-items: start;
+    margin-block: 0 24px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff8f1;
+}
+[data-nb-screen="ban"] .quay-fields label {
+    gap: 7px;
+    min-width: 0;
+    font-size: .875rem;
+    font-weight: 600;
+}
+[data-nb-screen="ban"] .quay-fields :is(input, select) {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    color: inherit;
+    font: inherit;
+    font-weight: 400;
+}
+[data-nb-screen="ban"] .quay-fields :is(input, select):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+[data-nb-screen="ban"] .quay-fields + section { min-width: 0; }
+[data-nb-screen="ban"] section + .quay-fields { margin-top: 24px; }
+
+[data-nb-screen="ban"] .quay-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px 20px;
+    margin-top: 24px;
+    padding: 16px 20px;
+    border: 1px solid #efcdb3;
+    border-radius: 12px;
+    background: #fff0e2;
+}
+[data-nb-screen="ban"] .quay-summary label { font-size: .875rem; font-weight: 600; }
+[data-nb-screen="ban"] .quay-summary output {
+    display: block;
+    margin-top: 4px;
+    color: #8c3b13;
+    font-size: clamp(1.55rem, 4vw, 2rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+    [data-nb-screen="ban"] .quay-fields { grid-template-columns: 1fr; }
+    [data-nb-screen="ban"] .quay-summary .button { width: 100%; }
+}
+
+[data-nb-screen="ban"] #ket-qua { margin-top: 20px; }
+[data-nb-screen="ban"] #quay-preview-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.quay-preview-badge {
+    border-radius: 999px;
+    padding: 4px 10px;
+    background: #fff0e2;
+    color: #8c3b13;
+    font-size: .8rem;
+}
+.quay-preview-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    gap: 14px;
+    padding: 14px;
+    margin: 14px 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fffaf5;
+}
+.quay-preview-info dt { color: var(--muted); font-size: .85rem; }
+.quay-preview-info dd { margin: 4px 0 0; font-weight: 600; }
+.quay-preview-total {
+    display: block;
+    color: #8c3b13;
+    font-size: clamp(1.55rem, 4vw, 2rem);
+    font-variant-numeric: tabular-nums;
+}

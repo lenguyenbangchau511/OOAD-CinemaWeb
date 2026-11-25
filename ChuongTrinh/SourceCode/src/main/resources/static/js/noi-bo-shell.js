@@ -21,7 +21,7 @@ export const menuItems = {
 export const nav = {
     ADMIN: ['home', 'accounts', 'employees', 'customers'],
     QUAN_LY: ['home', 'phim', 'phong', 'lich', 'gia', 'customers', 'food', 'stock', 'promo', 'report', 'history'],
-    NHAN_VIEN: ['home', 'ban', 'scan', 'history', 'customers', 'phim', 'lich', 'gia', 'food']
+    NHAN_VIEN: ['home', 'ban', 'scan', 'history', 'customers']
 };
 
 // Nhân viên chỉ có quyền xem phim; menu phòng suất và đồ ăn quản lý giữ nguyên.

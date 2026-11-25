@@ -1,7 +1,12 @@
 import {
-    anhMon, dinhDangGio, dinhDangNgay, dinhDangTien, goiApi, hienThongBao,
+    anhMon, dinhDangGio, dinhDangNgay, duongDanChonSuat, dinhDangTien, goiApi, hienThongBao,
     layPhienDatVe, luuPhienDatVe, taoDongHoDemNguoc, thoat
 } from './datve-common.js';
+
+window.addEventListener('pageshow', e => {
+    // Khôi phục lựa chọn mới nhất và kiểm tra lại phiên khi trình duyệt dùng bộ nhớ trang.
+    if (e.persisted) location.reload();
+});
 
 const phien = layPhienDatVe();
 if (phien.daXacNhan && phien.maDonHang) {
@@ -41,7 +46,7 @@ async function khoiTao() {
             goiApi(`/api/giu-ghe/${encodeURIComponent(phien.maPhienGiu)}`),
             goiApi('/api/don-dat-ve/danh-muc')
         ]);
-        if (!ghe.soGiayConLai) {
+        if (!ghe.soGiayConLai || !ghe.dsGhe.length) {
             throw new Error('Phiên giữ ghế đã hết hạn.');
         }
 
@@ -58,7 +63,7 @@ async function khoiTao() {
                     const s = sd.suat;
                     thongTinSuat = `${s.tenPhim} · ${dinhDangGio(s.gioBatDau)} · ${dinhDangNgay(s.ngayChieu)} · ${s.tenPhong}`;
                     if (s.maPhim) {
-                        buocChonSuat.href = `chi-tiet-phim.html?maPhim=${encodeURIComponent(s.maPhim)}#lich-chieu`;
+                        buocChonSuat.href = duongDanChonSuat(s.maPhim, s.ngayChieu);
                     }
                     luuPhienDatVe({ maSuat, maPhim: s.maPhim || phien.maPhim, tenPhim: s.tenPhim });
                 }
@@ -97,10 +102,10 @@ async function khoiTao() {
                 <div class="snack-body">
                     <div class="snack-meta">
                         <span class="snack-tag">${thoat(info.nhan)}</span>
-                        <span class="snack-stock${hetHang ? ' out' : ''}">${hetHang ? 'Hết hàng' : `Còn ${khaDung}`}</span>
+                        ${hetHang ? '<span class="snack-stock out">Hết hàng</span>' : ''}
                     </div>
                     <h3>${thoat(m.ten)}</h3>
-                    <p class="snack-desc">${thoat(m.moTa || 'Phục vụ tại quầy bắp nước rạp.')}</p>
+                    <p class="snack-desc">${thoat(m.moTa)}</p>
                     <div class="snack-footer">
                         <span class="snack-price">${dinhDangTien(m.gia)}</span>
                         <div class="qty-stepper" aria-label="Chọn số lượng ${thoat(m.ten)}">
@@ -200,7 +205,13 @@ async function khoiTao() {
             hienTong(true);
         });
 
-        hienTong(false);
+        const conChon = docDichVu();
+        const daDieuChinh = (phien.dichVu || []).some(muc =>
+            !conChon.some(mon => mon.ma === muc.ma && mon.soLuong === muc.soLuong));
+        if (daDieuChinh) {
+            hienThongBao(thongBao, 'Thực đơn hoặc tồn kho đã thay đổi. Vui lòng kiểm tra lại số lượng món.', 'thong-tin');
+        }
+        hienTong(true);
         tiep.disabled = boQua.disabled = false;
         dongHo.bat(ghe.soGiayConLai);
 
@@ -209,11 +220,14 @@ async function khoiTao() {
             location.href = 'xac-nhan-don.html';
         }
 
-        boQua.addEventListener('click', () => luuVaTiep([]));
-        tiep.addEventListener('click', async () => {
+        boQua.addEventListener('click', () => kiemTraVaTiep([]));
+        tiep.addEventListener('click', () => {
             const inputs = [...danhSach.querySelectorAll('input[data-ma]:not(:disabled)')];
             if (!inputs.every((input) => input.reportValidity())) return;
-            const dichVu = docDichVu();
+            kiemTraVaTiep(docDichVu());
+        });
+
+        async function kiemTraVaTiep(dichVu) {
             tiep.disabled = boQua.disabled = true;
             hienThongBao(thongBao, '');
             try {
@@ -226,8 +240,9 @@ async function khoiTao() {
                 hienThongBao(thongBao, loi.thongBao || loi.message, 'loi');
                 tiep.disabled = boQua.disabled = hetHan;
             }
-        });
+        }
     } catch (loi) {
+        danhSach.textContent = '';
         hienThongBao(thongBao, loi.thongBao || loi.message, 'loi');
     }
 }
