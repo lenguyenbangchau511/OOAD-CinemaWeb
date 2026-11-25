@@ -2,11 +2,14 @@ package com.cinema.controller;
 
 import com.cinema.dto.KetQuaDatVeDto;
 import com.cinema.dto.LichSuVeDto;
+import com.cinema.dto.SoatVeDto;
 import com.cinema.enums.TrangThaiDonHang;
 import com.cinema.enums.TrangThaiVe;
 import com.cinema.service.VeService;
 import com.cinema.util.NguoiDung;
 import com.cinema.util.PhienDangNhap;
+import com.cinema.enums.VaiTro;
+import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
@@ -63,4 +66,19 @@ public class VeController {
         kq.put("maKhachHang", nd == null ? null : nd.maKhachHang());
         return kq;
     }
+
+    /** Tra cứu vé hoặc QR trực tiếp từ CSDL để phục vụ UC5.11. */
+    @GetMapping("/api/ve/soat-ve/{maVeHoacQr}")
+    public SoatVeDto traCuuSoatVe(@PathVariable String maVeHoacQr, HttpSession session) {
+        NguoiDung nd = phienDangNhap.yeuCau(session, VaiTro.NHAN_VIEN, VaiTro.QUAN_LY);
+        return veService.traCuuSoatVe(nd, maVeHoacQr);
+    }
+
+    /** Xác nhận check-in; trạng thái và thời điểm được lưu bền vững trong bảng VE. */
+    @PostMapping("/api/ve/{maVe}/check-in")
+    public SoatVeDto checkIn(@PathVariable String maVe, HttpSession session) {
+        NguoiDung nd = phienDangNhap.yeuCau(session, VaiTro.NHAN_VIEN, VaiTro.QUAN_LY);
+        return veService.xacNhanCheckIn(nd, maVe);
+    }
+
 }
