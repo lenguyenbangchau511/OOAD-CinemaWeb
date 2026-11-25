@@ -30,7 +30,14 @@ async function xemBaoCao() {
     if (tuNgay > denNgay) { hienThongBao($('thong-bao'), 'Ngày bắt đầu không được sau ngày kết thúc.', 'loi'); return; }
     hienThongBao($('thong-bao'), '');
 
-    const ds = await docDuLieu(`/api/bao-cao/doanh-thu?tuNgay=${tuNgay}&denNgay=${denNgay}`, doanhThuMau(tuNgay, denNgay));
+    let ds;
+    try {
+        ds = await docDuLieu(`/api/bao-cao/doanh-thu?tuNgay=${tuNgay}&denNgay=${denNgay}`, doanhThuMau(tuNgay, denNgay));
+    } catch (loi) {
+        $('pn-doanh-thu').innerHTML = '';
+        hienThongBao($('thong-bao'), loi.message, 'loi');   // ví dụ: "Bạn không có quyền thực hiện chức năng này"
+        return;
+    }
     hienDoanhThu(ds, tuNgay, denNgay);
 }
 
