@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hồ sơ nhân viên | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/nhan-vien-form.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html" aria-current="page">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page form-hep">
+    <p class="breadcrumb"><a href="nhan-vien.html" id="ve-danh-sach">Nhân viên</a> / <span id="duong-dan">Thêm mới</span></p>
+    <div class="page-title">
+        <div><h1 id="tieu-de">Thêm nhân viên</h1><p id="mo-ta">Nhập hồ sơ nhân viên. Tài khoản đăng nhập do Admin tạo riêng sau khi lưu hồ sơ.</p></div>
+    </div>
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <form class="card" id="form" novalidate>
+        <div class="form-grid">
+            <h3>Hồ sơ nhân viên</h3>
+            <div class="field"><label for="ma-nv">Mã nhân viên</label><input id="ma-nv" readonly><span class="hint">Hệ thống tự sinh, không thay đổi</span></div>
+            <div class="field"><label for="chuc-vu">Chức vụ *</label>
+                <input id="chuc-vu" list="ds-chuc-vu" maxlength="100" placeholder="Chọn hoặc nhập chức vụ">
+                <datalist id="ds-chuc-vu"><option value="Quản lý"><option value="Nhân viên bán vé"><option value="Nhân viên soát vé"><option value="Nhân viên quầy bắp nước"></datalist></div>
+            <div class="field full"><label for="ho-ten">Họ và tên *</label><input id="ho-ten" maxlength="100" autocomplete="off" placeholder="Ví dụ Nguyễn Văn An"></div>
+            <div class="field full"><label for="sdt">Số điện thoại *</label>
+                <input id="sdt" type="tel" maxlength="10" inputmode="numeric" placeholder="10 chữ số, bắt đầu bằng 0">
+                <span class="hint">Thông tin định danh, không trùng với nhân viên khác</span></div>
+
+            <h3>Tài khoản liên kết</h3>
+            <div class="field"><label for="tk-ten">Tên đăng nhập</label><input id="tk-ten" disabled></div>
+            <div class="field"><label for="tk-email">Email</label><input id="tk-email" disabled></div>
+            <div class="field"><label for="tk-vai-tro">Vai trò</label><input id="tk-vai-tro" disabled></div>
+            <div class="field"><label for="tk-trang-thai">Trạng thái tài khoản</label><input id="tk-trang-thai" disabled></div>
+            <p class="muted field full">Vai trò và trạng thái tài khoản không chỉnh sửa tại đây. Admin quản lý ở màn hình Quản lý tài khoản và quyền.</p>
+        </div>
+
+        <div class="hanh-dong" id="nut-form">
+            <a class="button secondary" href="nhan-vien.html" id="nut-huy">Hủy</a>
+            <button class="button primary" type="submit">Lưu hồ sơ</button>
+        </div>
+        <div class="hanh-dong" id="nut-xem" hidden>
+            <a class="button secondary" href="nhan-vien.html" id="nut-quay-lai">Quay lại danh sách</a>
+            <a class="button primary" id="nut-sua" href="#">Chỉnh sửa</a>
+        </div>
+    </form>
+</main></div>
+</body>
+</html>

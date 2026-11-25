@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Giá vé | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/gia-ve-form.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html" aria-current="page">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page form-hep">
+    <p class="breadcrumb"><a href="gia-ve.html">Giá vé</a> / <span id="duong-dan">Thêm mới</span></p>
+    <div class="page-title">
+        <div><h1 id="tieu-de">Thêm giá vé</h1><p id="mo-ta">Nhập mức giá và điều kiện áp dụng.</p></div>
+    </div>
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <form class="card" id="form" novalidate>
+        <div class="form-grid">
+            <h3>Điều kiện áp dụng</h3>
+            <div class="field"><label for="ma-gia-ve">Mã giá vé</label><input id="ma-gia-ve" readonly><span class="hint">Hệ thống tự sinh</span></div>
+            <div class="field"><label for="trang-thai">Trạng thái *</label><select id="trang-thai"></select></div>
+            <div class="field"><label for="loai-ve">Loại vé *</label><select id="loai-ve"></select></div>
+            <div class="field"><label for="doi-tuong">Đối tượng khách hàng *</label><select id="doi-tuong"></select></div>
+            <div class="field"><label for="loai-ghe">Loại ghế *</label><select id="loai-ghe"></select></div>
+            <div class="field"><label for="loai-ngay">Loại ngày *</label><select id="loai-ngay"></select></div>
+
+            <h3>Mức giá và thời gian áp dụng</h3>
+            <div class="field full"><label for="muc-gia">Mức giá (₫) *</label>
+                <input id="muc-gia" type="number" min="1000" step="1000" inputmode="numeric" placeholder="Ví dụ 75000">
+                <span class="hint" id="goi-y-gia">Lớn hơn 0, là bội số của 1.000 ₫</span></div>
+            <div class="field"><label for="gio-bat-dau">Khung giờ bắt đầu *</label><input id="gio-bat-dau" type="time"></div>
+            <div class="field"><label for="gio-ket-thuc">Khung giờ kết thúc *</label><input id="gio-ket-thuc" type="time"></div>
+            <div class="field"><label for="ngay-bat-dau">Ngày bắt đầu hiệu lực *</label><input id="ngay-bat-dau" type="date"></div>
+            <div class="field"><label for="ngay-ket-thuc">Ngày kết thúc hiệu lực *</label><input id="ngay-ket-thuc" type="date"></div>
+        </div>
+
+        <div class="alert loi" id="canh-bao-trung" hidden></div>
+
+        <div class="hanh-dong" id="nut-form">
+            <a class="button secondary" href="gia-ve.html">Hủy</a>
+            <button class="button primary" type="submit">Lưu giá vé</button>
+        </div>
+        <div class="hanh-dong" id="nut-xem" hidden>
+            <a class="button secondary" href="gia-ve.html">Quay lại danh sách</a>
+            <a class="button primary" id="nut-sua" href="#">Chỉnh sửa</a>
+        </div>
+    </form>
+</main></div>
+</body>
+</html>

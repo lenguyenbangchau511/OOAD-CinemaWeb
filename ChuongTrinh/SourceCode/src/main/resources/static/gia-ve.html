@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Danh sách giá vé | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/gia-ve.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html" aria-current="page">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html">Báo cáo</a>
+</nav></aside><main class="main chau-page">
+    <div class="page-title">
+        <div>
+            <h1>Danh sách giá vé</h1>
+            <p>Mức giá theo loại vé, đối tượng, loại ghế, loại ngày và thời gian áp dụng.</p>
+        </div>
+        <a class="button primary" href="gia-ve-form.html">+ Thêm giá vé</a>
+    </div>
+
+    <form class="filters" id="bo-loc" role="search">
+        <div class="field"><label for="tu-khoa">Mã giá vé</label><input id="tu-khoa" type="search" placeholder="Ví dụ GV01"></div>
+        <div class="field"><label for="loc-loai-ve">Loại vé</label><select id="loc-loai-ve"></select></div>
+        <div class="field"><label for="loc-doi-tuong">Đối tượng</label><select id="loc-doi-tuong"></select></div>
+        <div class="field"><label for="loc-loai-ghe">Loại ghế</label><select id="loc-loai-ghe"></select></div>
+        <div class="field"><label for="loc-loai-ngay">Loại ngày</label><select id="loc-loai-ngay"></select></div>
+        <div class="field"><label for="gia-tu">Giá từ (₫)</label><input id="gia-tu" type="number" min="0" step="1000"></div>
+        <div class="field"><label for="gia-den">Giá đến (₫)</label><input id="gia-den" type="number" min="0" step="1000"></div>
+        <div class="field"><label for="loc-trang-thai">Trạng thái</label><select id="loc-trang-thai"></select></div>
+        <div class="actions">
+            <button class="button primary" type="submit">Tìm kiếm</button>
+            <button class="button secondary" type="button" id="xoa-loc">Xóa lọc</button>
+        </div>
+    </form>
+
+    <div class="alert" id="thong-bao" hidden></div>
+    <div id="ket-qua"></div>
+</main></div>
+</body>
+</html>

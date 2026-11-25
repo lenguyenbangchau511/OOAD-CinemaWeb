@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Báo cáo và thống kê | MegaCine</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/quan-ly.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/bao-cao.js"></script>
+</head>
+<body class="mc-page">
+<header class="header"><div class="container header-inner">
+    <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+    <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Quản lý</span></nav>
+</div></header>
+<div class="container mc-admin"><aside class="mc-sidebar"><nav aria-label="Khu nội bộ">
+<a href="noi-bo.html">Tổng quan</a><p>Vận hành rạp</p>
+<a href="quan-ly-phim.html">Quản lý phim</a><a href="suat-chieu.html">Suất chiếu</a>
+<a href="phong-chieu.html">Phòng chiếu</a><a href="gia-ve.html">Giá vé</a><a href="lich-su-ve.html">Tra cứu vé</a>
+<p>Bán hàng</p><a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a><a href="khuyen-mai.html">Khuyến mãi</a>
+<p>Khách hàng và nhân sự</p><a href="khach-hang.html">Khách hàng</a><a href="nhan-vien.html">Nhân viên</a>
+<p>Thống kê</p><a href="bao-cao.html" aria-current="page">Báo cáo</a>
+</nav></aside><main class="main chau-page">
+    <div class="page-title">
+        <div><h1>Báo cáo và thống kê</h1><p>Chỉ tính các đơn đã thanh toán thành công.</p></div>
+        <button class="button secondary" type="button" id="xuat-excel">Xuất Excel</button>
+    </div>
+
+    <form class="filters" id="bo-loc" novalidate>
+        <div class="field"><label for="tu-ngay">Từ ngày *</label><input id="tu-ngay" type="date"></div>
+        <div class="field"><label for="den-ngay">Đến ngày *</label><input id="den-ngay" type="date"></div>
+        <div class="field"><label for="chon-nhanh">Chọn nhanh</label>
+            <select id="chon-nhanh">
+                <option value="">Tùy chọn</option>
+                <option value="7">7 ngày gần nhất</option>
+                <option value="30">30 ngày gần nhất</option>
+                <option value="thang">Tháng này</option>
+            </select></div>
+        <div class="actions"><button class="button primary" type="submit">Xem báo cáo</button></div>
+    </form>
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <div class="tabs" role="tablist" aria-label="Loại báo cáo">
+        <button type="button" role="tab" id="tab-doanh-thu" aria-controls="pn-doanh-thu" aria-selected="true">Doanh thu</button>
+        <button type="button" role="tab" id="tab-ve-ban" aria-controls="pn-ve-ban" aria-selected="false">Vé bán</button>
+        <button type="button" role="tab" id="tab-phim" aria-controls="pn-phim" aria-selected="false">Doanh thu theo phim</button>
+        <button type="button" role="tab" id="tab-fnb" aria-controls="pn-fnb" aria-selected="false">Đồ ăn, thức uống</button>
+        <button type="button" role="tab" id="tab-km" aria-controls="pn-km" aria-selected="false">Khuyến mãi</button>
+    </div>
+
+    <section class="tab-panel" id="pn-doanh-thu" role="tabpanel"></section>
+    <section class="tab-panel" id="pn-ve-ban" role="tabpanel" hidden></section>
+    <section class="tab-panel" id="pn-phim" role="tabpanel" hidden></section>
+    <section class="tab-panel" id="pn-fnb" role="tabpanel" hidden></section>
+    <section class="tab-panel" id="pn-km" role="tabpanel" hidden></section>
+</main></div>
+</body>
+</html>
