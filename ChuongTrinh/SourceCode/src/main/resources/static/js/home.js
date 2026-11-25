@@ -179,13 +179,4 @@ async function loadFilms() {
 
 document.querySelector("#retry").addEventListener("click", loadFilms);
 loadFilms();
-try {
-    const taiKhoan = await goiApi('/api/dat-ve/toi');
-    if (taiKhoan.dangNhap) {
-        const lienKet = document.querySelector('#tai-khoan');
-        lienKet.href = 'ho-so.html';
-        lienKet.textContent = 'Hồ sơ';
-    }
-} catch {
-    // Khách vẫn có thể tra cứu phim khi API phiên đăng nhập tạm thời không khả dụng.
-}
+// Menu tài khoản do home-account.js phụ trách.

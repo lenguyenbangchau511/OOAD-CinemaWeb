@@ -1,0 +1,12 @@
+/* Chỉ định kiểu menu tài khoản; không tác động CSS trang chủ của thành viên khác. */
+.cinema-account-menu { position:relative; }
+.cinema-account-menu summary { list-style:none; cursor:pointer; gap:8px; }
+.cinema-account-menu summary::-webkit-details-marker { display:none; }
+.cinema-account-menu summary span { max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.cinema-account-menu .icon { width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.cinema-account-panel { position:absolute; top:calc(100% + 8px); right:0; width:min(280px,calc(100vw - 32px)); z-index:20; background:#fff; border:1px solid #EEDDD0; border-radius:12px; padding:12px; box-shadow:0 4px 12px #3D30291A; overflow-wrap:anywhere; }
+.cinema-account-panel small { display:block; color:#75665C; font-size:14px; }
+.cinema-account-panel hr { border:0; border-top:1px solid #EEDDD0; margin:8px 0; }
+.cinema-account-panel a,.cinema-account-panel button { display:flex; gap:8px; align-items:center; width:100%; min-height:44px; padding:8px; border:0; background:transparent; text-align:left; border-radius:8px; color:#3D3029; font:inherit; }
+.cinema-account-panel a:hover,.cinema-account-panel button:hover { background:#FFDFC4; }
+.cinema-account-panel p { font-size:14px; color:#75665C; padding:8px; }
