@@ -42,7 +42,7 @@ export function iconBtn(n,label,attrs=''){return `<button type="button" class="b
 export function safeReturn(){
     const d=new URLSearchParams(location.search).get('quayLai');
     if(!d||!d.startsWith('/')||d.startsWith('//')||d.includes('\\'))return null;
-    try{const u=new URL(d,location.origin);return u.origin===location.origin&&['/','/index.html','/tai-khoan-ca-nhan.html','/chi-tiet-phim.html','/chon-ghe.html','/thanh-toan.html','/lich-su-ve.html','/ket-qua-dat-ve.html','/chi-tiet-ve.html','/chon-do-an.html','/xac-nhan-don.html'].includes(u.pathname)?u.pathname+u.search:null;}catch{return null;}
+    try{const u=new URL(d,location.origin);return u.origin===location.origin&&['/','/index.html','/bap-nuoc.html','/tai-khoan-ca-nhan.html','/chi-tiet-phim.html','/chon-ghe.html','/thanh-toan.html','/lich-su-ve.html','/ket-qua-dat-ve.html','/chi-tiet-ve.html','/chon-do-an.html','/xac-nhan-don.html'].includes(u.pathname)?u.pathname+u.search:null;}catch{return null;}
 }
 export const current = () => api('/api/auth/toi');
 export function goLogin(){location.replace('login.html?quayLai='+encodeURIComponent(location.pathname+location.search));}
