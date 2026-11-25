@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Danh sách và tra cứu vé nội bộ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/megacine-pages.css">
+    <script type="module" src="js/tra-cuu-ve.js"></script>
+</head>
+<body class="mc-page tra-cuu-ve">
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="./"><span class="brand-mark" aria-hidden="true">▦</span><span>Mega<span class="mc-accent">Cine</span></span></a>
+        <nav aria-label="Khu nội bộ"><a href="noi-bo.html">Khu nội bộ</a><span class="mc-pill">Nhân viên / Quản lý</span></nav>
+    </div>
+</header>
+
+<div class="container mc-admin">
+    <aside class="mc-sidebar">
+        <nav aria-label="Khu nội bộ">
+            <a href="noi-bo.html">Tổng quan</a>
+            <p>Vận hành rạp</p>
+            <a href="quan-ly-phim.html">Quản lý phim</a>
+            <a href="suat-chieu.html">Suất chiếu</a>
+            <a href="phong-chieu.html">Phòng chiếu</a>
+            <a href="tra-cuu-ve.html" aria-current="page">Tra cứu vé</a>
+            <a href="soat-ve.html">Soát vé tại cửa</a>
+            <p>Bán hàng</p>
+            <a href="ban-ve-tai-quay.html">Bán vé tại quầy</a>
+            <a href="quan-ly-san-pham.html">Đồ ăn, thức uống và combo</a>
+        </nav>
+    </aside>
+
+    <main class="main chau-page">
+        <h1>Danh sách và tra cứu vé nội bộ</h1>
+        <p id="thong-bao" role="status" hidden></p>
+
+        <form id="form-loc" class="chau-actions" style="flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+            <label>Mã vé / Mã QR / Khách / Phim
+                <input id="tu-khoa" type="search" placeholder="Nhập mã vé hoặc từ khóa...">
+            </label>
+            <label>Ngày chiếu
+                <input id="ngay-chieu" type="date">
+            </label>
+            <label>Trạng thái vé
+                <select id="trang-thai">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="CHUA_SU_DUNG">Chưa sử dụng</option>
+                    <option value="DA_SU_DUNG">Đã sử dụng</option>
+                    <option value="DA_DOI">Đã đổi</option>
+                    <option value="DA_HUY">Đã hủy</option>
+                    <option value="HET_HAN">Hết hạn</option>
+                </select>
+            </label>
+            <button class="button primary" type="submit">Tra cứu</button>
+            <button id="nut-xoa-loc" class="button secondary" type="button">Đặt lại</button>
+        </form>
+
+        <div class="mc-table-wrap">
+            <table class="mc-table">
+                <thead>
+                    <tr>
+                        <th>Mã vé</th>
+                        <th>Khách hàng</th>
+                        <th>Phim</th>
+                        <th>Suất chiếu</th>
+                        <th>Phòng / Ghế</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="ds-ve"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

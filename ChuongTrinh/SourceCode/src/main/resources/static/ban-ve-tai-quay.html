@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Bán vé tại quầy</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/ban-ve-tai-quay.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Quầy vé</a>
+        <nav aria-label="Menu quầy vé">
+            <a href="ban-ve-tai-quay.html" aria-current="page">Bán vé tại quầy</a>
+            <a href="tra-cuu-ve.html">Tra cứu vé</a>
+            <a href="soat-ve.html">Soát vé</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="noi-bo.html">Khu nội bộ</a></div>
+    </div>
+</header>
+
+<main class="container main">
+    <div class="page-title">
+        <div>
+            <h1>Bán vé trực tiếp tại quầy</h1>
+            <p>Thao tác nhân viên: Chọn suất → Chọn ghế → Bắp nước → Thành viên & Ưu đãi → Thanh toán & In vé.</p>
+        </div>
+        <button id="nut-lam-moi" class="button secondary" type="button">Tạo giao dịch mới</button>
+    </div>
+
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; align-items: start;">
+        <!-- Cột trái: Các bước chọn dịch vụ -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Bước 1: Chọn suất chiếu -->
+            <section class="filters" style="padding: 20px;">
+                <h2 style="width: 100%; margin: 0 0 12px; font-size: 18px;">1. Chọn suất chiếu</h2>
+                <div class="field" style="flex: 1;">
+                    <label for="chon-suat">Suất chiếu trong ngày</label>
+                    <select id="chon-suat"></select>
+                </div>
+            </section>
+
+            <!-- Bước 2: Chọn ghế -->
+            <section class="filters" style="padding: 20px;">
+                <h2 style="width: 100%; margin: 0 0 8px; font-size: 18px;">2. Chọn ghế ngồi</h2>
+                <p class="muted" style="width: 100%; margin: 0 0 12px; font-size: 14px;">Bấm vào ghế trống để chọn/bỏ chọn (Thường: 85.000 ₫ · VIP: 105.000 ₫).</p>
+                <div id="luoi-ghe" style="width: 100%; display: flex; flex-direction: column; gap: 8px;"></div>
+            </section>
+
+            <!-- Bước 3: Chọn đồ ăn / combo -->
+            <section class="filters" style="padding: 20px;">
+                <h2 style="width: 100%; margin: 0 0 12px; font-size: 18px;">3. Thêm bắp nước / Combo</h2>
+                <div id="ds-combo" style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;"></div>
+            </section>
+        </div>
+
+        <!-- Cột phải: Thành viên, Ưu đãi & Thanh toán -->
+        <aside class="filters" style="padding: 22px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 16px;">
+            <h2 style="margin: 0; font-size: 18px;">4. Thành viên & Thanh toán tại quầy</h2>
+
+            <!-- Nhận diện thành viên -->
+            <div class="field">
+                <label for="sdt-thanh-vien">SĐT / Mã khách hàng thành viên</label>
+                <div style="display: flex; gap: 8px;">
+                    <input id="sdt-thanh-vien" placeholder="VD: 0901234567">
+                    <button id="nut-tim-tv" class="button secondary" type="button">Tra cứu</button>
+                </div>
+                <small id="thong-tin-tv" class="muted">Khách vãng lai (Không tích điểm)</small>
+            </div>
+
+            <!-- Mã ưu đãi -->
+            <div class="field">
+                <label for="ma-uu-dai">Mã khuyến mãi tại quầy</label>
+                <select id="ma-uu-dai">
+                    <option value="0">Không áp dụng ưu đãi</option>
+                    <option value="20000">U22QUAY - Giảm 20.000 ₫ học sinh/sinh viên</option>
+                    <option value="30000">COMBO30 - Giảm 30.000 ₫ hóa đơn có combo</option>
+                </select>
+            </div>
+
+            <!-- Bảng tóm tắt tiền -->
+            <div style="border-top: 1px solid #EEDDD0; border-bottom: 1px solid #EEDDD0; padding: 14px 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px;">
+                <div>Suất: <strong id="tom-tat-suat">—</strong></div>
+                <div>Ghế đã chọn: <strong id="tom-tat-ghe">Chưa chọn ghế</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span>Tiền vé:</span><strong id="tien-ve">0 ₫</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span>Tiền bắp nước:</span><strong id="tien-fb">0 ₫</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span>Giảm giá:</span><strong id="tien-giam">0 ₫</strong></div>
+                <div style="display: flex; justify-content: space-between; font-size: 20px; color: #C45116; margin-top: 4px;">
+                    <strong>Tổng thanh toán:</strong><strong id="tong-thanh-toan">0 ₫</strong>
+                </div>
+            </div>
+
+            <!-- Phương thức thanh toán & Tiền thừa -->
+            <div class="field">
+                <label for="phuong-thuc">Phương thức thu tiền</label>
+                <select id="phuong-thuc">
+                    <option value="TIEN_MAT">Tiền mặt tại quầy</option>
+                    <option value="CHUYEN_KHOAN">Quét mã QR / Chuyển khoản</option>
+                    <option value="THE">Quẹt thẻ POS</option>
+                </select>
+            </div>
+
+            <div id="khung-tien-mat" style="background: #FFDFC4; padding: 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 10px;">
+                <div class="field">
+                    <label for="tien-khach-dua">Tiền khách đưa (VNĐ)</label>
+                    <input id="tien-khach-dua" type="number" min="0" step="1000" placeholder="Nhập số tiền khách đưa...">
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 17px;">
+                    <span>Tiền thừa trả khách:</span>
+                    <strong id="tien-thua" style="color: #C45116;">0 ₫</strong>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="nut-xuat-ve" class="button primary" type="button">Xác nhận thu tiền & Xuất vé</button>
+                <button id="nut-xem-truoc" class="button secondary" type="button">Xem trước mẫu vé in</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal xem trước vé in -->
+    <dialog id="modal-ve-in" style="border: 1px solid #EEDDD0; border-radius: 12px; padding: 24px; max-width: 420px; width: 92%;">
+        <div id="noi-dung-ve-in" style="font-family: monospace; line-height: 1.6;"></div>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+            <button id="dong-modal" class="button secondary" type="button">Đóng</button>
+            <button onclick="window.print()" class="button primary" type="button">In vé nhiệt</button>
+        </div>
+    </dialog>
+</main>
+</body>
+</html>

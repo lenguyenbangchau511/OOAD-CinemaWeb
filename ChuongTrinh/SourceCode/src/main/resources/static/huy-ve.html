@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinema 11 | Hủy vé và hoàn tiền</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/dat-ve.css">
+    <link rel="stylesheet" href="css/phong-suat.css">
+    <script type="module" src="js/huy-ve.js"></script>
+</head>
+<body>
+<header class="header header-noi-bo">
+    <div class="container header-inner">
+        <a class="brand" href="noi-bo.html"><span class="brand-mark" aria-hidden="true">C</span>Cinema 11 · Nghiệp vụ vé</a>
+        <nav aria-label="Menu vé">
+            <a href="tra-cuu-ve.html">Tra cứu vé</a>
+            <a href="doi-ve.html">Đổi vé</a>
+            <a href="huy-ve.html" aria-current="page">Hủy vé</a>
+        </nav>
+        <div class="header-right"><a class="button secondary" href="tra-cuu-ve.html">← Danh sách vé</a></div>
+    </div>
+</header>
+
+<main class="container main">
+    <div class="page-title">
+        <div>
+            <h1>Hủy vé và hoàn tiền</h1>
+            <p>Quy định hoàn tiền: Khấu trừ <strong>20% phí xử lý hủy vé</strong> nếu hủy trước giờ chiếu tối thiểu 120 phút.</p>
+        </div>
+    </div>
+
+    <form id="form-tim-ve" class="filters" style="margin-bottom: 20px;">
+        <div class="field" style="flex: 1;">
+            <label for="nhap-ma-ve">Mã vé cần hủy</label>
+            <input id="nhap-ma-ve" placeholder="Nhập mã vé (VD: VE001)" required>
+        </div>
+        <div class="actions"><button class="button primary" type="submit">Tra cứu điều kiện hủy</button></div>
+    </form>
+
+    <div class="alert" id="thong-bao" hidden></div>
+
+    <section id="khu-vuc-huy" class="filters" style="padding: 24px;" hidden>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; width: 100%; margin-bottom: 20px;">
+            <div><small class="muted">Mã vé</small><div id="ve-ma" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Khách hàng</small><div id="ve-khach" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Phim & Suất</small><div id="ve-phim-suat" style="font-weight: 700;"></div></div>
+            <div><small class="muted">Ghế</small><div id="ve-ghe" style="font-weight: 700;"></div></div>
+        </div>
+
+        <div style="width: 100%; border-top: 1px solid #EEDDD0; padding-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+            <div class="field">
+                <label for="ly-do-huy">Lý do hủy vé *</label>
+                <select id="ly-do-huy">
+                    <option value="Khách bận việc đột xuất">Khách bận việc đột xuất</option>
+                    <option value="Đặt nhầm suất chiếu / ngày chiếu">Đặt nhầm suất chiếu / ngày chiếu</option>
+                    <option value="Sự cố kỹ thuật từ phía rạp (Hoàn 100%)">Sự cố kỹ thuật từ phía rạp (Hoàn 100%)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="phuong-thuc-hoan">Hình thức hoàn tiền</label>
+                <select id="phuong-thuc-hoan">
+                    <option value="Hoàn về ví điện tử / tài khoản gốc">Hoàn về ví điện tử / tài khoản gốc</option>
+                    <option value="Hoàn tiền mặt tại quầy">Hoàn tiền mặt tại quầy</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="width: 100%; background: #FFDFC4; padding: 16px; border-radius: 8px; margin-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <div>Giá vé gốc: <strong id="tien-goc">85.000 ₫</strong> · Phí hủy vé (<span id="ty-le-phi">20%</span>): <strong id="tien-phi">17.000 ₫</strong></div>
+                <div style="font-size: 20px; font-weight: 700; color: #C45116; margin-top: 4px;">Số tiền hoàn lại cho khách: <span id="tien-hoan">68.000 ₫</span></div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a class="button secondary" href="tra-cuu-ve.html">Quay lại</a>
+                <button id="nut-xac-nhan-huy" class="button primary" type="button">Xác nhận hủy & hoàn tiền</button>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
