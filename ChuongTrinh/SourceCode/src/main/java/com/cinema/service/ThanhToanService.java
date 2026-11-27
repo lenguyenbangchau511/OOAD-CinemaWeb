@@ -1,7 +1,6 @@
 package com.cinema.service;
 
 import com.cinema.dto.DichVuDto;
-import com.cinema.dto.DonHangMoiDto;
 import com.cinema.dto.DonThanhToanDto;
 import com.cinema.dto.KetQuaCongRequest;
 import com.cinema.dto.KetQuaThanhToanDto;
@@ -16,7 +15,6 @@ import com.cinema.entity.GheSuatChieu;
 import com.cinema.entity.PhongChieu;
 import com.cinema.entity.SuatChieu;
 import com.cinema.entity.ThanhToan;
-import com.cinema.enums.KenhBanVe;
 import com.cinema.enums.LoaiGiaoDich;
 import com.cinema.enums.PhuongThucThanhToan;
 import com.cinema.enums.TrangThaiDonHang;
@@ -357,39 +355,6 @@ public class ThanhToanService {
         return new KetQuaThanhToanDto(tt.getMaThanhToan(), don.getMaDonHang(), "CAN_DOI_SOAT",
                 "Cổng thanh toán đã thu tiền nhưng đơn hàng không thể hoàn tất (" + lyDo
                         + "). Vé không được phát hành, khoản tiền sẽ được hoàn lại");
-    }
-
-    // ----------------------------------------------------------- Đơn tạm
-    /**
-     * TẠM THỜI - chỉ dùng khi giao diện 8/9 (đồ ăn, xác nhận đơn) của Châu chưa ghép:
-     * tạo đơn CHO_THANH_TOAN chỉ gồm các ghế đang giữ, để vẫn chạy được luồng 7 -> 10 -> 11.
-     * Khi module đơn hàng hoàn thiện, giao diện 9 tạo đơn và có thể xóa hàm này.
-     */
-    @Transactional
-    public DonHangMoiDto taoDonTam(NguoiDung nd, String maPhienGiu) {
-        if (nd.maKhachHang() == null) {
-            throw new NghiepVuException(HttpStatus.FORBIDDEN, "Chỉ khách hàng thành viên mới đặt vé trực tuyến");
-        }
-        giuGheService.kiemTraChuPhien(nd, maPhienGiu);
-        giuGheService.giaiPhongGheQuaHan();
-        List<GheSuatChieu> dsGhe = maPhienGiu == null ? List.of() : gheSuatRepo.findByMaPhienGiu(maPhienGiu);
-        if (dsGhe.isEmpty()) {
-            throw new NghiepVuException(HttpStatus.CONFLICT, "HET_GIU_GHE", "Hết thời gian giữ ghế. Vui lòng chọn lại ghế");
-        }
-        DonHang don = new DonHang();
-        do {
-            don.setMaDonHang(SinhMa.ngauNhien("DH", 6));
-        } while (donHangRepo.existsById(don.getMaDonHang()));
-        don.setMaKhachHang(nd.maKhachHang());
-        don.setNgayDat(ThoiGian.bayGio());
-        don.setTongTien(tong(dsGhe.stream().map(GheSuatChieu::getGiaVe).toList()));
-        don.setKenhBan(KenhBanVe.ONLINE);
-        don.setTrangThai(TrangThaiDonHang.CHO_THANH_TOAN);
-        don.setSoTienGiamTuKhuyenMai(BigDecimal.ZERO);
-        don.setDiemSuDung(0);
-        don.setSoTienGiamTuDiem(BigDecimal.ZERO);
-        donHangRepo.save(don);
-        return new DonHangMoiDto(don.getMaDonHang(), don.getTongTien());
     }
 
     // ----------------------------------------------------------- nội bộ
