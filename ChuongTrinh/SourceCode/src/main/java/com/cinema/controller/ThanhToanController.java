@@ -1,8 +1,6 @@
 package com.cinema.controller;
 
-import com.cinema.dto.DonHangMoiDto;
 import com.cinema.dto.DonThanhToanDto;
-import com.cinema.dto.DonTamRequest;
 import com.cinema.dto.KetQuaCongRequest;
 import com.cinema.dto.KetQuaThanhToanDto;
 import com.cinema.dto.KhoiTaoThanhToanRequest;
@@ -59,11 +57,5 @@ public class ThanhToanController {
     public KetQuaThanhToanDto phatHanhLai(@PathVariable String maDonHang, @RequestBody PhatHanhLaiRequest req,
                                           HttpSession session) {
         return thanhToanService.phatHanhLai(phienDangNhap.yeuCau(session), maDonHang, req);
-    }
-
-    /** TẠM THỜI: tạo đơn chỉ có vé từ phiên giữ ghế khi giao diện 8/9 chưa ghép. */
-    @PostMapping("/don-tam")
-    public DonHangMoiDto donTam(@RequestBody DonTamRequest req, HttpSession session) {
-        return thanhToanService.taoDonTam(phienDangNhap.yeuCau(session), req.maPhienGiu());
     }
 }

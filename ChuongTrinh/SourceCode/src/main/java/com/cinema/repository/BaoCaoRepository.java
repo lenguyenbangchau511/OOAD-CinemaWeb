@@ -24,7 +24,12 @@ public class BaoCaoRepository {
                        SUM(d.soTienGiamTuKhuyenMai + d.soTienGiamTuDiem) AS giamGia,
                        SUM(d.tongTien) AS tongThu
                 FROM DONHANG d
-                LEFT JOIN (SELECT maDonHang, SUM(donGia) AS tien FROM VE GROUP BY maDonHang) v
+                LEFT JOIN (
+                    SELECT maDonHang, SUM(donGia) AS tien
+                    FROM VE
+                    WHERE trangThai NOT IN ('DA_HUY', 'DA_DOI')
+                    GROUP BY maDonHang
+                ) v
                        ON v.maDonHang = d.maDonHang
                 LEFT JOIN (SELECT maDonHang, SUM(thanhTien) AS tien FROM CHITIETDICHVU GROUP BY maDonHang) f
                        ON f.maDonHang = d.maDonHang

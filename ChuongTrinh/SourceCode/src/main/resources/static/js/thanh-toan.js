@@ -5,7 +5,7 @@ import {
 } from './datve-common.js';
 
 const $ = (id) => document.getElementById(id);
-let maDonHang = thamSo('maDonHang') || layPhienDatVe().maDonHang;
+const maDonHang = thamSo('maDonHang') || layPhienDatVe().maDonHang;
 const maPhienGiu = layPhienDatVe().maPhienGiu;
 /** Danh sách ghế đã chốt của đơn (lưu từ bước chọn ghế); server đối chiếu đúng với ghế đang giữ. */
 const dsMaGheSuat = (layPhienDatVe().dsGhe || []).map((g) => g.maGheSuat);
@@ -21,12 +21,6 @@ khoiTao();
 
 async function khoiTao() {
     try {
-        if (!maDonHang && thamSo('tamThoi')) {          // chưa có giao diện 8/9: tạo đơn tạm chỉ gồm vé
-            const moi = await goiApi('/api/thanh-toan/don-tam', { method: 'POST', body: { maPhienGiu } });
-            maDonHang = moi.maDonHang;
-            luuPhienDatVe({ maDonHang });
-            history.replaceState(null, '', `thanh-toan.html?maDonHang=${encodeURIComponent(maDonHang)}`);
-        }
         if (!maDonHang) {
             hienThongBao($('thong-bao'), 'Chưa có đơn hàng để thanh toán. Vui lòng bắt đầu từ bước chọn ghế.', 'loi');
             $('ma-don').textContent = '';
