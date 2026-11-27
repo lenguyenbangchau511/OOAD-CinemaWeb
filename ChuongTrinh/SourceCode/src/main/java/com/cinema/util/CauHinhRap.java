@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Các tham số "theo cấu hình của rạp" mà báo cáo nhắc tới. Có thể đổi trong application.properties,
+ * Các tham số "theo cấu hình của rạp" trong báo cáo. Có thể đổi trong application.properties,
  * không khai báo thì dùng giá trị mặc định bên dưới (khớp dữ liệu mẫu: 1 điểm = 1.000đ, 10.000đ = 1 điểm).
  */
 @Component
