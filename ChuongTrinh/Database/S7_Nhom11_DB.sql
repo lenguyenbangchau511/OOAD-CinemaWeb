@@ -1,7 +1,5 @@
--- MegaCine | MySQL 8.0.16 trở lên | Nhập vào cinema_db mới, chưa có dữ liệu.
--- Tài khoản và mật khẩu trong seed chỉ sử dụng để demo.
+-- MegaCine | MySQL 8.0.16 trở lên
 
--- MySQL 8.0.16 trở lên. Lược đồ theo mục 3.8 của báo cáo.
 SET NAMES utf8mb4;
 
 CREATE DATABASE IF NOT EXISTS cinema_db
@@ -372,7 +370,6 @@ CREATE TABLE IF NOT EXISTS GIAODICHDIEM (
     FOREIGN KEY (maDonHang) REFERENCES DONHANG (maDonHang)
 ) ENGINE=InnoDB;
 
--- Chạy sau 01_schema.sql trên CSDL mới. Các mã DEMO cố định.
 -- Mật khẩu chung của tài khoản demo: 123456 (BCrypt).
 SET NAMES utf8mb4;
 USE cinema_db;
@@ -407,16 +404,6 @@ INSERT INTO PHIM (maPhim, tenPhim, theLoai, thoiLuong, daoDien, dienVien, ngayKh
 	('P05', 'Chị Chị Em Em 3', 'Tâm lý, Tình cảm', 122, 'Nguyễn Hữu Hoàng', 'Nguyễn Cao Kỳ Duyên, Steven Nguyễn, Chi Pu, Ninh Dương Lan Ngọc, Lê Khanh', '2026-10-30', 'Việt Nam', 'Thị Mầu bước vào những mối quan hệ chồng chéo giữa tình yêu và danh dự ở vùng Kinh Bắc xưa.', 'chi-chi-em-em-3.webp', 'T18', 'DANG_CHIEU'),
     ('P06', 'Bắt Cá Ba Tay', 'Hài, Tình cảm', 100, 'Như Trang','Thúy Ngân, Steven Nguyễn, Ngô Kiến Huy, Otis','2026-12-04', 'Việt Nam','Trong BẮT CÁ BA TAY, sau một lần cầu duyên, Yên (Thúy Ngân) bất ngờ chứng kiến cả ba người yêu cũ là Tùng (Steven Nguyễn), Phong (Ngô Kiến Huy) và Minh (Otis) đồng loạt muốn nối lại tình xưa. Đứng trước ba chàng trai với ba tính cách và ba màu sắc tình yêu khác biệt, Yên quyết định cho cả ba cơ hội cùng lúc. Nhưng khi những cuộc hẹn chồng chéo và bí mật dần có nguy cơ bị phanh phui, liệu cô nàng có thể tìm được tình yêu đích thực hay sẽ nhận về một cú "nghiệp quật" nhớ đời?','bat-ca-ba-tay.webp', 'T13', 'SAP_CHIEU');
 
--- Tám phim từ bộ poster có sẵn. Ưu tiên ngày công chiếu rộng rãi tại Việt Nam khi có suất chiếu sớm.
--- Khi nguồn khác nhau (Ebenezer, Ngày Con Còn Mẹ), ngày lấy theo Galaxy/CGV, thời lượng và phân loại theo BHD.
--- P07: https://www.bhdstar.vn/phim/bo-sua-bay
--- P08: https://www.catinthehatfilm.com/home/ | https://moveek.com/phim/chang-meo-mang-mu/
--- P09: https://moveek.com/phim/dau-truong-sinh-tu-binh-minh-ngay-chieu-quan/ | https://www.rottentomatoes.com/m/the_hunger_games_sunrise_on_the_reaping
--- P10: https://www.galaxycine.vn/dat-ve/ebenezer/ | https://www.bhdstar.vn/phim/ebenezer-phep-mau-dem-giang-sinh
--- P11: https://moveek.com/phim/ke-hoi-sinh/ | https://www.megagscinemas.vn/phim/ke-hoi-sinh/
--- P12: https://www.galaxycine.vn/dat-ve/arnie--barney/ | https://metiz.vn/phim/long-tieng-kien-le-phieu-luu-ke-p.html
--- P13: https://www.galaxycine.vn/dat-ve/ngay-con-con-me/ | https://www.bhdstar.vn/phim/ngay-con-con-me
--- P14: https://www.bhdstar.vn/phim/ramayana-khoi-nguon-mot-huyen-thoai
 INSERT INTO PHIM (maPhim, tenPhim, theLoai, thoiLuong, daoDien, dienVien, ngayKhoiChieu, quocGia, noiDung, poster, gioiHanDoTuoi, trangThai) VALUES
     ('P07', 'Bò Sữa Bay', 'Hài, Tình cảm', 108, 'Nguyễn Phạm Thành Đạt', 'Nguyễn Hùng, Lãnh Thanh, Võ Điền Gia Huy, Trần Tiểu Vy', '2026-11-06', 'Việt Nam', 'Một nhóm công nhân ở trang trại bò sữa tìm cách lấy công thức bí mật có khả năng chữa lành và trẻ hóa. Kế hoạch của họ thay đổi khi người dẫn đầu đem lòng yêu người tạo ra công thức.', 'bo-sua-bay.webp', 'T18', 'DANG_CHIEU'),
     ('P08', 'Chàng Mèo Mang Mũ', 'Hoạt hình, Hài, Gia đình', 107, 'Erica Rivinoja, Alessandro Carloni', 'Bill Hader, Xochitl Gomez, Tiago Martinez, America Ferrera', '2026-11-06', 'Mỹ', 'Chú mèo đội mũ phép thuật nhận nhiệm vụ giúp hai anh em Gabby và Sebastian thích nghi với nơi ở mới. Những trò nghịch của chú nhanh chóng biến nhiệm vụ thành một cuộc phiêu lưu.', 'chang-meo-mang-mu.webp', 'P', 'DANG_CHIEU'),
@@ -432,7 +419,6 @@ INSERT INTO PHONGCHIEU (maPhong, tenPhong, loaiPhong, soLuongGhe, tongSoHang, to
     ('PC02', 'Phòng 02', 'STANDARD', 60, 6, 10, 'HOAT_DONG'),
     ('PC03', 'Phòng 03 VIP', 'VIP', 60, 6, 10, 'HOAT_DONG');
 
--- Phòng 04–14 bổ sung cho lịch demo, cùng sơ đồ 60 ghế với các phòng mẫu.
 INSERT INTO PHONGCHIEU (maPhong, tenPhong, loaiPhong, soLuongGhe, tongSoHang, tongSoCot, trangThai) VALUES
     ('PC04', 'Phòng 04', 'STANDARD', 60, 6, 10, 'HOAT_DONG'),
     ('PC05', 'Phòng 05', 'STANDARD', 60, 6, 10, 'HOAT_DONG'),
