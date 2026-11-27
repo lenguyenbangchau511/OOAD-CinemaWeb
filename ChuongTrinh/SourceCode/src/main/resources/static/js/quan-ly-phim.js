@@ -46,7 +46,7 @@ $('ds').addEventListener('click', async e => {
         await goiApi('/api/quan-ly/phim/' + encodeURIComponent(ma), { method: 'DELETE' });
         await tai('Đã xóa phim.');
     } catch (loi) {
-        hienThongBao($('thong-bao'), loi.message, 'loi');
+        alert(loi.message);
     } finally {
         nut.disabled = false;
     }

@@ -59,7 +59,7 @@ public class QuanLyPhimService {
                 throw new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy phim");
             }
         } catch (DataIntegrityViolationException e) {
-            throw new NghiepVuException(HttpStatus.CONFLICT, "Phim đã có suất chiếu. Hãy dùng Ngừng chiếu để giữ lịch sử.");
+            throw new NghiepVuException(HttpStatus.CONFLICT, "Phim đã có suất chiếu nên không thể xóa. Hãy vào Sửa, chọn trạng thái Ngừng chiếu rồi lưu để giữ lịch sử.");
         }
     }
 
