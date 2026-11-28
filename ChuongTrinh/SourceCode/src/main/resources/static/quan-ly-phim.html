@@ -27,13 +27,20 @@
         <section class="film-list" aria-labelledby="film-list-title">
             <h2 id="film-list-title">Danh sách phim</h2>
             <form id="loc" class="chau-actions">
-                <label>Tìm phim <input id="q" type="search" placeholder="Nhập tên hoặc mã phim"></label>
+                <label>Tìm phim <input id="q" type="search" placeholder="Tên, mã, đạo diễn hoặc diễn viên"></label>
                 <label>Trạng thái
                     <select id="tt">
                         <option value="">Tất cả</option>
                         <option value="DANG_CHIEU">Đang chiếu</option>
                         <option value="SAP_CHIEU">Sắp chiếu</option>
                         <option value="NGUNG_CHIEU">Ngừng chiếu</option>
+                    </select>
+                </label>
+                <label>Thể loại <input id="the-loai" type="search"></label>
+                <label>Độ tuổi
+                    <select id="do-tuoi">
+                        <option value="">Tất cả</option>
+                        <option>P</option><option>K</option><option>T13</option><option>T16</option><option>T18</option>
                     </select>
                 </label>
                 <button class="button secondary" type="submit">Tìm kiếm</button>

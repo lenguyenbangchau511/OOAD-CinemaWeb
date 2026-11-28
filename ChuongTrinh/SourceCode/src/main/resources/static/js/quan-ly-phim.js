@@ -4,7 +4,10 @@ const $ = id => document.getElementById(id);
 const tenTrangThai = { DANG_CHIEU: 'Đang chiếu', SAP_CHIEU: 'Sắp chiếu', NGUNG_CHIEU: 'Ngừng chiếu' };
 async function tai(thongBao = "") {
     hienThongBao($('thong-bao'), '');
-    const query = new URLSearchParams({ tuKhoa: $('q').value, trangThai: $('tt').value });
+    const query = new URLSearchParams({
+        tuKhoa: $('q').value, trangThai: $('tt').value,
+        theLoai: $('the-loai').value, gioiHanDoTuoi: $('do-tuoi').value
+    });
     try {
         const ds = await goiApi('/api/quan-ly/phim?' + query);
         $('chi-so').innerHTML = Object.entries({ 'Kết quả': null, ...Object.fromEntries(

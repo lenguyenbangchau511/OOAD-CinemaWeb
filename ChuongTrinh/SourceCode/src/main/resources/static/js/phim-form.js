@@ -1,4 +1,4 @@
-import { goiApi, hienThongBao, thamSo } from './datve-common.js';
+import { goiApi, hienThongBao, thamSo, dinhDangNgayGio } from './datve-common.js';
 
 const form = document.querySelector('#form');
 const thongBao = document.querySelector('#thong-bao');
@@ -20,9 +20,9 @@ document.querySelector('h1').textContent = chiXem ? 'Chi tiết phim' : ma ? 'C�
 form.innerHTML = truong.map(([ten, nhan, type, thuocTinh]) =>
     `<label>${nhan}<input name="${ten}" type="${type}" ${thuocTinh}></label>`).join('') +
     `<label>Nội dung<textarea name="noiDung"></textarea></label>
-    <label>Giới hạn độ tuổi<select name="gioiHanDoTuoi">${['P','K','T13','T16','T18','C']
+    <label>Giới hạn độ tuổi<select name="gioiHanDoTuoi">${['P','K','T13','T16','T18']
         .map(t => `<option>${t}</option>`).join('')}</select></label>
-    <label>Trạng thái<select name="trangThai"><option value="SAP_CHIEU">Sắp chiếu</option>
+    <label>Trạng thái<select name="trangThai" ${ma ? '' : 'disabled'}><option value="SAP_CHIEU">Sắp chiếu</option>
     <option value="DANG_CHIEU">Đang chiếu</option><option value="NGUNG_CHIEU">Ngừng chiếu</option></select></label>
     <div class="film-form-actions">
         <a href="quan-ly-phim.html" class="film-back-link"><span aria-hidden="true">←</span> Quay lại</a>
@@ -47,6 +47,27 @@ if (ma) {
         [...form.elements].forEach(e => { e.disabled = chiXem; });
         form.elements.maPhim.readOnly = true;
         xemPoster(p.poster ? "images/" + encodeURIComponent(p.poster) : "");
+        if (chiXem) {
+            const khuVuc = document.createElement('section');
+            khuVuc.className = 'chau-card';
+            const tieuDe = document.createElement('h2');
+            tieuDe.textContent = 'Suất chiếu sắp tới';
+            khuVuc.append(tieuDe);
+            const ds = document.createElement('ul');
+            for (const suat of p.suatChieuSapToi ?? []) {
+                const dong = document.createElement('li');
+                dong.textContent = dinhDangNgayGio(suat.batDau);
+                ds.append(dong);
+            }
+            if (ds.children.length) {
+                khuVuc.append(ds);
+            } else {
+                const rong = document.createElement('p');
+                rong.textContent = 'Chưa có suất chiếu sắp tới.';
+                khuVuc.append(rong);
+            }
+            form.closest('.mc-form-layout').after(khuVuc);
+        }
     } catch (loi) {
         hienThongBao(thongBao, loi.message, 'loi');
     }

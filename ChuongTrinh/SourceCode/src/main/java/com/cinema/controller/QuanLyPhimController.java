@@ -1,12 +1,12 @@
 package com.cinema.controller;
 
 import com.cinema.dto.PhimForm;
+import com.cinema.entity.Phim;
 import com.cinema.enums.VaiTro;
 import com.cinema.service.QuanLyPhimService;
 import com.cinema.util.PhienDangNhap;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +22,17 @@ public class QuanLyPhimController {
     }
 
     @GetMapping
-    public List<Map<String, Object>> danhSach(@RequestParam(defaultValue = "") String tuKhoa,
+    public List<Phim> danhSach(@RequestParam(defaultValue = "") String tuKhoa,
                                              @RequestParam(defaultValue = "") String trangThai,
+                                             @RequestParam(defaultValue = "") String theLoai,
+                                             @RequestParam(defaultValue = "") String gioiHanDoTuoi,
                                              HttpSession session) {
         dangNhap.yeuCau(session, VaiTro.QUAN_LY, VaiTro.NHAN_VIEN);
-        return service.danhSach(tuKhoa, trangThai);
+        return service.danhSach(tuKhoa, theLoai, gioiHanDoTuoi, trangThai);
     }
 
     @GetMapping("/{maPhim}")
-    public Map<String, Object> chiTiet(@PathVariable String maPhim, HttpSession session) {
+    public QuanLyPhimService.ChiTietPhim chiTiet(@PathVariable String maPhim, HttpSession session) {
         dangNhap.yeuCau(session, VaiTro.QUAN_LY, VaiTro.NHAN_VIEN);
         return service.chiTiet(maPhim);
     }
