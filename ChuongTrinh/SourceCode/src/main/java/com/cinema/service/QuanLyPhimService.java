@@ -1,98 +1,94 @@
 package com.cinema.service;
 
 import com.cinema.dto.PhimForm;
+import com.cinema.entity.Phim;
+import com.cinema.enums.TrangThaiPhim;
 import com.cinema.exception.NghiepVuException;
 import com.cinema.repository.PhimRepository;
-import com.cinema.util.TimKiem;
+import com.cinema.util.ThoiGian;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class QuanLyPhimService {
+    private final Phim phim;
     private final PhimRepository repository;
 
     public QuanLyPhimService(PhimRepository repository) {
         this.repository = repository;
+        this.phim = new Phim(repository);
     }
 
-    public List<Map<String, Object>> danhSach(String tuKhoa, String trangThai) {
-        return repository.danhSachQuanLy().stream()
-                .filter(p -> trangThai.isBlank() || trangThai.equals(p.get("trangThai")))
-                .filter(p -> tuKhoa.isBlank() || TimKiem.chua((String) p.get("tenPhim"), tuKhoa)
-                        || TimKiem.chua((String) p.get("maPhim"), tuKhoa))
+    public List<Phim> danhSach(String tuKhoa, String theLoai, String gioiHanDoTuoi, String trangThai) {
+        return phim.timKiemPhim(tuKhoa, theLoai, gioiHanDoTuoi, docTrangThai(trangThai));
+    }
+
+    public record ChiTietPhim(@com.fasterxml.jackson.annotation.JsonUnwrapped Phim phim,
+                              List<PhimRepository.LichChieu> suatChieuSapToi) {}
+
+    public ChiTietPhim chiTiet(String maPhim) {
+        Phim ketQua = phim.xemChiTietPhim(maPhim);
+        LocalDateTime bayGio = ThoiGian.bayGio();
+        var suatChieu = repository.suatChieuCuaPhim(maPhim).stream()
+                .filter(s -> s.canDoiThoiLuong(maPhim, bayGio))
+                .sorted(java.util.Comparator.comparing(PhimRepository.LichChieu::batDau))
                 .toList();
+        return new ChiTietPhim(ketQua, suatChieu);
     }
 
-    public Map<String, Object> chiTiet(String maPhim) {
-        return repository.timTheoMa(maPhim).stream().findFirst()
-                .orElseThrow(() -> new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy phim"));
-    }
-
-    public void them(PhimForm p) {
-        String maPhim = chuoi(p.maPhim(), "Mã phim", 10, true);
-        if (!maPhim.matches("[A-Za-z0-9_-]+")) throw khongHopLe("Mã phim chỉ gồm chữ, số, dấu gạch ngang hoặc gạch dưới");
-        try {
-            repository.them(duLieu(p, maPhim));
-        } catch (DuplicateKeyException e) {
-            throw new NghiepVuException(HttpStatus.CONFLICT, "Mã phim đã tồn tại");
+    @Transactional
+    public void them(PhimForm form) {
+        if (!phim.themPhim(chuyenForm(form.maPhim(), form, TrangThaiPhim.SAP_CHIEU))) {
+            throw new NghiepVuException(HttpStatus.CONFLICT, "Không thêm được phim");
         }
     }
 
-    public void sua(String maPhim, PhimForm p) {
-        int soDong = repository.sua(duLieu(p, maPhim));
-        if (soDong == 0) chiTiet(maPhim);
+    @Transactional
+    public void sua(String maPhim, PhimForm form) {
+        phim.suaPhim(chuyenForm(maPhim, form, docTrangThai(form.trangThai())));
     }
 
+    @Transactional
     public void ngungChieu(String maPhim) {
-        int soDong = repository.ngungChieu(maPhim);
-        if (soDong == 0) chiTiet(maPhim);
+        Phim hienTai = repository.khoaTheoMa(maPhim);
+        if (hienTai == null) throw new NghiepVuException(HttpStatus.NOT_FOUND, "Phim không còn tồn tại");
+        hienTai.setTrangThai(TrangThaiPhim.NGUNG_CHIEU);
+        phim.suaPhim(hienTai);
     }
 
+    @Transactional
     public void xoa(String maPhim) {
+        if (!phim.xoaPhim(maPhim)) {
+            throw new NghiepVuException(HttpStatus.NOT_FOUND, "Phim không còn tồn tại");
+        }
+    }
+
+    private static TrangThaiPhim docTrangThai(String giaTri) {
+        if (giaTri == null || giaTri.isBlank()) return null;
         try {
-            if (repository.xoa(maPhim) == 0) {
-                throw new NghiepVuException(HttpStatus.NOT_FOUND, "Không tìm thấy phim");
-            }
-        } catch (DataIntegrityViolationException e) {
-            throw new NghiepVuException(HttpStatus.CONFLICT, "Phim đã có suất chiếu. Hãy dùng Ngừng chiếu để giữ lịch sử.");
+            return TrangThaiPhim.valueOf(giaTri.strip());
+        } catch (IllegalArgumentException e) {
+            throw new NghiepVuException(HttpStatus.BAD_REQUEST, "Trạng thái không hợp lệ");
         }
     }
 
-    private PhimForm duLieu(PhimForm p, String maPhim) {
-        if (p.thoiLuong() == null || p.thoiLuong() < 1) throw khongHopLe("Thời lượng phải lớn hơn 0");
-        if (p.ngayKhoiChieu() == null) throw khongHopLe("Vui lòng nhập ngày khởi chiếu");
-        String tuoi = chuoi(p.gioiHanDoTuoi(), "Giới hạn độ tuổi", 10, true);
-        String trangThai = chuoi(p.trangThai(), "Trạng thái", 30, true);
-        if (!Set.of("P", "K", "T13", "T16", "T18", "C").contains(tuoi)) throw khongHopLe("Giới hạn độ tuổi không hợp lệ");
-        if (!Set.of("SAP_CHIEU", "DANG_CHIEU", "NGUNG_CHIEU").contains(trangThai)) throw khongHopLe("Trạng thái không hợp lệ");
-        String poster = chuoi(p.poster(), "Tên file poster", 255, false);
-        if (poster.contains("/") || poster.contains("\\") || poster.equals(".") || poster.equals("..")) {
-            throw khongHopLe("Poster phải là tên file trong thư mục images");
-        }
-        String noiDung = p.noiDung() == null ? "" : p.noiDung().strip();
-        if (noiDung.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > 65_535) {
-            throw khongHopLe("Nội dung phim quá dài");
-        }
-        return new PhimForm(maPhim, chuoi(p.tenPhim(), "Tên phim", 100, true),
-                chuoi(p.theLoai(), "Thể loại", 50, true), p.thoiLuong(),
-                chuoi(p.daoDien(), "Đạo diễn", 50, false), chuoi(p.dienVien(), "Diễn viên", 200, false),
-                p.ngayKhoiChieu(), chuoi(p.quocGia(), "Quốc gia", 50, false),
-                noiDung, poster, tuoi, trangThai);
-    }
-
-    private String chuoi(String giaTri, String nhan, int gioiHan, boolean batBuoc) {
-        String ketQua = giaTri == null ? "" : giaTri.strip();
-        if (batBuoc && ketQua.isEmpty()) throw khongHopLe("Vui lòng nhập " + nhan.toLowerCase());
-        if (ketQua.length() > gioiHan) throw khongHopLe(nhan + " dài tối đa " + gioiHan + " ký tự");
-        return ketQua;
-    }
-
-    private NghiepVuException khongHopLe(String thongBao) {
-        return new NghiepVuException(HttpStatus.BAD_REQUEST, thongBao);
+    private static Phim chuyenForm(String maPhim, PhimForm form, TrangThaiPhim trangThai) {
+        Phim duLieu = new Phim();
+        duLieu.setMaPhim(maPhim);
+        duLieu.setTenPhim(form.tenPhim());
+        duLieu.setTheLoai(form.theLoai());
+        duLieu.setThoiLuong(form.thoiLuong() == null ? 0 : form.thoiLuong());
+        duLieu.setDaoDien(form.daoDien());
+        duLieu.setDienVien(form.dienVien());
+        duLieu.setNgayKhoiChieu(form.ngayKhoiChieu());
+        duLieu.setQuocGia(form.quocGia());
+        duLieu.setNoiDung(form.noiDung());
+        duLieu.setPoster(form.poster());
+        duLieu.setGioiHanDoTuoi(form.gioiHanDoTuoi());
+        duLieu.setTrangThai(trangThai);
+        return duLieu;
     }
 }
